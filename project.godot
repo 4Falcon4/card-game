@@ -10,10 +10,32 @@ config_version=5
 
 [application]
 
-config/name="CardGame"
-config/features=PackedStringArray("4.5", "Forward Plus")
+config/name="SimpleCardsV2"
+run/main_scene="uid://brvun6l03k0hu"
+config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+CG="*res://addons/simple_cards/card_global.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
 
 [dotnet]
 
-project/assembly_name="CardGame"
+project/assembly_name="SimpleCardsV2"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/simple_cards/plugin.cfg")
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.18717614, 0.18717614, 0.18717614, 1)
