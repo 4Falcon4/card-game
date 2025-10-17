@@ -10,15 +10,16 @@ config_version=5
 
 [application]
 
-config/name="SimpleCardsV2"
+config/name="CardGame"
 run/main_scene="uid://brvun6l03k0hu"
-config/features=PackedStringArray("4.5", "GL Compatibility")
+config/features=PackedStringArray("4.5", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
 CG="*res://addons/simple_cards/card_global.gd"
 AchievementManager="*res://addons/milestone/autoload/achievement_manager.gd"
+ScenesManagerController="*res://addons/ScenesManager/ScenesManager.cs"
 
 [display]
 
@@ -28,11 +29,11 @@ window/stretch/mode="canvas_items"
 
 [dotnet]
 
-project/assembly_name="SimpleCardsV2"
+project/assembly_name="CardGame"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/milestone/plugin.cfg", "res://addons/simple_cards/plugin.cfg")
+enabled=PackedStringArray("res://addons/ScenesManager/plugin.cfg", "res://addons/milestone/plugin.cfg", "res://addons/simple_cards/plugin.cfg")
 
 [milestone]
 
