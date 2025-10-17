@@ -37,6 +37,11 @@ func _ready() -> void:
 	hand_size = card_hand.max_hand_size
 	card_deck_manager.setup()
 	deal()
+	await AchievementManager.achievements_loaded
+	AchievementManager.reset_achievements()
+	# wait 3 seconds to simulate loading time
+	await get_tree().create_timer(1).timeout
+	AchievementManager.unlock_achievement("game_launch")
 	
 	
 
