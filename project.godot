@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 CG="*res://addons/simple_cards/card_global.gd"
+AchievementManager="*res://addons/milestone/autoload/achievement_manager.gd"
 
 [display]
 
@@ -31,7 +32,14 @@ project/assembly_name="SimpleCardsV2"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/simple_cards/plugin.cfg")
+enabled=PackedStringArray("res://addons/milestone/plugin.cfg", "res://addons/simple_cards/plugin.cfg")
+
+[milestone]
+
+general/achievements_path="res://addons/milestone/demo/achievements/"
+debug/print_errors=true
+debug/print_output=true
+general/save_as_json=true
 
 [rendering]
 
