@@ -2,7 +2,8 @@ extends CardLayout
 
 @onready var card_color: PanelContainer = %CardColor
 @onready var texture_rect: TextureRect = %TextureRect
-@onready var value_label: Label = %ValueLabel
+@onready var top_value_label: Label = %TopValueLabel
+@onready var bottom_value_label: Label = %BottomValueLabel
 
 var res: BalatroStyleResource
 
@@ -36,4 +37,5 @@ func set_value():
 		_:
 			text = str(res.value)
 	
-	value_label.text = text
+	top_value_label.text = text
+	bottom_value_label.text = text

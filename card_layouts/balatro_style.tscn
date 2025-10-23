@@ -45,6 +45,31 @@ grow_horizontal = 2
 grow_vertical = 2
 stretch_mode = 3
 
+[node name="TopValueLabel" type="Label" parent="SubViewport"]
+unique_name_in_owner = true
+offset_left = 6.0
+offset_top = 5.0
+offset_right = 74.0
+offset_bottom = 21.0
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_eobcc")
+text = "1"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="BottomValueLabel" type="Label" parent="SubViewport"]
+unique_name_in_owner = true
+offset_left = 6.0
+offset_top = 92.0
+offset_right = 74.0
+offset_bottom = 108.0
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_eobcc")
+text = "1"
+vertical_alignment = 2
+
 [node name="MarginContainer" type="MarginContainer" parent="SubViewport"]
 anchors_preset = 15
 anchor_right = 1.0
@@ -55,13 +80,3 @@ theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
-
-[node name="ValueLabel" type="Label" parent="SubViewport/MarginContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 8
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("2_eobcc")
-text = "1"
-horizontal_alignment = 1
-vertical_alignment = 2
