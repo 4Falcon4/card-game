@@ -16,21 +16,23 @@ tab_alignment = 1
 current_tab = 0
 script = ExtResource("1_r0ib8")
 
-[node name="Controls" parent="." instance=ExtResource("2_h3kbj")]
+[node name="Inputs" parent="." instance=ExtResource("3_xtnrk")]
 layout_mode = 2
 metadata/_tab_index = 0
-
-[node name="Inputs" parent="." instance=ExtResource("3_xtnrk")]
-visible = false
-layout_mode = 2
-metadata/_tab_index = 1
 
 [node name="Audio" parent="." instance=ExtResource("4_n7wa5")]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 2
+metadata/_tab_index = 1
 
 [node name="Video" parent="." instance=ExtResource("5_ix5yc")]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 3
+metadata/_tab_index = 2
+
+[node name="Hidden" type="Node" parent="."]
+
+[node name="Controls" parent="Hidden" instance=ExtResource("2_h3kbj")]
+offset_top = 31.0
+offset_right = -2.0
+offset_bottom = -2.0
