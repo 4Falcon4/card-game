@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://whvy4fjofnsb"]
+[gd_scene load_steps=4 format=3 uid="uid://dotok77073p27"]
 
 [ext_resource type="Script" uid="uid://cscn0sc5gt01y" path="res://card_layouts/balatro_style.gd" id="1_ccxwp"]
 [ext_resource type="FontFile" uid="uid://fpoco0u13011" path="res://examples/balatro_style/KarenFat.ttf" id="2_eobcc"]
