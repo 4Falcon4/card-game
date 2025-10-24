@@ -48,6 +48,9 @@ func initialize_from_deck(deck: CardDeck) -> void:
 		card_resource.bottom_texture = deck.back_textures.get(randi() % 71)
 		var card = Card.new(card_resource)
 		#card.flip()
+		if randi() % 2 == 0:
+			card.flip()
+			pass
 		add_card_to_draw_pile(card)
 	
 	_update_card_visibility()
