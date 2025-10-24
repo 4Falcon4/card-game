@@ -33,6 +33,7 @@ func _ready() -> void:
 	sort_value_button.pressed.connect(_on_sort_value_pressed)
 	
 	CG.def_front_layout = "balatro_style"
+	CG.def_back_layout = "back_balatro_style"
 	
 	hand_size = card_hand.max_hand_size
 	card_deck_manager.setup()

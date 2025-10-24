@@ -44,7 +44,10 @@ func initialize_from_deck(deck: CardDeck) -> void:
 	clear_deck()
 	
 	for card_resource in deck.cards:
+		card_resource.deck_color = deck.deck_color
+		card_resource.bottom_texture = deck.back_textures.get(randi() % 71)
 		var card = Card.new(card_resource)
+		#card.flip()
 		add_card_to_draw_pile(card)
 	
 	_update_card_visibility()
