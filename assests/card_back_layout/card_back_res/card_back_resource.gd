@@ -1,4 +1,4 @@
-@abstract @icon("uid://cvwcyhqx6fvdk")
+@icon("uid://cvwcyhqx6fvdk")
 class_name CardBackResource extends Resource
 
 @export var display_name: String
