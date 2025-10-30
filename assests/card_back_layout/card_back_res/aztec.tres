@@ -1,8 +1,6 @@
-[gd_resource type="Resource" script_class="CardBackResource" load_steps=3 format=3 uid="uid://c3fapi3h1sb4t"]
+[gd_resource type="Resource" script_class="CardBackResource" load_steps=2 format=3 uid="uid://c3fapi3h1sb4t"]
 
 [ext_resource type="Script" uid="uid://1fhb10321e8q" path="res://assests/card_back_layout/card_back_res/card_back_resource.gd" id="1_yg3ej"]
-[ext_resource type="Texture2D" uid="uid://b5u6888ckhv1e" path="res://assests/card_back_layout/Abstract.png" id="2_t65a4"]
 
 [resource]
 script = ExtResource("1_yg3ej")
-texture = ExtResource("2_t65a4")
