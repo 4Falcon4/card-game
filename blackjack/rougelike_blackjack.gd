@@ -19,8 +19,10 @@ extends CanvasLayer
 var sort_by_suit: bool = false
 var hand_size: int
 
-func _init() -> void:
-	CG.def_front_layout = "balatro_style"
+#func _init() -> void:
+	#CG.def_front_layout = "front_blackjack_style"
+	#CG.def_back_layout = "back_blackjack_style"
+	
 
 func _ready() -> void:
 	gold_button.pressed.connect(_on_gold_pressed)
@@ -31,8 +33,8 @@ func _ready() -> void:
 	sort_suit_button.pressed.connect(_on_sort_suit_pressed)
 	sort_value_button.pressed.connect(_on_sort_value_pressed)
 	
-	CG.def_front_layout = "balatro_style"
-	CG.def_back_layout = "back_balatro_style"
+	CG.def_front_layout = "front_blackjack_style"
+	CG.def_back_layout = "back_blackjack_style"
 	
 	hand_size = card_hand.max_hand_size
 	card_deck_manager.setup()
@@ -40,7 +42,7 @@ func _ready() -> void:
 	await AchievementManager.achievements_loaded
 	AchievementManager.reset_achievements()
 	# wait 3 seconds to simulate loading time
-	await get_tree().create_timer(1).timeout
+	await get_tree().create_timer(3).timeout
 	AchievementManager.unlock_achievement("game_launch")
 	
 	
@@ -93,7 +95,6 @@ func deal():
 	var to_deal: int = min(hand_size, card_hand.get_remaining_space())
 	if card_deck_manager.get_draw_pile_size() >= to_deal:
 		card_hand.add_cards(card_deck_manager.draw_cards(to_deal))
-		
 	elif card_deck_manager.get_draw_pile_size() < to_deal:
 		var overflow := to_deal - card_deck_manager.get_draw_pile_size()
 		card_hand.add_cards(card_deck_manager.draw_cards(card_deck_manager.get_draw_pile_size()))

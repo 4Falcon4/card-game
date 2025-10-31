@@ -53,4 +53,27 @@ func clear_selected():
 	for card in _selected:
 		deselect(card)
 	_selected.clear()
+
+func add_cards(card_array: Array[Card]) -> int:
+	var added_count = 0
+	for card in card_array:
+		# Check if hand is full
+		if max_hand_size >= 0 and _cards.size() >= max_hand_size:
+			break
+		
+		if card.get_parent() != self:
+			if card.get_parent() is CardHand:
+				card.get_parent().remove_card(card, self)
+			elif card.get_parent():
+				card.reparent(self)
+			else:
+				add_child(card)
+		
+		if not _cards.has(card):
+			_cards.append(card)
+			_connect_card_signals(card)
+			added_count += 1
+			card.flip()
 	
+	_arrange_cards()
+	return added_count

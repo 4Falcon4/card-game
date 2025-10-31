@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="CardGame"
-run/main_scene="res://menu/scenes/opening/opening.tscn"
+run/main_scene="uid://co862sk2tfhhm"
 config/features=PackedStringArray("4.5", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 

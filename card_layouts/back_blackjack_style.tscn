@@ -1,0 +1,68 @@
+[gd_scene load_steps=6 format=3 uid="uid://dgcmvrendgojk"]
+
+[ext_resource type="Script" uid="uid://bayqhb4g32yj8" path="res://card_layouts/back_blackjack_style.gd" id="1_jhtlp"]
+[ext_resource type="Script" uid="uid://cjablyhm8alee" path="res://blackjack/blackjack_style_res.gd" id="2_t33xb"]
+[ext_resource type="Texture2D" uid="uid://b5u6888ckhv1e" path="res://assests/card_backs/Abstract.png" id="2_vsnfr"]
+
+[sub_resource type="Resource" id="Resource_vsnfr"]
+script = ExtResource("2_t33xb")
+metadata/_custom_type_script = "uid://cjablyhm8alee"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0a68r"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.14044741, 0.14044747, 0.14044735, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+corner_detail = 16
+
+[node name="BlackjackBackCardLayout" type="SubViewportContainer"]
+offset_right = 80.0
+offset_bottom = 112.0
+script = ExtResource("1_jhtlp")
+card_resource = SubResource("Resource_vsnfr")
+metadata/_custom_type_script = "uid://dm115oleoggyt"
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+oversampling = false
+size = Vector2i(80, 112)
+render_target_update_mode = 4
+
+[node name="CardColor" type="PanelContainer" parent="SubViewport"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(45, 67)
+theme_override_styles/panel = SubResource("StyleBoxFlat_0a68r")
+
+[node name="TextureRect" type="TextureRect" parent="SubViewport"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_vsnfr")
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewport"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4

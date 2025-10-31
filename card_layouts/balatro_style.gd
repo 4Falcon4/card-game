@@ -5,11 +5,11 @@ extends CardLayout
 @onready var top_value_label: Label = %TopValueLabel
 @onready var bottom_value_label: Label = %BottomValueLabel
 
-var res: BalatroStyleResource
+var res: StandardStyleRes
 
 func _update_display() -> void:
-	res = card_resource as BalatroStyleResource
-	set_color()
+	res = card_resource as StandardStyleRes
+	#set_color()
 	texture_rect.texture = res.top_texture
 	set_value()
 

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CardBackResource" load_steps=3 format=3 uid="uid://bgo0dfmcx5np0"]
+
+[ext_resource type="Script" uid="uid://1fhb10321e8q" path="res://assests/card_backs/card_back_res/card_back_resource.gd" id="1_i7pir"]
+[ext_resource type="Texture2D" uid="uid://c5txxcs8owheh" path="res://assests/card_backs/Simple.png" id="2_jrn6c"]
+
+[resource]
+script = ExtResource("1_i7pir")
+display_name = "Simple"
+descriptionP = "Regular Card"
+descriptionN = "Regular Card"
+texture = ExtResource("2_jrn6c")

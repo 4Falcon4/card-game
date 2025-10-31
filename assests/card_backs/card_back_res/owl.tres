@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="CardBackResource" load_steps=2 format=3 uid="uid://dyjageudapd87"]
+
+[ext_resource type="Script" uid="uid://1fhb10321e8q" path="res://assests/card_backs/card_back_res/card_back_resource.gd" id="1_angoa"]
+
+[resource]
+script = ExtResource("1_angoa")

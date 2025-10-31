@@ -1,0 +1,91 @@
+[gd_scene load_steps=6 format=3 uid="uid://b4kdkj34h41xh"]
+
+[ext_resource type="Script" uid="uid://cglvg4klouhs0" path="res://card_layouts/front_blackjack_style.gd" id="1_ig0bd"]
+[ext_resource type="FontFile" uid="uid://fpoco0u13011" path="res://examples/balatro_style/KarenFat.ttf" id="2_2ly63"]
+[ext_resource type="Script" uid="uid://cjablyhm8alee" path="res://blackjack/blackjack_style_res.gd" id="2_ddm1k"]
+
+[sub_resource type="Resource" id="Resource_6isfj"]
+script = ExtResource("2_ddm1k")
+metadata/_custom_type_script = "uid://cjablyhm8alee"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0a68r"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.14044741, 0.14044747, 0.14044735, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+corner_detail = 16
+
+[node name="FrontBlackJackStyle" type="SubViewportContainer"]
+offset_right = 80.0
+offset_bottom = 112.0
+script = ExtResource("1_ig0bd")
+card_resource = SubResource("Resource_6isfj")
+metadata/_custom_type_script = "uid://dm115oleoggyt"
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+oversampling = false
+size = Vector2i(80, 112)
+render_target_update_mode = 4
+
+[node name="CardColor" type="PanelContainer" parent="SubViewport"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_0a68r")
+
+[node name="TextureRect" type="TextureRect" parent="SubViewport"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 3
+
+[node name="TopValueLabel" type="Label" parent="SubViewport"]
+unique_name_in_owner = true
+offset_left = 6.0
+offset_top = 5.0
+offset_right = 74.0
+offset_bottom = 21.0
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_2ly63")
+text = "1"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="BottomValueLabel" type="Label" parent="SubViewport"]
+unique_name_in_owner = true
+offset_left = 6.0
+offset_top = 92.0
+offset_right = 74.0
+offset_bottom = 108.0
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_2ly63")
+text = "1"
+vertical_alignment = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewport"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4

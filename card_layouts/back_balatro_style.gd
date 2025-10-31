@@ -3,10 +3,10 @@ extends CardLayout
 @onready var card_color: PanelContainer = %CardColor
 @onready var texture_rect: TextureRect = %TextureRect
 
-var res: BalatroStyleResource
+var res: StandardStyleRes
 
 func _update_display() -> void:
-	res = card_resource as BalatroStyleResource
+	res = card_resource as StandardStyleRes
 	set_color()
 	texture_rect.texture = res.bottom_texture
 

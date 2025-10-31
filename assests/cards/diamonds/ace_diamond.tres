@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StandardStyleRes" load_steps=3 format=3 uid="uid://68qc20tgevc2"]
+
+[ext_resource type="Script" uid="uid://daq0vwvfroqtd" path="res://assests/cards/standard_style_res.gd" id="1_jodjd"]
+[ext_resource type="Texture2D" uid="uid://bfi67t37l1qlp" path="res://assests/cards/diamond.png" id="2_gbffe"]
+
+[resource]
+script = ExtResource("1_jodjd")
+name = "Ace of Diamonds"
+top_texture = ExtResource("2_gbffe")
+card_suit = 1
+metadata/_custom_type_script = "uid://dox8s17eu2u0u"

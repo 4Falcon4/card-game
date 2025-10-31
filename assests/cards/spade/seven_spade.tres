@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StandardStyleRes" load_steps=3 format=3 uid="uid://rey8k8tkllg1"]
+
+[ext_resource type="Script" uid="uid://daq0vwvfroqtd" path="res://assests/cards/standard_style_res.gd" id="1_wvjlw"]
+[ext_resource type="Texture2D" uid="uid://ral2awpcmpdv" path="res://assests/cards/spade.png" id="2_wpkpp"]
+
+[resource]
+script = ExtResource("1_wvjlw")
+name = "Ace of Spades"
+top_texture = ExtResource("2_wpkpp")
+card_suit = 3
+value = 7
+metadata/_custom_type_script = "uid://dox8s17eu2u0u"

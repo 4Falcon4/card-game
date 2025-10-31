@@ -1,6 +1,0 @@
-[gd_resource type="Resource" script_class="CardBackResource" load_steps=2 format=3 uid="uid://1i3cnpdvwnq2"]
-
-[ext_resource type="Script" uid="uid://1fhb10321e8q" path="res://assests/card_back_layout/card_back_res/card_back_resource.gd" id="1_nmxpe"]
-
-[resource]
-script = ExtResource("1_nmxpe")

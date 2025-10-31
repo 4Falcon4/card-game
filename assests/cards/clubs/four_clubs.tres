@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StandardStyleRes" load_steps=3 format=3 uid="uid://bhq2rypy4spst"]
+
+[ext_resource type="Script" uid="uid://daq0vwvfroqtd" path="res://assests/cards/standard_style_res.gd" id="1_spdqx"]
+[ext_resource type="Texture2D" uid="uid://d13a1tcqjxkas" path="res://assests/cards/club.png" id="2_75fr8"]
+
+[resource]
+script = ExtResource("1_spdqx")
+name = "Ace of Clubs"
+top_texture = ExtResource("2_75fr8")
+card_suit = 0
+value = 4
+metadata/_custom_type_script = "uid://dox8s17eu2u0u"

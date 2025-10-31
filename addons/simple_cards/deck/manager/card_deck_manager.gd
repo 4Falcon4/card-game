@@ -45,7 +45,9 @@ func initialize_from_deck(deck: CardDeck) -> void:
 	
 	for card_resource in deck.cards:
 		card_resource.deck_color = deck.deck_color
-		card_resource.bottom_texture = deck.back_textures.get(randi() % 71)
+		if len(deck.back_resources) <= 0:
+			push_error("Back Resource Array Empty")
+		card_resource.bottom_texture = deck.standard_back.texture
 		var card = Card.new(card_resource)
 		add_card_to_draw_pile(card)
 	

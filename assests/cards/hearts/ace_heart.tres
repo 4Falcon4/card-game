@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StandardStyleRes" load_steps=3 format=3 uid="uid://cewwhhwejd4cw"]
+
+[ext_resource type="Script" uid="uid://daq0vwvfroqtd" path="res://assests/cards/standard_style_res.gd" id="1_s0prt"]
+[ext_resource type="Texture2D" uid="uid://clwd04qm16woo" path="res://assests/cards/heart.png" id="2_i3xx4"]
+
+[resource]
+script = ExtResource("1_s0prt")
+name = "Ace of Hearts"
+top_texture = ExtResource("2_i3xx4")
+card_suit = 2
+metadata/_custom_type_script = "uid://dox8s17eu2u0u"
