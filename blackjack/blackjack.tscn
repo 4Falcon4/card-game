@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://cfgoavojtjp10"]
+[gd_scene load_steps=2 format=3 uid="uid://dd6308bfwdtnd"]
 
-[ext_resource type="Script" uid="uid://ci8k2b2cp0a3n" path="res://blackjack_scene.gd" id="1_dklug"]
+[ext_resource type="Script" uid="uid://ci8k2b2cp0a3n" path="res://blackjack/blackjack.gd" id="1_dklug"]
 
 [node name="BlackjackScene" type="Node2D"]
+position = Vector2(804, 411)
 script = ExtResource("1_dklug")
 
 [node name="DealerLabel" type="Label" parent="."]
@@ -10,24 +11,28 @@ offset_left = 92.0
 offset_top = 2.0
 offset_right = 132.0
 offset_bottom = 25.0
+metadata/_edit_use_anchors_ = true
 
 [node name="DealerCards" type="Label" parent="."]
 offset_left = 95.0
 offset_top = 62.0
 offset_right = 135.0
 offset_bottom = 85.0
+metadata/_edit_use_anchors_ = true
 
 [node name="PlayerLabel" type="Label" parent="."]
 offset_left = 366.0
 offset_top = 3.0
 offset_right = 406.0
 offset_bottom = 26.0
+metadata/_edit_use_anchors_ = true
 
 [node name="PlayerCards" type="Label" parent="."]
 offset_left = 365.0
 offset_top = 67.0
 offset_right = 405.0
 offset_bottom = 90.0
+metadata/_edit_use_anchors_ = true
 
 [node name="HitButton" type="Button" parent="."]
 offset_left = 154.0
@@ -35,6 +40,7 @@ offset_top = 161.0
 offset_right = 185.0
 offset_bottom = 192.0
 text = "Hit"
+metadata/_edit_use_anchors_ = true
 
 [node name="StandButton" type="Button" parent="."]
 offset_left = 292.0
@@ -42,6 +48,7 @@ offset_top = 161.0
 offset_right = 345.0
 offset_bottom = 192.0
 text = "Stand"
+metadata/_edit_use_anchors_ = true
 
 [node name="ResetButton" type="Button" parent="."]
 offset_left = 217.0
@@ -49,6 +56,7 @@ offset_top = 161.0
 offset_right = 268.0
 offset_bottom = 192.0
 text = "Reset"
+metadata/_edit_use_anchors_ = true
 
 [node name="ResultLabel" type="Label" parent="."]
 offset_left = 221.0
@@ -56,3 +64,4 @@ offset_top = 220.0
 offset_right = 261.0
 offset_bottom = 254.0
 theme_override_font_sizes/font_size = 24
+metadata/_edit_use_anchors_ = true

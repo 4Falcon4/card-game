@@ -3,10 +3,10 @@ extends Node2D
 # Simple Blackjack game (text-based version)
 # All comments in English
 
-var deck = []
-var dealer_hand = []
-var player_hand = []
-var game_over = false
+var deck := []
+var dealer_hand := []
+var player_hand := []
+var game_over := false
 
 @onready var dealer_label = $DealerLabel
 @onready var dealer_cards = $DealerCards
