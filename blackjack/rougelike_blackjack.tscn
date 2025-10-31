@@ -10,10 +10,13 @@
 [node name="RougelikeBlackjack" type="CanvasLayer"]
 script = ExtResource("1_b22ve")
 
-[node name="CardDeckManager" type="Node" parent="."]
+[node name="CardDeckManager" type="Node" parent="." node_paths=PackedStringArray("draw_pile", "discard_pile")]
 physics_interpolation_mode = 2
 script = ExtResource("4_jnrdv")
+show_cards = true
 starting_deck = ExtResource("5_jnrdv")
+draw_pile = NodePath("Draw")
+discard_pile = NodePath("Discards")
 metadata/_custom_type_script = "uid://bisyk4bowdvsf"
 
 [node name="Draw" type="Control" parent="CardDeckManager"]

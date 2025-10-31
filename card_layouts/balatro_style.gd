@@ -9,7 +9,7 @@ var res: StandardStyleRes
 
 func _update_display() -> void:
 	res = card_resource as StandardStyleRes
-	#set_color()
+	set_color()
 	texture_rect.texture = res.top_texture
 	set_value()
 

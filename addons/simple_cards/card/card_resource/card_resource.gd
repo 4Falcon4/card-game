@@ -4,5 +4,8 @@
 @abstract @icon("uid://cvwcyhqx6fvdk")
 class_name CardResource extends Resource
 
+func _init() -> void:
+	pass
+
 ##If valid, the layout will be used instead of the default front layout.
 @export var custom_layout_name: StringName = ""

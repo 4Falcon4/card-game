@@ -5,4 +5,18 @@ class_name CardBackResource extends CardResource
 @export var ability: CardAbility
 @export var descriptionP: String
 @export var descriptionN: String
+@export var rarrity: Rarrity = Rarrity.NONE
 @export var texture: Texture2D
+
+enum Rarrity {
+	NONE,
+	COMMON,
+	UNCOMMON,
+	RARE,
+	EPIC,
+	LEGENDARY,
+	MYTHIC,
+	EXOTIC,
+	DIVINE,
+	GODLY
+}

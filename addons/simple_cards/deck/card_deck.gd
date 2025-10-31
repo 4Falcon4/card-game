@@ -6,7 +6,7 @@ class_name CardDeck extends Resource
 @export var deck_name: StringName = ""
 ##The original card list (template for resetting)
 @export var cards: Array[CardResource] = []
-@export var back_resources: Array[CardResource] = []
+@export var back_resources: Array[CardBackResource] = []
 @export_enum("NONE", "LIGHT", "DARK", "WHITE", "BLACK") var deck_color: int = 1
 
 var standard_back: CardBackResource = load("res://assests/card_backs/card_back_res/simple.tres")

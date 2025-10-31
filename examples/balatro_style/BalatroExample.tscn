@@ -13,7 +13,9 @@ script = ExtResource("1_bwu64")
 [node name="CardDeckManager" type="Node" parent="." node_paths=PackedStringArray("draw_pile", "discard_pile")]
 physics_interpolation_mode = 2
 script = ExtResource("3_hg8is")
+show_cards = null
 starting_deck = ExtResource("3_bwu64")
+shuffle_on_ready = null
 draw_pile = NodePath("Draw")
 discard_pile = NodePath("Discards")
 metadata/_custom_type_script = "uid://bisyk4bowdvsf"

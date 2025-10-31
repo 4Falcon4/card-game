@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="CardDeck" load_steps=52 format=3 uid="uid://7xdydh66qfkc"]
+[gd_resource type="Resource" script_class="CardDeck" load_steps=53 format=3 uid="uid://7xdydh66qfkc"]
 
 [ext_resource type="Script" uid="uid://c8315v58tr66b" path="res://addons/simple_cards/card/card_resource/card_resource.gd" id="1_qqff3"]
 [ext_resource type="Resource" uid="uid://df8bu4xpvj5lr" path="res://assests/card_backs/card_back_res/abstract.tres" id="2_ryvns"]
@@ -52,10 +52,14 @@
 [ext_resource type="Script" uid="uid://cjablyhm8alee" path="res://blackjack/blackjack_style_res.gd" id="50_6qgo1"]
 [ext_resource type="Script" uid="uid://lhb5ry3o8icy" path="res://addons/simple_cards/deck/card_deck.gd" id="125_yndb8"]
 
+[sub_resource type="Resource" id="Resource_6qgo1"]
+script = ExtResource("50_6qgo1")
+metadata/_custom_type_script = "uid://cjablyhm8alee"
+
 [resource]
 script = ExtResource("125_yndb8")
 deck_name = &"DealerBalatro"
 back_resources = Array[ExtResource("1_qqff3")]([ExtResource("2_ryvns"), ExtResource("3_jnm2g"), ExtResource("4_ysobf"), ExtResource("5_2qsqa"), ExtResource("6_6gr4s"), ExtResource("7_yjsso"), ExtResource("8_h5uri"), ExtResource("9_7yq82"), ExtResource("10_bpcvr"), ExtResource("11_q734q"), ExtResource("12_0nrih"), ExtResource("13_xxwgq"), ExtResource("14_m0f5r"), ExtResource("15_tv2t2"), ExtResource("16_kft7l"), ExtResource("17_bf5q0"), ExtResource("18_g0plw"), ExtResource("19_74ird"), ExtResource("20_a12k1"), ExtResource("21_7yloi"), ExtResource("22_v1afj"), ExtResource("23_xvpmd"), ExtResource("24_cit26"), ExtResource("25_au0w2"), ExtResource("26_fych7"), ExtResource("27_rh3jt"), ExtResource("28_2r0jw"), ExtResource("29_mb4bq"), ExtResource("30_qp8qc"), ExtResource("31_bbeh4"), ExtResource("32_5c2aj"), ExtResource("33_26clg"), ExtResource("34_hike3"), ExtResource("35_pp1vg"), ExtResource("36_tkjry"), ExtResource("37_304h1"), ExtResource("38_lsm2i"), ExtResource("39_86pme"), ExtResource("40_6cafx"), ExtResource("41_l8qee"), ExtResource("42_v6val"), ExtResource("43_7p44j"), ExtResource("44_ikjik"), ExtResource("45_20n45"), ExtResource("46_u7qdb"), ExtResource("47_u4yi7"), ExtResource("48_5vnwd"), ExtResource("49_d71uf")])
-card_resource = ExtResource("50_6qgo1")
+card_resource = SubResource("Resource_6qgo1")
 deck_color = 2
 metadata/_custom_type_script = "uid://lhb5ry3o8icy"
