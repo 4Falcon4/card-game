@@ -315,7 +315,7 @@ graph_offset = Vector2(-180.277, 49)
 
 [node name="MainMenu" instance=ExtResource("1_s4hg3")]
 script = ExtResource("2_0ic5h")
-game_scene_path = "uid://brvun6l03k0hu"
+game_scene_path = "uid://2dwibevu7ne7"
 options_packed_scene = ExtResource("3_wi2rp")
 credits_packed_scene = ExtResource("4_utvf7")
 
