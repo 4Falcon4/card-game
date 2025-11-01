@@ -14,7 +14,7 @@ class_name BlackjackStyleRes extends CardResource
 @export var rarrity: Rarrity = Rarrity.NONE
 @export var texture: Texture2D
 
-func _init(standardRes: StandardStyleRes) -> void:
+func _init(standardRes: StandardStyleRes = StandardStyleRes.new()) -> void:
 	name = standardRes.name
 	top_texture = standardRes.top_texture
 	card_suit = standardRes.card_suit as int

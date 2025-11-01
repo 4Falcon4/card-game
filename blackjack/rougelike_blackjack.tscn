@@ -1,14 +1,18 @@
-[gd_scene load_steps=7 format=3 uid="uid://2dwibevu7ne7"]
+[gd_scene load_steps=8 format=3 uid="uid://2dwibevu7ne7"]
 
 [ext_resource type="Script" uid="uid://b4kn4yeeplfhp" path="res://blackjack/rougelike_blackjack.gd" id="1_b22ve"]
+[ext_resource type="Script" uid="uid://j11yb5rk1n4t" path="res://blackjack/BlackjackManager.cs" id="2_fs0nk"]
 [ext_resource type="Script" uid="uid://di1kob85cvgt1" path="res://blackjack/blackjack_card_hand.gd" id="4_b22ve"]
 [ext_resource type="Script" uid="uid://cn33b5sd6cnt6" path="res://blackjack/blackjack_deck_manager.gd" id="4_jnrdv"]
 [ext_resource type="Resource" uid="uid://tfmqvl885cor" path="res://blackjack/player_blackjack_deck.tres" id="5_jnrdv"]
-[ext_resource type="Script" uid="uid://bbi8i6vef3f6y" path="res://addons/simple_cards/hand/card_hand.gd" id="5_x71mc"]
+[ext_resource type="Script" uid="uid://b2knnouicstx" path="res://blackjack/blackjack_dealer_hand.gd" id="6_fs0nk"]
 [ext_resource type="Script" uid="uid://wn30x7o3f47m" path="res://addons/milestone/scripts/achievements/achievement_notifier.gd" id="6_sm6pw"]
 
 [node name="RougelikeBlackjack" type="CanvasLayer"]
 script = ExtResource("1_b22ve")
+
+[node name="BlackjackManager" type="Node" parent="."]
+script = ExtResource("2_fs0nk")
 
 [node name="CardDeckManager" type="Node" parent="." node_paths=PackedStringArray("draw_pile", "discard_pile")]
 physics_interpolation_mode = 2
@@ -68,7 +72,7 @@ offset_top = -350.0
 offset_bottom = -350.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("5_x71mc")
+script = ExtResource("6_fs0nk")
 shape = 0
 card_spacing = 90.0
 enable_reordering = false
@@ -113,17 +117,39 @@ offset_right = 67.0
 offset_bottom = 66.0
 grow_vertical = 2
 
-[node name="DiscardButton" type="Button" parent="VBoxContainer2"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-text = "Discard"
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+offset_left = 843.0
+offset_top = 254.0
+offset_right = 1043.0
+offset_bottom = 318.0
+alignment = 1
 
-[node name="PlayButton" type="Button" parent="VBoxContainer2"]
+[node name="DealerValueLabel" type="Label" parent="HBoxContainer2"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-text = "Play"
+
+[node name="ResultLabel" type="Label" parent="HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="."]
+offset_left = 854.0
+offset_top = 951.0
+offset_right = 1054.0
+offset_bottom = 1015.0
+alignment = 1
+
+[node name="PlayerValueLabel" type="Label" parent="HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ChipsLabel" type="Label" parent="HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BetLabel" type="Label" parent="HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchors_preset = 7
@@ -137,17 +163,23 @@ offset_right = 105.5
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="SortSuitButton" type="Button" parent="HBoxContainer"]
+[node name="HitButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-text = "Sort by Suit"
+text = "Hit"
 
-[node name="SortValueButton" type="Button" parent="HBoxContainer"]
+[node name="StandButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-text = "Sort by Value"
+text = "Stand"
+
+[node name="DealButton" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+text = "Deal"
 
 [node name="AchievementNotifier" type="Node" parent="."]
 script = ExtResource("6_sm6pw")

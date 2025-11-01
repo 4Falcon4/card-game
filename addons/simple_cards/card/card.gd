@@ -60,6 +60,12 @@ var is_front_face: bool = true:
 		is_front_face = value
 		if value: layout_name = front_layout_name
 		else: layout_name = back_layout_name
+		
+var is_hidden: bool = false:
+	set(value):
+		is_hidden = value
+		is_front_face = !value
+		_setup_layout()
 
 
 func _init(card_resource: CardResource = null) -> void:
