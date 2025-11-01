@@ -33,6 +33,7 @@ metadata/_tab_index = 2
 [node name="Hidden" type="Node" parent="."]
 
 [node name="Controls" parent="Hidden" instance=ExtResource("2_h3kbj")]
+visible = false
 offset_top = 31.0
 offset_right = -2.0
 offset_bottom = -2.0

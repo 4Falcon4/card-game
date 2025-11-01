@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://2dwibevu7ne7"]
+[gd_scene load_steps=10 format=3 uid="uid://2dwibevu7ne7"]
 
 [ext_resource type="Script" uid="uid://b4kn4yeeplfhp" path="res://blackjack/rougelike_blackjack.gd" id="1_b22ve"]
 [ext_resource type="Script" uid="uid://j11yb5rk1n4t" path="res://blackjack/BlackjackManager.cs" id="2_fs0nk"]
+[ext_resource type="Script" uid="uid://cyh0d64pfygbl" path="res://addons/maaacks_menus_template/base/scripts/pause_menu_controller.gd" id="3_30fd4"]
 [ext_resource type="Script" uid="uid://di1kob85cvgt1" path="res://blackjack/blackjack_card_hand.gd" id="4_b22ve"]
 [ext_resource type="Script" uid="uid://cn33b5sd6cnt6" path="res://blackjack/blackjack_deck_manager.gd" id="4_jnrdv"]
+[ext_resource type="PackedScene" uid="uid://ceqj7dw2cldtl" path="res://menu/scenes/overlaid_menus/pause_menu.tscn" id="4_x71mc"]
 [ext_resource type="Resource" uid="uid://tfmqvl885cor" path="res://blackjack/player_blackjack_deck.tres" id="5_jnrdv"]
 [ext_resource type="Script" uid="uid://b2knnouicstx" path="res://blackjack/blackjack_dealer_hand.gd" id="6_fs0nk"]
 [ext_resource type="Script" uid="uid://wn30x7o3f47m" path="res://addons/milestone/scripts/achievements/achievement_notifier.gd" id="6_sm6pw"]
@@ -13,6 +15,10 @@ script = ExtResource("1_b22ve")
 
 [node name="BlackjackManager" type="Node" parent="."]
 script = ExtResource("2_fs0nk")
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource("3_30fd4")
+pause_menu_packed = ExtResource("4_x71mc")
 
 [node name="CardDeckManager" type="Node" parent="." node_paths=PackedStringArray("draw_pile", "discard_pile")]
 physics_interpolation_mode = 2
