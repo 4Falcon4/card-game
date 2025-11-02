@@ -225,7 +225,9 @@ func _on_game_state_changed(new_state: int) -> void:
 
 		5:  # RoundEnd
 			_set_blackjack_controls_enabled(false)
-			deal_button.disabled = false
+			# Keep deal button disabled until ResetRound() transitions to Idle state
+			# This prevents the rapid-deal bug where pressing deal during the 3-second
+			# delay causes the new round to be reset, losing the player's bet
 
 		6:  # GameOver
 			_set_blackjack_controls_enabled(false)
