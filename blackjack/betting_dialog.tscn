@@ -1,0 +1,89 @@
+[gd_scene load_steps=2 format=3 uid="uid://cq8f4y7n5xo8w"]
+
+[ext_resource type="Script" path="res://blackjack/betting_dialog.gd" id="1_betting_dialog"]
+
+[node name="BettingDialog" type="CanvasLayer"]
+script = ExtResource("1_betting_dialog")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+theme_override_constants/separation = 15
+
+[node name="TitleLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Place Your Bet"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ChipsLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Available Chips: 1000"
+horizontal_alignment = 1
+
+[node name="BetAmountLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Bet Amount: 10"
+horizontal_alignment = 1
+
+[node name="BetSlider" type="HSlider" parent="Panel/VBoxContainer"]
+layout_mode = 2
+min_value = 10.0
+max_value = 1000.0
+step = 10.0
+value = 10.0
+
+[node name="QuickBets" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="MinButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
+layout_mode = 2
+text = "Min"
+
+[node name="QuarterButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
+layout_mode = 2
+text = "25%"
+
+[node name="HalfButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
+layout_mode = 2
+text = "50%"
+
+[node name="MaxButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
+layout_mode = 2
+text = "Max"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="CancelButton" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="ConfirmButton" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Confirm Bet"

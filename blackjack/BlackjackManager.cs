@@ -100,6 +100,17 @@ public partial class BlackjackManager : Node
 	private List<GodotObject> _playerCards = new List<GodotObject>();
 	private List<GodotObject> _dealerCards = new List<GodotObject>();
 
+	// Double down tracking
+	private bool _hasDoubled = false;
+	private bool _canDouble = false;
+
+	// Split hand tracking
+	private bool _hasSplit = false;
+	private bool _canSplit = false;
+	private List<GodotObject> _splitCards = new List<GodotObject>();
+	private int _splitHandValue = 0;
+	private bool _isPlayingSplitHand = false;
+
 	#endregion
 
 	#region Godot Lifecycle
@@ -146,6 +157,15 @@ public partial class BlackjackManager : Node
 		_dealerHandValue = 0;
 		LastResult = RoundResult.None;
 
+		// Reset double down and split states
+		_hasDoubled = false;
+		_canDouble = false;
+		_hasSplit = false;
+		_canSplit = false;
+		_splitCards.Clear();
+		_splitHandValue = 0;
+		_isPlayingSplitHand = false;
+
 		SetGameState(GameState.Dealing);
 		GD.Print($"Round started with bet: {betAmount}");
 
@@ -157,12 +177,34 @@ public partial class BlackjackManager : Node
 	/// </summary>
 	public void AddPlayerCard(GodotObject card)
 	{
-		_playerCards.Add(card);
-		_playerHandValue = CalculateHandValue(_playerCards);
-		GD.Print($"Player card added. Hand value: {_playerHandValue}");
+		if (_hasSplit && _isPlayingSplitHand)
+		{
+			_splitCards.Add(card);
+			_splitHandValue = CalculateHandValue(_splitCards);
+			GD.Print($"Split hand card added. Hand value: {_splitHandValue}");
+			CheckForBust(true);
+		}
+		else
+		{
+			_playerCards.Add(card);
+			_playerHandValue = CalculateHandValue(_playerCards);
+			GD.Print($"Player card added. Hand value: {_playerHandValue}");
 
-		CheckForBlackjack();
-		CheckForBust(true);
+			// Check if double down is available (must have exactly 2 cards)
+			if (_playerCards.Count == 2 && CurrentState == GameState.PlayerTurn && !_hasDoubled)
+			{
+				_canDouble = PlayerChips >= CurrentBet;
+			}
+
+			// Check if split is available (must have exactly 2 cards of same value)
+			if (_playerCards.Count == 2 && CurrentState == GameState.PlayerTurn && !_hasSplit)
+			{
+				_canSplit = CanSplitCards() && PlayerChips >= CurrentBet;
+			}
+
+			CheckForBlackjack();
+			CheckForBust(true);
+		}
 	}
 
 	/// <summary>
@@ -205,7 +247,103 @@ public partial class BlackjackManager : Node
 		}
 
 		GD.Print("Player stands");
-		SetGameState(GameState.DealerTurn);
+
+		// If playing split hand and haven't finished first hand, switch to split hand
+		if (_hasSplit && !_isPlayingSplitHand)
+		{
+			_isPlayingSplitHand = true;
+			GD.Print("Switching to split hand");
+		}
+		else
+		{
+			SetGameState(GameState.DealerTurn);
+		}
+	}
+
+	/// <summary>
+	/// Player chooses to double down (double bet, draw one card, then stand).
+	/// </summary>
+	public bool PlayerDouble()
+	{
+		if (CurrentState != GameState.PlayerTurn)
+		{
+			GD.PrintErr("Cannot double - not player's turn");
+			return false;
+		}
+
+		if (!_canDouble || _hasDoubled)
+		{
+			GD.PrintErr("Cannot double down at this time");
+			return false;
+		}
+
+		if (PlayerChips < CurrentBet)
+		{
+			GD.PrintErr("Insufficient chips to double down");
+			return false;
+		}
+
+		// Double the bet
+		PlayerChips -= CurrentBet;
+		CurrentBet *= 2;
+		_hasDoubled = true;
+		_canDouble = false;
+		_canSplit = false; // Can't split after doubling
+
+		GD.Print($"Player doubled down. New bet: {CurrentBet}");
+
+		// Player will draw one card and then automatically stand
+		return true;
+	}
+
+	/// <summary>
+	/// Player chooses to split their hand (must have two cards of same value).
+	/// </summary>
+	public bool PlayerSplit()
+	{
+		if (CurrentState != GameState.PlayerTurn)
+		{
+			GD.PrintErr("Cannot split - not player's turn");
+			return false;
+		}
+
+		if (!_canSplit || _hasSplit)
+		{
+			GD.PrintErr("Cannot split at this time");
+			return false;
+		}
+
+		if (PlayerChips < CurrentBet)
+		{
+			GD.PrintErr("Insufficient chips to split");
+			return false;
+		}
+
+		if (_playerCards.Count != 2 || !CanSplitCards())
+		{
+			GD.PrintErr("Cannot split - cards do not match");
+			return false;
+		}
+
+		// Deduct additional bet for split hand
+		PlayerChips -= CurrentBet;
+		_hasSplit = true;
+		_canSplit = false;
+		_canDouble = false; // Can't double after splitting
+
+		// Move second card to split hand
+		var secondCard = _playerCards[1];
+		_playerCards.RemoveAt(1);
+		_splitCards.Add(secondCard);
+
+		// Recalculate hand values
+		_playerHandValue = CalculateHandValue(_playerCards);
+		_splitHandValue = CalculateHandValue(_splitCards);
+
+		GD.Print($"Player split hand. First hand: {_playerHandValue}, Split hand: {_splitHandValue}");
+
+		// Player will need to draw a card for each hand
+		return true;
 	}
 
 	/// <summary>
@@ -313,6 +451,46 @@ public partial class BlackjackManager : Node
 		return PlayerChips >= amount;
 	}
 
+	/// <summary>
+	/// Checks if player can double down.
+	/// </summary>
+	public bool CanDouble()
+	{
+		return _canDouble && !_hasDoubled && PlayerChips >= CurrentBet;
+	}
+
+	/// <summary>
+	/// Checks if player can split.
+	/// </summary>
+	public bool CanSplit()
+	{
+		return _canSplit && !_hasSplit && PlayerChips >= CurrentBet;
+	}
+
+	/// <summary>
+	/// Checks if the player has split their hand.
+	/// </summary>
+	public bool HasSplit()
+	{
+		return _hasSplit;
+	}
+
+	/// <summary>
+	/// Gets the value of the split hand.
+	/// </summary>
+	public int GetSplitHandValue()
+	{
+		return _splitHandValue;
+	}
+
+	/// <summary>
+	/// Gets whether currently playing the split hand.
+	/// </summary>
+	public bool IsPlayingSplitHand()
+	{
+		return _isPlayingSplitHand;
+	}
+
 	#endregion
 
 	#region Private Methods - Hand Calculation
@@ -391,6 +569,20 @@ public partial class BlackjackManager : Node
 		return value == 1; // Ace has value 1
 	}
 
+	/// <summary>
+	/// Checks if the player's two cards can be split (same value).
+	/// </summary>
+	private bool CanSplitCards()
+	{
+		if (_playerCards.Count != 2)
+			return false;
+
+		int value1 = GetCardValue(_playerCards[0]);
+		int value2 = GetCardValue(_playerCards[1]);
+
+		return value1 == value2;
+	}
+
 	#endregion
 
 	#region Private Methods - Game Logic
@@ -436,16 +628,35 @@ public partial class BlackjackManager : Node
 	/// </summary>
 	private void CheckForBust(bool isPlayer)
 	{
-		int handValue = isPlayer ? _playerHandValue : _dealerHandValue;
-
-		if (handValue > 21)
+		if (isPlayer)
 		{
-			if (isPlayer)
+			int handValue = _isPlayingSplitHand ? _splitHandValue : _playerHandValue;
+
+			if (handValue > 21)
 			{
 				EmitSignal(SignalName.PlayerBusted);
-				EndRound(RoundResult.PlayerBust);
+
+				// If split hand busted, switch to other hand or dealer
+				if (_hasSplit && !_isPlayingSplitHand)
+				{
+					_isPlayingSplitHand = true;
+					GD.Print("First hand busted, switching to split hand");
+				}
+				else if (_hasSplit && _isPlayingSplitHand)
+				{
+					// Both hands busted or split hand busted
+					SetGameState(GameState.DealerTurn);
+				}
+				else
+				{
+					// Single hand busted
+					EndRound(RoundResult.PlayerBust);
+				}
 			}
-			else
+		}
+		else
+		{
+			if (_dealerHandValue > 21)
 			{
 				EmitSignal(SignalName.DealerBusted);
 				EndRound(RoundResult.DealerBust);
@@ -458,17 +669,76 @@ public partial class BlackjackManager : Node
 	/// </summary>
 	private void DetermineWinner()
 	{
-		if (_playerHandValue > _dealerHandValue)
+		if (!_hasSplit)
 		{
-			EndRound(RoundResult.PlayerWin);
-		}
-		else if (_dealerHandValue > _playerHandValue)
-		{
-			EndRound(RoundResult.DealerWin);
+			// Normal single hand
+			if (_playerHandValue > _dealerHandValue)
+			{
+				EndRound(RoundResult.PlayerWin);
+			}
+			else if (_dealerHandValue > _playerHandValue)
+			{
+				EndRound(RoundResult.DealerWin);
+			}
+			else
+			{
+				EndRound(RoundResult.Push);
+			}
 		}
 		else
 		{
-			EndRound(RoundResult.Push);
+			// Split hands - calculate both independently
+			int firstHandPayout = 0;
+			int splitHandPayout = 0;
+
+			// First hand
+			if (_playerHandValue <= 21)
+			{
+				if (_playerHandValue > _dealerHandValue || _dealerHandValue > 21)
+				{
+					firstHandPayout = CurrentBet * WinPayoutMultiplier;
+				}
+				else if (_playerHandValue == _dealerHandValue)
+				{
+					firstHandPayout = CurrentBet;
+				}
+			}
+
+			// Split hand
+			if (_splitHandValue <= 21)
+			{
+				if (_splitHandValue > _dealerHandValue || _dealerHandValue > 21)
+				{
+					splitHandPayout = CurrentBet * WinPayoutMultiplier;
+				}
+				else if (_splitHandValue == _dealerHandValue)
+				{
+					splitHandPayout = CurrentBet;
+				}
+			}
+
+			int totalPayout = firstHandPayout + splitHandPayout;
+			PlayerChips += totalPayout;
+
+			// Determine overall result for display
+			RoundResult result;
+			if (totalPayout > CurrentBet * 2)
+			{
+				result = RoundResult.PlayerWin;
+			}
+			else if (totalPayout == CurrentBet * 2)
+			{
+				result = RoundResult.Push;
+			}
+			else
+			{
+				result = RoundResult.DealerWin;
+			}
+
+			LastResult = result;
+			SetGameState(GameState.RoundEnd);
+			EmitSignal(SignalName.RoundEnded, (int)result, totalPayout);
+			GD.Print($"Split round ended: {result}, Total Payout: {totalPayout}, Chips: {PlayerChips}");
 		}
 	}
 

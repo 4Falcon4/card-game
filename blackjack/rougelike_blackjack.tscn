@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://2dwibevu7ne7"]
+[gd_scene load_steps=11 format=3 uid="uid://2dwibevu7ne7"]
 
 [ext_resource type="Script" uid="uid://b4kn4yeeplfhp" path="res://blackjack/rougelike_blackjack.gd" id="1_b22ve"]
 [ext_resource type="Script" uid="uid://j11yb5rk1n4t" path="res://blackjack/BlackjackManager.cs" id="2_fs0nk"]
@@ -9,12 +9,15 @@
 [ext_resource type="Resource" uid="uid://tfmqvl885cor" path="res://blackjack/player_blackjack_deck.tres" id="5_jnrdv"]
 [ext_resource type="Script" uid="uid://b2knnouicstx" path="res://blackjack/blackjack_dealer_hand.gd" id="6_fs0nk"]
 [ext_resource type="Script" uid="uid://wn30x7o3f47m" path="res://addons/milestone/scripts/achievements/achievement_notifier.gd" id="6_sm6pw"]
+[ext_resource type="PackedScene" uid="uid://cq8f4y7n5xo8w" path="res://blackjack/betting_dialog.tscn" id="10_betting"]
 
 [node name="RougelikeBlackjack" type="CanvasLayer"]
 script = ExtResource("1_b22ve")
 
 [node name="BlackjackManager" type="Node" parent="."]
 script = ExtResource("2_fs0nk")
+
+[node name="BettingDialog" parent="." instance=ExtResource("10_betting")]
 
 [node name="Node" type="Node" parent="."]
 script = ExtResource("3_30fd4")
@@ -82,6 +85,26 @@ script = ExtResource("6_fs0nk")
 shape = 0
 card_spacing = 90.0
 enable_reordering = false
+metadata/_custom_type_script = "uid://bbi8i6vef3f6y"
+
+[node name="SplitHand" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 250.0
+offset_top = 230.0
+offset_right = 250.0
+offset_bottom = 230.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("4_b22ve")
+max_selected = 5
+card_spacing = 70.0
+max_hand_size = 7
 metadata/_custom_type_script = "uid://bbi8i6vef3f6y"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -157,6 +180,11 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="SplitValueLabel" type="Label" parent="HBoxContainer3"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchors_preset = 7
 anchor_left = 0.5
@@ -186,6 +214,20 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 text = "Deal"
+
+[node name="DoubleButton" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+disabled = true
+text = "Double"
+
+[node name="SplitButton" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+disabled = true
+text = "Split"
 
 [node name="AchievementNotifier" type="Node" parent="."]
 script = ExtResource("6_sm6pw")
