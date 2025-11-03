@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://2dwibevu7ne7"]
+[gd_scene load_steps=13 format=3 uid="uid://2dwibevu7ne7"]
 
 [ext_resource type="Script" uid="uid://b4kn4yeeplfhp" path="res://blackjack/rougelike_blackjack.gd" id="1_b22ve"]
 [ext_resource type="Script" uid="uid://j11yb5rk1n4t" path="res://blackjack/BlackjackManager.cs" id="2_fs0nk"]
@@ -7,9 +7,11 @@
 [ext_resource type="Script" uid="uid://cn33b5sd6cnt6" path="res://blackjack/blackjack_deck_manager.gd" id="4_jnrdv"]
 [ext_resource type="PackedScene" uid="uid://ceqj7dw2cldtl" path="res://menu/scenes/overlaid_menus/pause_menu.tscn" id="4_x71mc"]
 [ext_resource type="Resource" uid="uid://tfmqvl885cor" path="res://blackjack/player_blackjack_deck.tres" id="5_jnrdv"]
+[ext_resource type="Script" uid="uid://byukkb2blkkq0" path="res://blackjack/deck_generator.gd" id="5_sm6pw"]
 [ext_resource type="Script" uid="uid://b2knnouicstx" path="res://blackjack/blackjack_dealer_hand.gd" id="6_fs0nk"]
 [ext_resource type="Script" uid="uid://wn30x7o3f47m" path="res://addons/milestone/scripts/achievements/achievement_notifier.gd" id="6_sm6pw"]
 [ext_resource type="PackedScene" path="res://blackjack/betting_dialog.tscn" id="10_betting"]
+[ext_resource type="Resource" uid="uid://7xdydh66qfkc" path="res://blackjack/dealer_blackjack_deck.tres" id="8_6ijn7"]
 
 [node name="RougelikeBlackjack" type="CanvasLayer"]
 script = ExtResource("1_b22ve")
@@ -23,9 +25,15 @@ script = ExtResource("2_fs0nk")
 script = ExtResource("3_30fd4")
 pause_menu_packed = ExtResource("4_x71mc")
 
-[node name="PlayerDeckManager" type="Node" parent="." node_paths=PackedStringArray("draw_pile", "discard_pile")]
+[node name="PlayerDeckGenerator" type="Node" parent="." node_paths=PackedStringArray("target_deck_manager")]
+script = ExtResource("5_sm6pw")
+base_deck = ExtResource("5_jnrdv")
+target_deck_manager = NodePath("../PlayerDeckManager")
+
+[node name="PlayerDeckManager" type="Node" parent="." node_paths=PackedStringArray("deck_generator", "draw_pile", "discard_pile")]
 physics_interpolation_mode = 2
 script = ExtResource("4_jnrdv")
+deck_generator = NodePath("../PlayerDeckGenerator")
 show_cards = true
 starting_deck = ExtResource("5_jnrdv")
 draw_pile = NodePath("Draw")
@@ -45,10 +53,44 @@ layout_mode = 3
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -140.0
+offset_left = -1786.0
+offset_top = 957.0
+offset_right = -1786.0
+offset_bottom = 957.0
+grow_horizontal = 0
+
+[node name="DealerDeckGenerator" type="Node" parent="." node_paths=PackedStringArray("target_deck_manager")]
+script = ExtResource("5_sm6pw")
+base_deck = ExtResource("8_6ijn7")
+target_deck_manager = NodePath("../DealerDeckManager")
+
+[node name="DealerDeckManager" type="Node" parent="." node_paths=PackedStringArray("deck_generator", "draw_pile", "discard_pile")]
+physics_interpolation_mode = 2
+script = ExtResource("4_jnrdv")
+deck_generator = NodePath("../DealerDeckGenerator")
+show_cards = true
+starting_deck = ExtResource("8_6ijn7")
+draw_pile = NodePath("Draw")
+discard_pile = NodePath("Discards")
+metadata/_custom_type_script = "uid://bisyk4bowdvsf"
+
+[node name="Draw" type="Control" parent="DealerDeckManager"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1769.0
 offset_top = 70.0
-offset_right = -140.0
+offset_right = 1769.0
 offset_bottom = 70.0
+
+[node name="Discards" type="Control" parent="DealerDeckManager"]
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -140.0
+offset_top = 923.0
+offset_right = -140.0
+offset_bottom = 923.0
 grow_horizontal = 0
 
 [node name="CardHand" type="Control" parent="."]

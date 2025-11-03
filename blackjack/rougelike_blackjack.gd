@@ -1,10 +1,15 @@
 extends CanvasLayer
 
 # Card management nodes
-@onready var card_deck_manager: CardDeckManager = $PlayerDeckManager
+@onready var player_deck_manager: CardDeckManager = $PlayerDeckManager
+@onready var dealer_deck_manager: CardDeckManager = $DealerDeckManager if has_node("DealerDeckManager") else null
 @onready var card_hand: CardHand = $CardHand
 @onready var dealer_hand: CardHand = $DealerHand
 @onready var split_hand: CardHand = $SplitHand if has_node("SplitHand") else null
+
+# Deck generators for automatic regeneration
+@onready var player_deck_generator: DeckGenerator = $PlayerDeckGenerator if has_node("PlayerDeckGenerator") else null
+@onready var dealer_deck_generator: DeckGenerator = $DealerDeckGenerator if has_node("DealerDeckGenerator") else null
 
 # Blackjack game manager (C#)
 @onready var blackjack_manager := $BlackjackManager
@@ -16,8 +21,6 @@ extends CanvasLayer
 @onready var hit_button: Button = %HitButton
 @onready var stand_button: Button = %StandButton
 @onready var deal_button: Button = %DealButton
-@onready var double_button: Button = %DoubleButton if has_node("%DoubleButton") else null
-@onready var split_button: Button = %SplitButton if has_node("%SplitButton") else null
 
 # UI Labels (these need to be added to your scene)
 @onready var player_value_label: Label = %PlayerValueLabel if has_node("%PlayerValueLabel") else null
@@ -28,7 +31,6 @@ extends CanvasLayer
 @onready var split_value_label: Label = %SplitValueLabel if has_node("%SplitValueLabel") else null
 
 # Game state
-var hand_size: int
 var current_bet: int = 100  # Default bet amount
 var players_turn: bool = true
 
@@ -64,9 +66,11 @@ func _ready() -> void:
 	# Setup game
 	CG.def_front_layout = "front_blackjack_style"
 	CG.def_back_layout = "back_blackjack_style"
-
-	hand_size = card_hand.max_hand_size
-	card_deck_manager.setup()
+	
+	if player_deck_generator:
+		player_deck_generator.generate_new_deck()
+	if dealer_deck_generator:
+		dealer_deck_generator.generate_new_deck()
 
 	# Initialize UI
 	_update_ui()
@@ -82,7 +86,7 @@ func _ready() -> void:
 	AchievementManager.reset_achievements()
 	await get_tree().create_timer(3).timeout
 	AchievementManager.unlock_achievement("game_launch")
-
+	
 
 #region Card Modifier Buttons
 
@@ -136,7 +140,7 @@ func _on_bet_cancelled() -> void:
 func _on_hit_pressed() -> void:
 	"""Player hits - draw another card"""
 	if blackjack_manager.PlayerHit():
-		var cards = card_deck_manager.draw_cards(1)
+		var cards = player_deck_manager.draw_cards(1)
 		if cards.size() > 0:
 			# Add card to correct hand
 			if blackjack_manager.IsPlayingSplitHand() and split_hand:
@@ -212,7 +216,7 @@ func _start_new_round() -> void:
 func _deal_initial_cards() -> void:
 	"""Deal 2 cards to player and 2 to dealer"""
 	# Deal 2 cards to player
-	var player_cards = card_deck_manager.draw_cards(2)
+	var player_cards = player_deck_manager.draw_cards(2)
 	if player_cards.size() > 0:
 		for card in player_cards:
 			card_hand.add_card(card)
@@ -220,8 +224,8 @@ func _deal_initial_cards() -> void:
 			card.flip()
 			await get_tree().create_timer(0.5).timeout  # Small delay between deals
 
-	# Deal 2 cards to dealer (1 face down)
-	var dealer_cards = card_deck_manager.draw_cards(2)
+	# Deal 2 cards to dealer (1 face down) from dealer's separate deck
+	var dealer_cards = _get_dealer_deck_manager().draw_cards(2)
 	if dealer_cards.size() > 0:
 		var i := 0
 		for card in dealer_cards:
@@ -248,11 +252,11 @@ func _dealer_play() -> void:
 	if dealer_cards.size() > 0:
 		dealer_cards[1].is_hidden = false
 
-	# Dealer draws until reaching threshold
+	# Dealer draws until reaching threshold from dealer's separate deck
 	while blackjack_manager.DealerShouldHit():
 		await get_tree().create_timer(1.0).timeout  # Visual delay
 
-		var cards = card_deck_manager.draw_cards(1)
+		var cards = _get_dealer_deck_manager().draw_cards(1)
 		if cards.size() > 0:
 			dealer_hand.add_cards(cards)
 			blackjack_manager.AddDealerCard(cards[0])
@@ -266,11 +270,13 @@ func _dealer_play() -> void:
 
 func _clear_all_hands() -> void:
 	"""Clear all cards from both hands"""
-	# Move cards to discard
+	# Move player cards to player's discard pile
 	for card in card_hand.cards:
-		card_deck_manager.add_card_to_discard_pile(card)
+		player_deck_manager.add_card_to_discard_pile(card)
+
+	# Move dealer cards to dealer's discard pile
 	for card in dealer_hand.cards:
-		card_deck_manager.add_card_to_discard_pile(card)
+		_get_dealer_deck_manager().add_card_to_discard_pile(card)
 
 	# Clear split hand if it exists
 	if split_hand and split_hand.cards.size() > 0:
@@ -282,6 +288,15 @@ func _clear_all_hands() -> void:
 	# Clear hand references
 	card_hand.clear_hand()
 	dealer_hand.clear_hand()
+
+
+func _get_dealer_deck_manager() -> CardDeckManager:
+	"""Returns the dealer deck manager, falling back to player deck if not available"""
+	if dealer_deck_manager:
+		return dealer_deck_manager
+	else:
+		# Fallback to player deck if dealer deck not set up
+		return player_deck_manager
 
 #endregion
 

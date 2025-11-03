@@ -104,6 +104,10 @@
 [ext_resource type="Resource" uid="uid://1kpoq85luonq" path="res://assests/cards/spade/king_spade.tres" id="124_c5wic"]
 [ext_resource type="Script" uid="uid://lhb5ry3o8icy" path="res://addons/simple_cards/deck/card_deck.gd" id="125_r0mif"]
 
+[sub_resource type="Resource" id="Resource_75rs2"]
+script = ExtResource("50_jri5n")
+metadata/_custom_type_script = "uid://cjablyhm8alee"
+
 [resource]
 script = ExtResource("125_r0mif")
 deck_name = &"PlayerBalatro"
