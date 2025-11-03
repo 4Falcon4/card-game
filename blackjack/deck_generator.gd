@@ -9,7 +9,7 @@ class_name DeckGenerator
 ## - Supporting both player and dealer deck generation
 
 ## Rarity weight configuration (lower = rarer)
-const RARITY_WEIGHTS = {
+const RARITY_WEIGHTS: Dictionary[Variant, Variant] = {
 	CardBackResource.Rarrity.NONE: 0,
 	CardBackResource.Rarrity.COMMON: 100,
 	CardBackResource.Rarrity.UNCOMMON: 50,
@@ -56,8 +56,10 @@ func generate_new_deck() -> void:
 		_assign_random_card_backs(new_deck)
 
 	# Initialize the deck manager with the new deck
-	target_deck_manager.initialize_from_deck(new_deck)
-
+	if target_deck_manager.get_discard_pile_size() > 0:
+		target_deck_manager.add_deck(new_deck)
+	else:
+		target_deck_manager.initialize_from_deck(new_deck)
 	print("DeckGenerator: Generated new deck with %d cards" % new_deck.cards.size())
 
 
@@ -75,10 +77,20 @@ func _assign_random_card_backs(deck: CardDeck) -> void:
 		return
 
 	# Assign a random back to each card
-	for card_resource in deck.cards:
+	for i in range(deck.cards.size()):
+		var card_resource = deck.cards[i]
 		var random_back = _select_random_card_back(weighted_backs)
-		if random_back and card_resource is BlackjackStyleRes:
+		if not random_back:
+			continue
+
+		if card_resource is BlackjackStyleRes:
 			card_resource.set_back_data(random_back)
+			# ensure the modified resource stays in the array (mostly redundant for Resource refs)
+			deck.cards[i] = card_resource
+		else:
+			var new_card = BlackjackStyleRes.new(card_resource)
+			new_card.set_back_data(random_back)
+			deck.cards[i] = new_card
 
 
 ## Builds a weighted pool of card backs for random selection

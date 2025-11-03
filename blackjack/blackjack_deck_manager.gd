@@ -7,7 +7,7 @@ extends CardDeckManager
 @export_enum("new_deck", "reshuffle") var regeneration_mode: String = "new_deck"
 
 ## Reference to DeckGenerator for creating new decks
-var deck_generator: DeckGenerator
+@export var deck_generator: DeckGenerator
 
 
 func add_card_to_draw_pile(card: Card) -> void:
@@ -31,16 +31,34 @@ func initialize_from_deck(deck: CardDeck) -> void:
 	clear_deck()
 
 	for card_resource in deck.cards:
-		card_resource = BlackjackStyleRes.new(card_resource)
-		card_resource.deck_color = deck.deck_color
-		if len(deck.back_resources) <= 0:
-			push_error("Back Resource Array Empty")
-		card_resource.set_back_data(deck.standard_back)
+		if not card_resource is BlackjackStyleRes:
+			push_warning("BlackjackDeckManager: Card resource is not of type BlackjackStyleRes!")
+			card_resource = BlackjackStyleRes.new(card_resource)
+			card_resource.set_back_data(deck.standard_back)
+		if not card_resource.bottom_texture:
+			card_resource.bottom_texture = deck.standard_back.texture
+		if card_resource.deck_color == 0:
+			card_resource.deck_color = deck.deck_color
 		var card = Card.new(card_resource)
 		add_card_to_draw_pile(card)
-
+	
 	_update_card_visibility()
 
+##Adds a deck from a CardDeck resource, creating Card instances.
+func add_deck(deck: CardDeck) -> void:
+	for card_resource in deck.cards:
+		if not card_resource is BlackjackStyleRes:
+			push_warning("BlackjackDeckManager: Card resource is not of type BlackjackStyleRes!")
+			card_resource = BlackjackStyleRes.new(card_resource)
+			card_resource.set_back_data(deck.standard_back)
+		if not card_resource.bottom_texture:
+			card_resource.bottom_texture = deck.standard_back.texture
+		if card_resource.deck_color == 0:
+			card_resource.deck_color = deck.deck_color
+		var card = Card.new(card_resource)
+		add_card_to_draw_pile(card)
+	
+	_update_card_visibility()
 
 ## Override draw_card to support automatic regeneration
 func draw_card() -> Card:

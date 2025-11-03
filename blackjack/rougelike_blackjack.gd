@@ -1,14 +1,14 @@
 extends CanvasLayer
 
 # Card management nodes
-@onready var card_deck_manager: CardDeckManager = $CardDeckManager
+@onready var player_deck_manager: CardDeckManager = $PlayerDeckManager
 @onready var dealer_deck_manager: CardDeckManager = $DealerDeckManager if has_node("DealerDeckManager") else null
 @onready var card_hand: CardHand = $CardHand
 @onready var dealer_hand: CardHand = $DealerHand
 
 # Deck generators for automatic regeneration
-var player_deck_generator: DeckGenerator
-var dealer_deck_generator: DeckGenerator
+@onready var player_deck_generator: DeckGenerator = $PlayerDeckGenerator if has_node("PlayerDeckGenerator") else null
+@onready var dealer_deck_generator: DeckGenerator = $DealerDeckGenerator if has_node("DealerDeckGenerator") else null
 
 # Blackjack game manager (C#)
 @onready var blackjack_manager := $BlackjackManager
@@ -26,7 +26,6 @@ var dealer_deck_generator: DeckGenerator
 @onready var result_label: Label = %ResultLabel if has_node("%ResultLabel") else null
 
 # Game state
-var hand_size: int
 var current_bet: int = 100  # Default bet amount
 var players_turn: bool = true
 
@@ -52,11 +51,11 @@ func _ready() -> void:
 	# Setup game
 	CG.def_front_layout = "front_blackjack_style"
 	CG.def_back_layout = "back_blackjack_style"
-
-	hand_size = card_hand.max_hand_size
-
-	# Setup separate decks for player and dealer
-	_setup_deck_managers()
+	
+	if player_deck_generator:
+		player_deck_generator.generate_new_deck()
+	if dealer_deck_generator:
+		dealer_deck_generator.generate_new_deck()
 
 	# Initialize UI
 	_update_ui()
@@ -68,68 +67,7 @@ func _ready() -> void:
 	AchievementManager.reset_achievements()
 	await get_tree().create_timer(3).timeout
 	AchievementManager.unlock_achievement("game_launch")
-
-
-func _setup_deck_managers() -> void:
-	"""Initialize deck managers with automatic regeneration"""
-	# Load deck resources - use player deck as base for both since it has all cards
-	var player_deck = load("res://blackjack/player_blackjack_deck.tres") as CardDeck
-	var dealer_deck_base = load("res://blackjack/dealer_blackjack_deck.tres") as CardDeck
-
-	# Create a dealer deck by copying player deck but using dealer's back resources
-	var dealer_deck = player_deck.duplicate(true) if player_deck else null
-	if dealer_deck and dealer_deck_base:
-		dealer_deck.back_resources = dealer_deck_base.back_resources
-		dealer_deck.deck_name = dealer_deck_base.deck_name
-		dealer_deck.deck_color = dealer_deck_base.deck_color
-
-	# Create or use existing dealer deck manager
-	if not dealer_deck_manager:
-		print("Creating separate dealer deck manager...")
-		dealer_deck_manager = BlackjackDeckManager.new()
-		dealer_deck_manager.name = "DealerDeckManager"
-		dealer_deck_manager.show_cards = false
-		dealer_deck_manager.shuffle_on_ready = true
-		dealer_deck_manager.starting_deck = dealer_deck
-		add_child(dealer_deck_manager)
-
-	# Setup player deck generator with random card backs
-	player_deck_generator = DeckGenerator.new()
-	player_deck_generator.name = "PlayerDeckGenerator"
-	player_deck_generator.base_deck = player_deck
-	player_deck_generator.target_deck_manager = card_deck_manager
-	player_deck_generator.assign_random_backs = true
-	player_deck_generator.use_standard_back = false
-	add_child(player_deck_generator)
-
-	# Setup dealer deck generator (uses standard back only)
-	dealer_deck_generator = DeckGenerator.new()
-	dealer_deck_generator.name = "DealerDeckGenerator"
-	dealer_deck_generator.base_deck = dealer_deck
-	dealer_deck_generator.target_deck_manager = dealer_deck_manager
-	dealer_deck_generator.assign_random_backs = false
-	dealer_deck_generator.use_standard_back = true
-	add_child(dealer_deck_generator)
-
-	# Link generators to deck managers (if they support it)
-	if card_deck_manager is BlackjackDeckManager:
-		card_deck_manager.deck_generator = player_deck_generator
-		card_deck_manager.auto_regenerate = true
-		card_deck_manager.regeneration_mode = "new_deck"
-
-	if dealer_deck_manager is BlackjackDeckManager:
-		dealer_deck_manager.deck_generator = dealer_deck_generator
-		dealer_deck_manager.auto_regenerate = true
-		dealer_deck_manager.regeneration_mode = "new_deck"
-
-	# Initialize both decks
-	card_deck_manager.setup(player_deck)
-	dealer_deck_manager.setup(dealer_deck)
-
-	print("Deck managers initialized with automatic regeneration")
-	print("Player deck size: %d" % card_deck_manager.get_draw_pile_size())
-	print("Dealer deck size: %d" % dealer_deck_manager.get_draw_pile_size())
-
+	
 
 #region Card Modifier Buttons
 
@@ -169,7 +107,7 @@ func _on_deal_pressed() -> void:
 func _on_hit_pressed() -> void:
 	"""Player hits - draw another card"""
 	if blackjack_manager.PlayerHit():
-		var cards = card_deck_manager.draw_cards(1)
+		var cards = player_deck_manager.draw_cards(1)
 		if cards.size() > 0:
 			card_hand.add_cards(cards)
 			blackjack_manager.AddPlayerCard(cards[0])
@@ -200,7 +138,7 @@ func _start_new_round() -> void:
 func _deal_initial_cards() -> void:
 	"""Deal 2 cards to player and 2 to dealer"""
 	# Deal 2 cards to player
-	var player_cards = card_deck_manager.draw_cards(2)
+	var player_cards = player_deck_manager.draw_cards(2)
 	if player_cards.size() > 0:
 		card_hand.add_cards(player_cards)
 		for card in player_cards:
@@ -249,7 +187,7 @@ func _clear_all_hands() -> void:
 	"""Clear all cards from both hands"""
 	# Move player cards to player's discard pile
 	for card in card_hand.cards:
-		card_deck_manager.add_card_to_discard_pile(card)
+		player_deck_manager.add_card_to_discard_pile(card)
 
 	# Move dealer cards to dealer's discard pile
 	for card in dealer_hand.cards:
@@ -266,7 +204,7 @@ func _get_dealer_deck_manager() -> CardDeckManager:
 		return dealer_deck_manager
 	else:
 		# Fallback to player deck if dealer deck not set up
-		return card_deck_manager
+		return player_deck_manager
 
 #endregion
 
