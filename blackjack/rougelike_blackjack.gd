@@ -24,6 +24,7 @@ extends CanvasLayer
 @onready var double_button: Button = %DoubleButton if has_node("%DoubleButton") else null
 @onready var split_button: Button = %SplitButton if has_node("%SplitButton") else null
 
+
 # UI Labels (these need to be added to your scene)
 @onready var player_value_label: Label = %PlayerValueLabel if has_node("%PlayerValueLabel") else null
 @onready var dealer_value_label: Label = %DealerValueLabel if has_node("%DealerValueLabel") else null
@@ -71,8 +72,10 @@ func _ready() -> void:
 	
 	if player_deck_generator:
 		player_deck_generator.generate_new_deck()
+		player_deck_manager.shuffle()
 	if dealer_deck_generator:
 		dealer_deck_generator.generate_new_deck()
+		dealer_deck_manager.shuffle()
 
 	# Initialize UI
 	_update_ui()

@@ -43,11 +43,13 @@ func sort_by_value():
 
 func _on_card_focused(card: Card) -> void:
 	super._on_card_focused(card)
-	card.flip()
+	if not card.is_hidden:
+		card.flip()
 
 func _on_card_unfocused(card: Card) -> void:
 	super._on_card_unfocused(card)
-	card.flip()
+	if not card.is_hidden:
+		card.flip()
 
 func clear_selected():
 	for card in _selected:
@@ -73,7 +75,8 @@ func add_cards(card_array: Array[Card]) -> int:
 			_cards.append(card)
 			_connect_card_signals(card)
 			added_count += 1
-			card.flip()
+			if not card.is_hidden:
+				card.is_front_face = true
 	
 	_arrange_cards()
 	return added_count
