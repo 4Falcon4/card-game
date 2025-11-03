@@ -17,16 +17,16 @@ class_name BlackjackStyleRes extends CardResource
 func _init(standardRes: StandardStyleRes = StandardStyleRes.new()) -> void:
 	name = standardRes.name
 	top_texture = standardRes.top_texture
-	card_suit = standardRes.card_suit as int
+	card_suit = standardRes.card_suit as suit
 	value = standardRes.value
-	deck_color = standardRes.deck_color as int
+	deck_color = standardRes.deck_color as deck_colors
 
 func set_back_data(backRes: CardBackResource) -> void:
 	display_name = backRes.display_name
 	ability = backRes.ability
 	descriptionP = backRes.descriptionP
 	descriptionN = backRes.descriptionN
-	rarrity = backRes.rarrity as int
+	rarrity = backRes.rarrity as Rarrity
 	bottom_texture = backRes.texture
 	
 
