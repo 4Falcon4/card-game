@@ -1,9 +1,6 @@
 @tool
 extends CardHand
 
-# Blackjack game manager (C#)
-@onready var blackjack_manager := $BlackjackManager
-
 @export var max_selected: int
 var _selected: Array[Card]
 var selected: Array[Card]:

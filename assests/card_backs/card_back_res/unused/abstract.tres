@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardBackResource" load_steps=3 format=3 uid="uid://df8bu4xpvj5lr"]
+
+[ext_resource type="Script" uid="uid://1fhb10321e8q" path="res://assests/card_backs/card_back_res/card_back_resource.gd" id="1_7ae6j"]
+[ext_resource type="Texture2D" uid="uid://jq1u7dlj1af" path="res://assests/card_backs/Alchemy.png" id="2_8frx5"]
+
+[resource]
+script = ExtResource("1_7ae6j")
+display_name = "Alchemy"
+descriptionP = "gain money equal to hand value divided by 2"
+texture = ExtResource("2_8frx5")

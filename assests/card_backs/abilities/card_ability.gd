@@ -12,7 +12,8 @@ class_name CardAbility extends Script
 ## Called when the positive effect of the card ability is triggered.
 ## @param context: Dictionary containing game state information:
 ##   - "blackjack_game": Reference to the BlackjackGame C# instance
-##   - "card_deck_manager": Reference to the CardDeckManager
+##   - "player_deck_manager": Reference to the CardDeckManager
+##   - "dealer_deck_manager": Reference to the CardDeckManager
 ##   - "player_hand": Reference to the player's CardHand
 ##   - "dealer_hand": Reference to the dealer's CardHand
 ##   - "triggering_card": The Card that triggered this ability

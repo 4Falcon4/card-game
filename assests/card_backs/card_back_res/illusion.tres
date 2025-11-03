@@ -1,6 +1,14 @@
-[gd_resource type="Resource" script_class="CardBackResource" load_steps=2 format=3 uid="uid://dmcll8o56tkrf"]
+[gd_resource type="Resource" script_class="CardBackResource" load_steps=4 format=3 uid="uid://dmcll8o56tkrf"]
 
+[ext_resource type="Script" uid="uid://bavq6f4ghdcwc" path="res://assests/card_backs/abilities/wip/illusion_ability.gd" id="1_5de3a"]
 [ext_resource type="Script" uid="uid://1fhb10321e8q" path="res://assests/card_backs/card_back_res/card_back_resource.gd" id="1_ddilq"]
+[ext_resource type="Texture2D" uid="uid://c116hhq35f76k" path="res://assests/card_backs/Illusion.png" id="3_yw1b2"]
 
 [resource]
 script = ExtResource("1_ddilq")
+display_name = "Illusion"
+ability = ExtResource("1_5de3a")
+descriptionP = "If you bust this round, make your hand blank"
+descriptionN = "Make your hand blank, immediately stand "
+rarrity = 5
+texture = ExtResource("3_yw1b2")

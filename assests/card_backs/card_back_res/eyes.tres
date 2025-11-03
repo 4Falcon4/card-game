@@ -1,8 +1,14 @@
-[gd_resource type="Resource" script_class="CardBackResource" load_steps=2 format=3 uid="uid://c2d7t0aylmeyq"]
+[gd_resource type="Resource" script_class="CardBackResource" load_steps=4 format=3 uid="uid://c2d7t0aylmeyq"]
 
+[ext_resource type="Script" uid="uid://bmf3bwqqpjy8b" path="res://assests/card_backs/abilities/wip/eyes_ability.gd" id="1_0cd3e"]
 [ext_resource type="Script" uid="uid://1fhb10321e8q" path="res://assests/card_backs/card_back_res/card_back_resource.gd" id="1_80kbh"]
+[ext_resource type="Texture2D" uid="uid://ckufl7bgm6udu" path="res://assests/card_backs/Eyes.png" id="3_0urxw"]
 
 [resource]
 script = ExtResource("1_80kbh")
-descriptionP = "destroy all cards of a suit"
-descriptionN = "create and shuffle the next 3 cards drawn"
+display_name = "Eyes"
+ability = ExtResource("1_0cd3e")
+descriptionP = "See next 3 cards, choose which remains and which get discarded"
+descriptionN = "Draw a playing card face down"
+rarrity = 2
+texture = ExtResource("3_0urxw")
