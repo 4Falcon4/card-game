@@ -121,8 +121,7 @@ func _on_deal_pressed() -> void:
 
 func _on_bet_selected(bet_amount: int) -> void:
 	"""Called when player confirms their bet"""
-	current_bet = bet_amount
-	if blackjack_manager.StartRound(current_bet):
+	if blackjack_manager.StartRound(bet_amount):
 		_start_new_round()
 	else:
 		_show_message("Cannot start round! Check bet and chips.")
