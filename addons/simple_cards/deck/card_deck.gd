@@ -9,7 +9,7 @@ class_name CardDeck extends Resource
 @export var back_resources: Array[CardBackResource] = []
 @export_enum("NONE", "LIGHT", "DARK", "WHITE", "BLACK") var deck_color: int = 1
 
-var standard_back: CardBackResource = load("res://assests/card_backs/card_back_res/simple.tres")
+var standard_back: CardBackResource = load("res://assests/card_backs/simple.tres")
 
 ##Everyone knows what a horse is!
 var horse

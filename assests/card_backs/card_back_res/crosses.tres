@@ -1,6 +1,14 @@
-[gd_resource type="Resource" script_class="CardBackResource" load_steps=2 format=3 uid="uid://drpyruv2f4lk7"]
+[gd_resource type="Resource" script_class="CardBackResource" load_steps=4 format=3 uid="uid://drpyruv2f4lk7"]
 
 [ext_resource type="Script" uid="uid://1fhb10321e8q" path="res://assests/card_backs/card_back_res/card_back_resource.gd" id="1_14vt1"]
+[ext_resource type="Script" uid="uid://jci1ajr61wi7" path="res://assests/card_backs/abilities/crosses_ability.gd" id="1_dki2v"]
+[ext_resource type="Texture2D" uid="uid://fvi5gpm2cvec" path="res://assests/card_backs/Crosses.png" id="3_uqb3r"]
 
 [resource]
 script = ExtResource("1_14vt1")
+display_name = "Crosses"
+ability = ExtResource("1_dki2v")
+descriptionP = "Gain $1 for each playing card on table when dealer stands"
+descriptionN = "Draw 1 playing card for each card already played"
+rarrity = 2
+texture = ExtResource("3_uqb3r")

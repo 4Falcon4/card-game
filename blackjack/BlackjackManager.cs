@@ -34,7 +34,7 @@ public partial class BlackjackManager : Node
 	#region Enums
 
 	
-/// <summary>
+		/// <summary>
 		/// Game states for the blackjack game.
 		/// Integer values:
 		/// 0 = Idle, 1 = Betting, 2 = Dealing, 3 = PlayerTurn, 4 = DealerTurn, 5 = RoundEnd, 6 = GameOver
