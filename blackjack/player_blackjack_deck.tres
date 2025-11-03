@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="CardDeck" load_steps=105 format=3 uid="uid://tfmqvl885cor"]
+[gd_resource type="Resource" script_class="CardDeck" load_steps=104 format=3 uid="uid://tfmqvl885cor"]
 
 [ext_resource type="Script" uid="uid://c8315v58tr66b" path="res://addons/simple_cards/card/card_resource/card_resource.gd" id="1_ep2cd"]
+[ext_resource type="Script" uid="uid://1fhb10321e8q" path="res://assests/card_backs/card_back_res/card_back_resource.gd" id="1_jri5n"]
 [ext_resource type="Resource" uid="uid://bggriv153ch21" path="res://assests/card_backs/card_back_res/candles.tres" id="2_jri5n"]
 [ext_resource type="Resource" uid="uid://c3fapi3h1sb4t" path="res://assests/card_backs/card_back_res/unused/aztec.tres" id="3_75rs2"]
 [ext_resource type="Resource" uid="uid://dg8x2p13b1p41" path="res://assests/card_backs/card_back_res/alchemy.tres" id="4_4qm8q"]
@@ -49,7 +50,6 @@
 [ext_resource type="Resource" uid="uid://c0b8vpj71u74o" path="res://assests/card_backs/card_back_res/unused/triangle.tres" id="47_afye5"]
 [ext_resource type="Resource" uid="uid://lj0dfe0c6m0o" path="res://assests/card_backs/card_back_res/unused/wheat.tres" id="48_rxbxf"]
 [ext_resource type="Resource" uid="uid://b1tgb2jibqru" path="res://assests/card_backs/card_back_res/unused/yinyang.tres" id="49_yu5lg"]
-[ext_resource type="Script" uid="uid://cjablyhm8alee" path="res://blackjack/blackjack_style_res.gd" id="50_jri5n"]
 [ext_resource type="Resource" uid="uid://dyad7cfasumhn" path="res://assests/cards/clubs/ace_clubs.tres" id="73_aju1a"]
 [ext_resource type="Resource" uid="uid://bjs2sq56pihry" path="res://assests/cards/clubs/two_clubs.tres" id="74_7rflj"]
 [ext_resource type="Resource" uid="uid://bjash8sjc2cyt" path="res://assests/cards/clubs/three_clubs.tres" id="75_lo86w"]
@@ -104,14 +104,9 @@
 [ext_resource type="Resource" uid="uid://1kpoq85luonq" path="res://assests/cards/spade/king_spade.tres" id="124_c5wic"]
 [ext_resource type="Script" uid="uid://lhb5ry3o8icy" path="res://addons/simple_cards/deck/card_deck.gd" id="125_r0mif"]
 
-[sub_resource type="Resource" id="Resource_75rs2"]
-script = ExtResource("50_jri5n")
-metadata/_custom_type_script = "uid://cjablyhm8alee"
-
 [resource]
 script = ExtResource("125_r0mif")
 deck_name = &"PlayerBalatro"
 cards = Array[ExtResource("1_ep2cd")]([ExtResource("73_aju1a"), ExtResource("80_u52tf"), ExtResource("77_6bxpf"), ExtResource("76_il3j2"), ExtResource("83_nvre4"), ExtResource("85_o7r2w"), ExtResource("81_84v0k"), ExtResource("84_7gfky"), ExtResource("79_qpk0d"), ExtResource("78_bf2f1"), ExtResource("82_7704a"), ExtResource("75_lo86w"), ExtResource("74_7rflj"), ExtResource("86_jdx3w"), ExtResource("93_u0gk1"), ExtResource("90_h7cex"), ExtResource("89_lg6pw"), ExtResource("96_wyuwa"), ExtResource("98_ekmgl"), ExtResource("94_vcg7p"), ExtResource("97_vdwxi"), ExtResource("92_4lmmd"), ExtResource("91_hkm70"), ExtResource("95_w47ny"), ExtResource("88_a13qy"), ExtResource("87_m834n"), ExtResource("99_pyjt1"), ExtResource("106_i6yfv"), ExtResource("103_w4umv"), ExtResource("102_6wrt5"), ExtResource("109_6siyj"), ExtResource("111_44t2r"), ExtResource("107_lchpp"), ExtResource("110_xmnpd"), ExtResource("105_ct5xp"), ExtResource("104_tlobb"), ExtResource("108_eldga"), ExtResource("101_1co7t"), ExtResource("100_7kdww"), ExtResource("112_ighyk"), ExtResource("119_peh0x"), ExtResource("116_fg1s4"), ExtResource("115_ylfdn"), ExtResource("122_6oskr"), ExtResource("124_c5wic"), ExtResource("120_el5lo"), ExtResource("123_oaske"), ExtResource("118_d4p61"), ExtResource("117_ie7xq"), ExtResource("121_0js4r"), ExtResource("114_ysqbi"), ExtResource("113_7cjmr")])
-back_resources = Array[ExtResource("1_ep2cd")]([ExtResource("2_jri5n"), ExtResource("3_75rs2"), ExtResource("4_4qm8q"), ExtResource("5_rjd8w"), ExtResource("6_p3wj7"), ExtResource("7_dj6g0"), ExtResource("8_3l6es"), ExtResource("9_n34ql"), ExtResource("10_tou4u"), ExtResource("11_n5hw1"), ExtResource("12_s4s0x"), ExtResource("13_regvo"), ExtResource("14_kv0o4"), ExtResource("15_y3hod"), ExtResource("16_cdhjs"), ExtResource("17_rx8cu"), ExtResource("18_ujav0"), ExtResource("19_re573"), ExtResource("20_gq1c1"), ExtResource("21_kqllm"), ExtResource("22_22ow0"), ExtResource("23_vvb1e"), ExtResource("24_b74lq"), ExtResource("25_yov3x"), ExtResource("26_0p57y"), ExtResource("27_sumu8"), ExtResource("28_40nvd"), ExtResource("29_u86e4"), ExtResource("30_y7l2q"), ExtResource("31_25ar0"), ExtResource("32_6hvxp"), ExtResource("33_opd08"), ExtResource("34_11g6v"), ExtResource("35_1n52d"), ExtResource("36_5k2c6"), ExtResource("37_wyana"), ExtResource("38_ovptm"), ExtResource("39_os8e1"), ExtResource("40_dxuhf"), ExtResource("41_h34du"), ExtResource("42_mwu10"), ExtResource("43_rwpmq"), ExtResource("44_aix7m"), ExtResource("45_edl2s"), ExtResource("46_w3xvl"), ExtResource("47_afye5"), ExtResource("48_rxbxf"), ExtResource("49_yu5lg")])
-card_resource = SubResource("Resource_75rs2")
+back_resources = Array[ExtResource("1_jri5n")]([ExtResource("2_jri5n"), ExtResource("3_75rs2"), ExtResource("4_4qm8q"), ExtResource("5_rjd8w"), ExtResource("6_p3wj7"), ExtResource("7_dj6g0"), ExtResource("8_3l6es"), ExtResource("9_n34ql"), ExtResource("10_tou4u"), ExtResource("11_n5hw1"), ExtResource("12_s4s0x"), ExtResource("13_regvo"), ExtResource("14_kv0o4"), ExtResource("15_y3hod"), ExtResource("16_cdhjs"), ExtResource("17_rx8cu"), ExtResource("18_ujav0"), ExtResource("19_re573"), ExtResource("20_gq1c1"), ExtResource("21_kqllm"), ExtResource("22_22ow0"), ExtResource("23_vvb1e"), ExtResource("24_b74lq"), ExtResource("25_yov3x"), ExtResource("26_0p57y"), ExtResource("27_sumu8"), ExtResource("28_40nvd"), ExtResource("29_u86e4"), ExtResource("30_y7l2q"), ExtResource("31_25ar0"), ExtResource("32_6hvxp"), ExtResource("33_opd08"), ExtResource("34_11g6v"), ExtResource("35_1n52d"), ExtResource("36_5k2c6"), ExtResource("37_wyana"), ExtResource("38_ovptm"), ExtResource("39_os8e1"), ExtResource("40_dxuhf"), ExtResource("41_h34du"), ExtResource("42_mwu10"), ExtResource("43_rwpmq"), ExtResource("44_aix7m"), ExtResource("45_edl2s"), ExtResource("46_w3xvl"), ExtResource("47_afye5"), ExtResource("48_rxbxf"), ExtResource("49_yu5lg")])
 metadata/_custom_type_script = "uid://lhb5ry3o8icy"

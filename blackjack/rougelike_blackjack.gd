@@ -214,7 +214,6 @@ func _deal_initial_cards() -> void:
 	# Deal 2 cards to player
 	var player_cards = card_deck_manager.draw_cards(2)
 	if player_cards.size() > 0:
-		var i := 0
 		for card in player_cards:
 			card_hand.add_card(card)
 			blackjack_manager.AddPlayerCard(card)
