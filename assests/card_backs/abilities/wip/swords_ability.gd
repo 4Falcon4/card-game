@@ -2,7 +2,6 @@
 ## Positive: Swap hands with the dealer
 ## Negative: Both players discard all cards and draw 2 new cards
 extends CardAbility
-class_name SwordsAbility
 
 ## Swap player and dealer hands
 func perform_positive(context: Dictionary) -> void:

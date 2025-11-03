@@ -1,7 +1,7 @@
 extends CanvasLayer
 
 # Card management nodes
-@onready var card_deck_manager: CardDeckManager = $CardDeckManager
+@onready var card_deck_manager: CardDeckManager = $PlayerDeckManager
 @onready var card_hand: CardHand = $CardHand
 @onready var dealer_hand: CardHand = $DealerHand
 

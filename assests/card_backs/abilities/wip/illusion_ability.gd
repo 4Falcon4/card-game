@@ -2,7 +2,6 @@
 ## Positive: If you bust this round, make your hand blank (prevent bust)
 ## Negative: Make your hand blank, immediately stand
 extends CardAbility
-class_name IllusionAbility
 
 ## Prevent bust by making hand blank
 func perform_positive(context: Dictionary) -> void:

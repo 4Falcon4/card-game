@@ -2,7 +2,6 @@
 ## Positive: While in your hand, see incoming card and card effect
 ## Negative: Becomes next card drawn, shuffle 2 into your deck and destroy itself
 extends CardAbility
-class_name ToeBeansAbility
 
 ## Show preview of next card and effect
 func perform_positive(context: Dictionary) -> void:

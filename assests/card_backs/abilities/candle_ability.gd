@@ -2,7 +2,6 @@
 ## Positive: Pick from 2 random card effects (random bonus chips)
 ## Negative: Activate random negative effect (random chip loss)
 extends CardAbility
-class_name CandleAbility
 
 @export var max_bonus: int = 10
 @export var max_penalty: int = 10

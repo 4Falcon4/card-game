@@ -2,7 +2,6 @@
 ## Positive: Gain money equal to hand value divided by 2
 ## Negative: Lose money equal to number of cards in hand
 extends CardAbility
-class_name AlchemyAbility
 
 ## Gain chips based on current hand value
 func perform_positive(context: Dictionary) -> void:

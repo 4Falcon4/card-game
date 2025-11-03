@@ -1,6 +1,14 @@
-[gd_resource type="Resource" script_class="CardBackResource" load_steps=2 format=3 uid="uid://dg8x2p13b1p41"]
+[gd_resource type="Resource" script_class="CardBackResource" load_steps=4 format=3 uid="uid://dg8x2p13b1p41"]
 
 [ext_resource type="Script" uid="uid://1fhb10321e8q" path="res://assests/card_backs/card_back_res/card_back_resource.gd" id="1_42skx"]
+[ext_resource type="Script" uid="uid://bc5doireu5e8p" path="res://assests/card_backs/abilities/alchemy_ability.gd" id="1_wiuky"]
+[ext_resource type="Texture2D" uid="uid://jq1u7dlj1af" path="res://assests/card_backs/Alchemy.png" id="3_pnnpd"]
 
 [resource]
 script = ExtResource("1_42skx")
+display_name = "Alchemy"
+ability = ExtResource("1_wiuky")
+descriptionP = "Gain money equal to hand value divided by 2"
+descriptionN = "Lose money equal to number of cards in hand when you stand"
+rarrity = 1
+texture = ExtResource("3_pnnpd")

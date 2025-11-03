@@ -2,7 +2,6 @@
 ## Positive: See next 3 cards, choose which remains and which get discarded
 ## Negative: Draw a playing card face down
 extends CardAbility
-class_name EyesAbility
 
 ## Preview next 3 cards and allow selection
 func perform_positive(context: Dictionary) -> void:
@@ -30,6 +29,6 @@ func perform_negative(context: Dictionary) -> void:
 	var drawn_cards = card_deck_manager.deal_cards(1)
 	if drawn_cards.size() > 0:
 		var card = drawn_cards[0]
-		# TODO: Set card to be face down/hidden
+		card.is_hidden = true
 		player_hand.add_cards(drawn_cards)
 		print("EyesAbility: Drew 1 card face down")
