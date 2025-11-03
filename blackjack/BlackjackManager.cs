@@ -26,6 +26,9 @@ public partial class BlackjackManager : Node
 	[Signal]
 	public delegate void RoundEndedEventHandler(RoundResult result, int payout);
 
+	[Signal]
+	public delegate void SwitchedToFirstHandEventHandler();
+
 	#endregion
 
 	#region Enums
@@ -190,16 +193,29 @@ public partial class BlackjackManager : Node
 			_playerHandValue = CalculateHandValue(_playerCards);
 			GD.Print($"Player card added. Hand value: {_playerHandValue}");
 
-			// Check if double down is available (must have exactly 2 cards)
-			if (_playerCards.Count == 2 && CurrentState == GameState.PlayerTurn && !_hasDoubled)
+			// Only check double/split availability if not in a split situation
+			// During split, these flags should remain false
+			if (!_hasSplit)
 			{
-				_canDouble = PlayerChips >= CurrentBet;
-			}
+				// Check if double down is available (must have exactly 2 cards)
+				if (_playerCards.Count == 2 && !_hasDoubled)
+				{
+					_canDouble = PlayerChips >= CurrentBet;
+				}
+				else if (_playerCards.Count > 2)
+				{
+					_canDouble = false; // Can't double after hitting
+				}
 
-			// Check if split is available (must have exactly 2 cards of same value)
-			if (_playerCards.Count == 2 && CurrentState == GameState.PlayerTurn && !_hasSplit)
-			{
-				_canSplit = CanSplitCards() && PlayerChips >= CurrentBet;
+				// Check if split is available (must have exactly 2 cards of same value)
+				if (_playerCards.Count == 2)
+				{
+					_canSplit = CanSplitCards() && PlayerChips >= CurrentBet;
+				}
+				else if (_playerCards.Count > 2)
+				{
+					_canSplit = false; // Can't split after hitting
+				}
 			}
 
 			CheckForBlackjack();
@@ -248,11 +264,12 @@ public partial class BlackjackManager : Node
 
 		GD.Print("Player stands");
 
-		// If playing split hand and haven't finished first hand, switch to split hand
-		if (_hasSplit && !_isPlayingSplitHand)
+		// If playing split hand, switch to first hand
+		if (_hasSplit && _isPlayingSplitHand)
 		{
-			_isPlayingSplitHand = true;
-			GD.Print("Switching to split hand");
+			_isPlayingSplitHand = false;
+			GD.Print("Switching to first hand");
+			EmitSignal(SignalName.SwitchedToFirstHand);
 		}
 		else
 		{
@@ -340,9 +357,12 @@ public partial class BlackjackManager : Node
 		_playerHandValue = CalculateHandValue(_playerCards);
 		_splitHandValue = CalculateHandValue(_splitCards);
 
-		GD.Print($"Player split hand. First hand: {_playerHandValue}, Split hand: {_splitHandValue}");
+		// Start playing the split hand first
+		_isPlayingSplitHand = true;
 
-		// Player will need to draw a card for each hand
+		GD.Print($"Player split hand. Playing split hand first. Split hand: {_splitHandValue}, First hand: {_playerHandValue}");
+
+		// Player will need to draw a card for the split hand
 		return true;
 	}
 
@@ -456,7 +476,9 @@ public partial class BlackjackManager : Node
 	/// </summary>
 	public bool CanDouble()
 	{
-		return _canDouble && !_hasDoubled && PlayerChips >= CurrentBet;
+		if (CurrentState != GameState.PlayerTurn)
+			return false;
+		return _canDouble;
 	}
 
 	/// <summary>
@@ -464,7 +486,9 @@ public partial class BlackjackManager : Node
 	/// </summary>
 	public bool CanSplit()
 	{
-		return _canSplit && !_hasSplit && PlayerChips >= CurrentBet;
+		if (CurrentState != GameState.PlayerTurn)
+			return false;
+		return _canSplit;
 	}
 
 	/// <summary>
@@ -579,7 +603,8 @@ public partial class BlackjackManager : Node
 
 		int value1 = GetCardValue(_playerCards[0]);
 		int value2 = GetCardValue(_playerCards[1]);
-
+		
+		// Can split if value are equal (King and Queen are equal) NOTE: might change to value under 10
 		return value1 == value2;
 	}
 
@@ -636,15 +661,16 @@ public partial class BlackjackManager : Node
 			{
 				EmitSignal(SignalName.PlayerBusted);
 
-				// If split hand busted, switch to other hand or dealer
-				if (_hasSplit && !_isPlayingSplitHand)
+				// If split hand busted, switch to first hand
+				if (_hasSplit && _isPlayingSplitHand)
 				{
-					_isPlayingSplitHand = true;
-					GD.Print("First hand busted, switching to split hand");
+					_isPlayingSplitHand = false;
+					GD.Print("Split hand busted, switching to first hand");
+					EmitSignal(SignalName.SwitchedToFirstHand);
 				}
-				else if (_hasSplit && _isPlayingSplitHand)
+				else if (_hasSplit && !_isPlayingSplitHand)
 				{
-					// Both hands busted or split hand busted
+					// First hand busted after split hand
 					SetGameState(GameState.DealerTurn);
 				}
 				else
