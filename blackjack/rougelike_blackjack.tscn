@@ -9,7 +9,7 @@
 [ext_resource type="Resource" uid="uid://tfmqvl885cor" path="res://blackjack/player_blackjack_deck.tres" id="5_jnrdv"]
 [ext_resource type="Script" uid="uid://b2knnouicstx" path="res://blackjack/blackjack_dealer_hand.gd" id="6_fs0nk"]
 [ext_resource type="Script" uid="uid://wn30x7o3f47m" path="res://addons/milestone/scripts/achievements/achievement_notifier.gd" id="6_sm6pw"]
-[ext_resource type="PackedScene" path="res://blackjack/betting_dialog.tscn" id="10_betting"]
+[ext_resource type="PackedScene" uid="uid://cq8f4y7n5xo8w" path="res://blackjack/betting_dialog.tscn" id="10_betting"]
 
 [node name="RougelikeBlackjack" type="CanvasLayer"]
 script = ExtResource("1_b22ve")
@@ -219,14 +219,12 @@ text = "Deal"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-disabled = true
 text = "Double"
 
 [node name="SplitButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-disabled = true
 text = "Split"
 
 [node name="AchievementNotifier" type="Node" parent="." node_paths=PackedStringArray("user_interface")]

@@ -59,6 +59,7 @@ func _ready() -> void:
 	blackjack_manager.DealerBusted.connect(_on_dealer_busted)
 	blackjack_manager.Blackjack.connect(_on_blackjack)
 	blackjack_manager.RoundEnded.connect(_on_round_ended)
+	blackjack_manager.SwitchedToFirstHand.connect(_on_switched_to_first_hand)
 
 	# Setup game
 	CG.def_front_layout = "front_blackjack_style"
@@ -182,10 +183,10 @@ func _on_split_pressed() -> void:
 			split_hand.add_cards([second_card])
 			split_hand.visible = true
 
-			# Draw a card for the first hand
+			# Draw a card for the split hand (playing this hand first)
 			var cards = card_deck_manager.draw_cards(1)
 			if cards.size() > 0:
-				card_hand.add_cards(cards)
+				split_hand.add_cards(cards)
 				blackjack_manager.AddPlayerCard(cards[0])
 
 			_update_ui()
@@ -300,14 +301,10 @@ func _on_game_state_changed(new_state: int) -> void:
 			_set_blackjack_controls_enabled(true)
 			deal_button.disabled = true
 
-			# Update double and split button states
-			if double_button:
-				double_button.disabled = !blackjack_manager.CanDouble()
-			if split_button:
-				split_button.disabled = !blackjack_manager.CanSplit()
-
 			if blackjack_manager.IsPlayingSplitHand():
 				_show_message("Playing split hand! Hit or Stand?")
+			elif blackjack_manager.HasSplit():
+				_show_message("Playing first hand! Hit or Stand?")
 			else:
 				_show_message("Your turn! Hit or Stand?")
 
@@ -378,6 +375,13 @@ func _on_round_ended(result: int, payout: int) -> void:
 	await get_tree().create_timer(3.0).timeout
 	blackjack_manager.ResetRound()
 
+
+func _on_switched_to_first_hand() -> void:
+	"""Switched from split hand to first hand"""
+	print("Switching to first hand")
+	_show_message("Playing first hand! Hit or Stand?")
+	_update_ui()
+
 #endregion
 
 
@@ -387,6 +391,7 @@ func _update_ui() -> void:
 	"""Update all UI labels with current game state"""
 	if player_value_label:
 		player_value_label.text = "Player: %d" % blackjack_manager.GetPlayerHandValue()
+	
 
 	if dealer_value_label:
 		if players_turn:
@@ -413,12 +418,11 @@ func _update_ui() -> void:
 		else:
 			split_value_label.visible = false
 
-	# Update button states during player turn
-	if blackjack_manager.CurrentState == 3:  # PlayerTurn
-		if double_button:
-			double_button.disabled = !blackjack_manager.CanDouble()
-		if split_button:
-			split_button.disabled = !blackjack_manager.CanSplit()
+	# Update button states
+	if double_button:
+		double_button.disabled = !blackjack_manager.CanDouble()
+	if split_button:
+		split_button.disabled = !blackjack_manager.CanSplit()
 
 
 func _show_message(message: String) -> void:
@@ -432,5 +436,10 @@ func _set_blackjack_controls_enabled(enabled: bool) -> void:
 	"""Enable/disable hit and stand buttons"""
 	hit_button.disabled = !enabled
 	stand_button.disabled = !enabled
+	# Update double and split button states
+	if double_button:
+		double_button.disabled = !blackjack_manager.CanDouble() if enabled else true
+	if split_button:
+		split_button.disabled = !blackjack_manager.CanSplit() if enabled else true
 
 #endregion
