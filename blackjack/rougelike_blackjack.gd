@@ -21,6 +21,8 @@ extends CanvasLayer
 @onready var hit_button: Button = %HitButton
 @onready var stand_button: Button = %StandButton
 @onready var deal_button: Button = %DealButton
+@onready var double_button: Button = %DoubleButton if has_node("%DoubleButton") else null
+@onready var split_button: Button = %SplitButton if has_node("%SplitButton") else null
 
 # UI Labels (these need to be added to your scene)
 @onready var player_value_label: Label = %PlayerValueLabel if has_node("%PlayerValueLabel") else null
@@ -162,7 +164,7 @@ func _on_double_pressed() -> void:
 	"""Player doubles down - double bet, draw one card, then stand"""
 	if blackjack_manager.PlayerDouble():
 		# Draw one card
-		var cards = card_deck_manager.draw_cards(1)
+		var cards = player_deck_manager.draw_cards(1)
 		if cards.size() > 0:
 			if blackjack_manager.IsPlayingSplitHand() and split_hand:
 				split_hand.add_cards(cards)
@@ -188,7 +190,7 @@ func _on_split_pressed() -> void:
 			split_hand.visible = true
 
 			# Draw a card for the split hand (playing this hand first)
-			var cards = card_deck_manager.draw_cards(1)
+			var cards = player_deck_manager.draw_cards(1)
 			if cards.size() > 0:
 				split_hand.add_cards(cards)
 				blackjack_manager.AddPlayerCard(cards[0])
@@ -281,7 +283,7 @@ func _clear_all_hands() -> void:
 	# Clear split hand if it exists
 	if split_hand and split_hand.cards.size() > 0:
 		for card in split_hand.cards:
-			card_deck_manager.add_card_to_discard_pile(card)
+			player_deck_manager.add_card_to_discard_pile(card)
 		split_hand.clear_hand()
 		split_hand.visible = false
 
