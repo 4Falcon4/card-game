@@ -16,7 +16,7 @@ script = ExtResource("1_b22ve")
 [node name="BlackjackManager" type="Node" parent="."]
 script = ExtResource("2_fs0nk")
 
-[node name="Node" type="Node" parent="."]
+[node name="PuaseMenuController" type="Node" parent="."]
 script = ExtResource("3_30fd4")
 pause_menu_packed = ExtResource("4_x71mc")
 
@@ -56,9 +56,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -1.0
-offset_top = 230.0
+offset_top = 206.0
 offset_right = -1.0
-offset_bottom = 230.0
+offset_bottom = 206.0
 grow_horizontal = 2
 grow_vertical = 0
 script = ExtResource("4_b22ve")

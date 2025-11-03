@@ -123,6 +123,8 @@ func _start_new_round() -> void:
 	# Clear hands
 	_clear_all_hands()
 
+	blackjack_manager.SetGameState(2)  # Set state to Dealing
+	
 	# Deal initial cards
 	_deal_initial_cards()
 
@@ -134,19 +136,27 @@ func _deal_initial_cards() -> void:
 	# Deal 2 cards to player
 	var player_cards = card_deck_manager.draw_cards(2)
 	if player_cards.size() > 0:
-		card_hand.add_cards(player_cards)
+		var i := 0
 		for card in player_cards:
+			card_hand.add_card(card)
 			blackjack_manager.AddPlayerCard(card)
+			card.flip()
+			await get_tree().create_timer(0.5).timeout  # Small delay between deals
 
 	# Deal 2 cards to dealer (1 face down)
 	var dealer_cards = card_deck_manager.draw_cards(2)
 	if dealer_cards.size() > 0:
-		dealer_hand.add_cards(dealer_cards)
+		var i := 0
 		for card in dealer_cards:
+			dealer_hand.add_card(card)
 			blackjack_manager.AddDealerCard(card)
-		dealer_cards[1].is_hidden = true
-
-		# Keep first dealer card face down (if your card system supports it)
+			if i > 0:
+				card.is_hidden = true  # Hide dealer's second card
+			else:
+				card.flip()
+			await get_tree().create_timer(0.5).timeout  # Small delay between deals
+			i += 1
+			
 
 	# Begin player's turn
 	blackjack_manager.BeginPlayerTurn()
@@ -208,13 +218,13 @@ func _on_game_state_changed(new_state: int) -> void:
 			_set_blackjack_controls_enabled(false)
 
 		2:  # Dealing
+			deal_button.disabled = true
 			_set_blackjack_controls_enabled(false)
 			_show_message("Dealing cards...")
 
 		3:  # PlayerTurn
 			players_turn = true
 			_set_blackjack_controls_enabled(true)
-			deal_button.disabled = true
 			_show_message("Your turn! Hit or Stand?")
 
 		4:  # DealerTurn
@@ -225,7 +235,9 @@ func _on_game_state_changed(new_state: int) -> void:
 
 		5:  # RoundEnd
 			_set_blackjack_controls_enabled(false)
-			deal_button.disabled = false
+			# Keep deal button disabled until ResetRound() transitions to Idle state
+			# This prevents the rapid-deal bug where pressing deal during the 3-second
+			# delay causes the new round to be reset, losing the player's bet
 
 		6:  # GameOver
 			_set_blackjack_controls_enabled(false)
@@ -291,14 +303,20 @@ func _on_round_ended(result: int, payout: int) -> void:
 
 func _update_ui() -> void:
 	"""Update all UI labels with current game state"""
-	if player_value_label:
-		player_value_label.text = "Player: %d" % blackjack_manager.GetPlayerHandValue()
+	if blackjack_manager.CurrentState in [0, 1, 2]:
+		if player_value_label:
+			player_value_label.text = ""
+		if dealer_value_label:
+			dealer_value_label.text = ""
+	else:
+		if player_value_label:
+			player_value_label.text = "Player: %d" % blackjack_manager.GetPlayerHandValue()
 		
-	if dealer_value_label:
-		if players_turn:
-			dealer_value_label.text = "Dealer: %d" % blackjack_manager.GetVisibleDealerHandValue()
-		else:
-			dealer_value_label.text = "Dealer: %d" % blackjack_manager.GetDealerHandValue()
+		if dealer_value_label:
+			if players_turn:
+				dealer_value_label.text = "Dealer: %d" % blackjack_manager.GetVisibleDealerHandValue()
+			else:
+				dealer_value_label.text = "Dealer: %d" % blackjack_manager.GetDealerHandValue()
 
 	if chips_label:
 		chips_label.text = "Chips: %d" % blackjack_manager.PlayerChips
