@@ -295,8 +295,8 @@ func _test_positive_ability() -> void:
 	var chips_before = blackjack_game.PlayerChips if blackjack_game else 0
 
 	print("[EDITOR TEST] 🔄 Executing POSITIVE ability...")
-	var ability_script: CardAbility = card_back.ability.new()
-	ability_script.perform_positive(context)
+	var ability: CardAbility = card_back.ability
+	ability.perform_positive(context)
 
 	# Show changes
 	var chips_after = blackjack_game.PlayerChips if blackjack_game else 0
@@ -345,8 +345,8 @@ func _test_negative_ability() -> void:
 	var chips_before = blackjack_game.PlayerChips if blackjack_game else 0
 
 	print("[EDITOR TEST] 🔄 Executing NEGATIVE ability...")
-	var ability_script: CardAbility = card_back.ability.new()
-	ability_script.perform_negative(context)
+	var ability: CardAbility = card_back.ability
+	ability.perform_negative(context)
 
 	# Show changes
 	var chips_after = blackjack_game.PlayerChips if blackjack_game else 0

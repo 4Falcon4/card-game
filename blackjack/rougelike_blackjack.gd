@@ -205,7 +205,7 @@ func _activate_card_ability(card: Card, is_positive: bool) -> bool:
 		print("[ABILITY DEBUG] ❌ Card '%s' (%s) doesn't have an ability assigned" % [card.name, card_back.display_name])
 		return false
 
-	# Get the ability script path for debugging
+	# Get the ability resource path for debugging
 	var ability_path = card_back.ability.resource_path if card_back.ability else "none"
 	var ability_name = ability_path.get_file().get_basename() if ability_path != "none" else "unknown"
 
@@ -216,8 +216,8 @@ func _activate_card_ability(card: Card, is_positive: bool) -> bool:
 	var player_hand_value_before = blackjack_manager.GetPlayerHandValue()
 	var player_hand_size_before = card_hand.cards.size()
 
-	# Create an instance of the ability script
-	var ability_script: CardAbility = card_back.ability.new()
+	# Get the ability resource (already an instance)
+	var ability: CardAbility = card_back.ability
 
 	# Prepare the context dictionary
 	var context = {
@@ -232,9 +232,9 @@ func _activate_card_ability(card: Card, is_positive: bool) -> bool:
 	# Call the appropriate ability function
 	print("[ABILITY DEBUG] 🔄 Executing %s ability..." % ability_type)
 	if is_positive:
-		ability_script.perform_positive(context)
+		ability.perform_positive(context)
 	else:
-		ability_script.perform_negative(context)
+		ability.perform_negative(context)
 
 	# Show what changed after ability
 	var chips_after = blackjack_manager.PlayerChips

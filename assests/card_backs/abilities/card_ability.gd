@@ -4,10 +4,10 @@
 ## To create a new ability:
 ## 1. Create a new GDScript file extending CardAbility
 ## 2. Implement perform_positive() and perform_negative()
-## 3. Assign the script to a CardBackResource
+## 3. Create a .tres resource file from the script
+## 4. Assign the resource to a CardBackResource
 @icon("uid://cvwcyhqx6fvdk")
-@abstract
-class_name CardAbility extends Script
+class_name CardAbility extends Resource
 
 ## Called when the positive effect of the card ability is triggered.
 ## @param context: Dictionary containing game state information:
@@ -17,8 +17,10 @@ class_name CardAbility extends Script
 ##   - "player_hand": Reference to the player's CardHand
 ##   - "dealer_hand": Reference to the dealer's CardHand
 ##   - "triggering_card": The Card that triggered this ability
-@abstract func perform_positive(context: Dictionary) -> void
+func perform_positive(context: Dictionary) -> void:
+	push_error("CardAbility.perform_positive() must be overridden in subclass")
 
 ## Called when the negative effect of the card ability is triggered.
 ## @param context: Dictionary containing game state information (same as perform_positive)
-@abstract func perform_negative(context: Dictionary) -> void
+func perform_negative(context: Dictionary) -> void:
+	push_error("CardAbility.perform_negative() must be overridden in subclass")
