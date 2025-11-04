@@ -131,11 +131,29 @@ func _on_positive_pressed() -> void:
 	var selected_cards = card_hand.selected
 
 	if selected_cards.is_empty():
+		print("[ABILITY DEBUG] No cards selected for positive activation!")
 		_show_message("No cards selected!")
 		return
 
+	print("\n========== ACTIVATING POSITIVE ABILITIES ==========")
+	print("[ABILITY DEBUG] Selected %d card(s)" % selected_cards.size())
+
+	var activated_count = 0
+	var failed_count = 0
+
 	for card: Card in selected_cards:
-		_activate_card_ability(card, true)
+		if _activate_card_ability(card, true):
+			activated_count += 1
+		else:
+			failed_count += 1
+
+	print("[ABILITY DEBUG] Successfully activated: %d | Failed: %d" % [activated_count, failed_count])
+	print("===================================================\n")
+
+	var message = "Activated %d positive abilities" % activated_count
+	if failed_count > 0:
+		message += " (%d failed)" % failed_count
+	_show_message(message)
 
 	card_hand.clear_selected()
 
@@ -145,27 +163,58 @@ func _on_negative_pressed() -> void:
 	var selected_cards = card_hand.selected
 
 	if selected_cards.is_empty():
+		print("[ABILITY DEBUG] No cards selected for negative activation!")
 		_show_message("No cards selected!")
 		return
 
+	print("\n========== ACTIVATING NEGATIVE ABILITIES ==========")
+	print("[ABILITY DEBUG] Selected %d card(s)" % selected_cards.size())
+
+	var activated_count = 0
+	var failed_count = 0
+
 	for card: Card in selected_cards:
-		_activate_card_ability(card, false)
+		if _activate_card_ability(card, false):
+			activated_count += 1
+		else:
+			failed_count += 1
+
+	print("[ABILITY DEBUG] Successfully activated: %d | Failed: %d" % [activated_count, failed_count])
+	print("===================================================\n")
+
+	var message = "Activated %d negative abilities" % activated_count
+	if failed_count > 0:
+		message += " (%d failed)" % failed_count
+	_show_message(message)
 
 	card_hand.clear_selected()
 
 
-func _activate_card_ability(card: Card, is_positive: bool) -> void:
-	"""Helper function to activate a card's ability"""
+func _activate_card_ability(card: Card, is_positive: bool) -> bool:
+	"""Helper function to activate a card's ability. Returns true if successful."""
+	var ability_type = "POSITIVE" if is_positive else "NEGATIVE"
+
 	# Check if card has a CardBackResource with an ability
 	if not card.card_data is CardBackResource:
-		print("Card %s doesn't have a CardBackResource" % card.name)
-		return
+		print("[ABILITY DEBUG] ❌ Card '%s' doesn't have a CardBackResource (has: %s)" % [card.name, card.card_data.get_class()])
+		return false
 
 	var card_back: CardBackResource = card.card_data as CardBackResource
 
 	if not card_back.ability:
-		print("Card %s doesn't have an ability assigned" % card.name)
-		return
+		print("[ABILITY DEBUG] ❌ Card '%s' (%s) doesn't have an ability assigned" % [card.name, card_back.display_name])
+		return false
+
+	# Get the ability script path for debugging
+	var ability_path = card_back.ability.resource_path if card_back.ability else "none"
+	var ability_name = ability_path.get_file().get_basename() if ability_path != "none" else "unknown"
+
+	print("[ABILITY DEBUG] 🎴 Card: '%s' | Ability: '%s' | Type: %s" % [card_back.display_name, ability_name, ability_type])
+
+	# Store state before ability activation for comparison
+	var chips_before = blackjack_manager.PlayerChips
+	var player_hand_value_before = blackjack_manager.GetPlayerHandValue()
+	var player_hand_size_before = card_hand.cards.size()
 
 	# Create an instance of the ability script
 	var ability_script: CardAbility = card_back.ability.new()
@@ -181,13 +230,38 @@ func _activate_card_ability(card: Card, is_positive: bool) -> void:
 	}
 
 	# Call the appropriate ability function
+	print("[ABILITY DEBUG] 🔄 Executing %s ability..." % ability_type)
 	if is_positive:
 		ability_script.perform_positive(context)
 	else:
 		ability_script.perform_negative(context)
 
+	# Show what changed after ability
+	var chips_after = blackjack_manager.PlayerChips
+	var player_hand_value_after = blackjack_manager.GetPlayerHandValue()
+	var player_hand_size_after = card_hand.cards.size()
+
+	print("[ABILITY DEBUG] 📊 Changes:")
+	if chips_after != chips_before:
+		var chips_diff = chips_after - chips_before
+		var diff_symbol = "+" if chips_diff > 0 else ""
+		print("   💰 Chips: %d → %d (%s%d)" % [chips_before, chips_after, diff_symbol, chips_diff])
+	else:
+		print("   💰 Chips: %d (no change)" % chips_before)
+
+	if player_hand_value_after != player_hand_value_before:
+		print("   🎯 Hand Value: %d → %d" % [player_hand_value_before, player_hand_value_after])
+
+	if player_hand_size_after != player_hand_size_before:
+		var card_diff = player_hand_size_after - player_hand_size_before
+		print("   🃏 Hand Size: %d → %d (%+d cards)" % [player_hand_size_before, player_hand_size_after, card_diff])
+
+	print("[ABILITY DEBUG] ✅ %s ability executed successfully!\n" % ability_type)
+
 	# Update UI to reflect any changes
 	_update_ui()
+
+	return true
 
 #endregion
 

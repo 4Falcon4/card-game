@@ -268,46 +268,100 @@ func flip() -> void:
 
 ## Editor button to test the positive ability of the card
 func _test_positive_ability() -> void:
+	print("\n========== EDITOR TEST: POSITIVE ABILITY ==========")
+
 	if not card_data is CardBackResource:
-		print("Card doesn't have a CardBackResource")
+		print("[EDITOR TEST] ❌ Card doesn't have a CardBackResource (has: %s)" % card_data.get_class())
+		print("===================================================\n")
 		return
 
 	var card_back: CardBackResource = card_data as CardBackResource
 
 	if not card_back.ability:
-		print("Card doesn't have an ability assigned")
+		print("[EDITOR TEST] ❌ Card '%s' doesn't have an ability assigned" % card_back.display_name)
+		print("===================================================\n")
 		return
 
 	var context = _get_test_context()
 	if context.is_empty():
-		print("Could not find game context. Make sure card is in a scene with BlackjackManager.")
+		print("[EDITOR TEST] ❌ Could not find game context. Make sure card is in a scene with BlackjackManager.")
+		print("===================================================\n")
 		return
 
+	# Get the ability info
+	var ability_path = card_back.ability.resource_path if card_back.ability else "none"
+	var ability_name = ability_path.get_file().get_basename() if ability_path != "none" else "unknown"
+
+	print("[EDITOR TEST] 🎴 Card: '%s'" % card_back.display_name)
+	print("[EDITOR TEST] 📜 Ability: '%s'" % ability_name)
+	print("[EDITOR TEST] 📝 Description: %s" % card_back.descriptionP)
+
+	# Get state before
+	var blackjack_game = context.get("blackjack_game")
+	var chips_before = blackjack_game.PlayerChips if blackjack_game else 0
+
+	print("[EDITOR TEST] 🔄 Executing POSITIVE ability...")
 	var ability_script: CardAbility = card_back.ability.new()
-	print("Testing POSITIVE ability for: ", card_back.display_name)
 	ability_script.perform_positive(context)
+
+	# Show changes
+	var chips_after = blackjack_game.PlayerChips if blackjack_game else 0
+	if chips_after != chips_before:
+		var chips_diff = chips_after - chips_before
+		var diff_symbol = "+" if chips_diff > 0 else ""
+		print("[EDITOR TEST] 💰 Chips: %d → %d (%s%d)" % [chips_before, chips_after, diff_symbol, chips_diff])
+
+	print("[EDITOR TEST] ✅ Positive ability test complete!")
+	print("===================================================\n")
 
 
 ## Editor button to test the negative ability of the card
 func _test_negative_ability() -> void:
+	print("\n========== EDITOR TEST: NEGATIVE ABILITY ==========")
+
 	if not card_data is CardBackResource:
-		print("Card doesn't have a CardBackResource")
+		print("[EDITOR TEST] ❌ Card doesn't have a CardBackResource (has: %s)" % card_data.get_class())
+		print("===================================================\n")
 		return
 
 	var card_back: CardBackResource = card_data as CardBackResource
 
 	if not card_back.ability:
-		print("Card doesn't have an ability assigned")
+		print("[EDITOR TEST] ❌ Card '%s' doesn't have an ability assigned" % card_back.display_name)
+		print("===================================================\n")
 		return
 
 	var context = _get_test_context()
 	if context.is_empty():
-		print("Could not find game context. Make sure card is in a scene with BlackjackManager.")
+		print("[EDITOR TEST] ❌ Could not find game context. Make sure card is in a scene with BlackjackManager.")
+		print("===================================================\n")
 		return
 
+	# Get the ability info
+	var ability_path = card_back.ability.resource_path if card_back.ability else "none"
+	var ability_name = ability_path.get_file().get_basename() if ability_path != "none" else "unknown"
+
+	print("[EDITOR TEST] 🎴 Card: '%s'" % card_back.display_name)
+	print("[EDITOR TEST] 📜 Ability: '%s'" % ability_name)
+	print("[EDITOR TEST] 📝 Description: %s" % card_back.descriptionN)
+
+	# Get state before
+	var blackjack_game = context.get("blackjack_game")
+	var chips_before = blackjack_game.PlayerChips if blackjack_game else 0
+
+	print("[EDITOR TEST] 🔄 Executing NEGATIVE ability...")
 	var ability_script: CardAbility = card_back.ability.new()
-	print("Testing NEGATIVE ability for: ", card_back.display_name)
 	ability_script.perform_negative(context)
+
+	# Show changes
+	var chips_after = blackjack_game.PlayerChips if blackjack_game else 0
+	if chips_after != chips_before:
+		var chips_diff = chips_after - chips_before
+		var diff_symbol = "+" if chips_diff > 0 else ""
+		print("[EDITOR TEST] 💰 Chips: %d → %d (%s%d)" % [chips_before, chips_after, diff_symbol, chips_diff])
+
+	print("[EDITOR TEST] ✅ Negative ability test complete!")
+	print("===================================================\n")
 
 
 ## Helper to get test context from the scene tree
