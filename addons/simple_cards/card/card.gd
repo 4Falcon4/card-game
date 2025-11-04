@@ -1,4 +1,5 @@
 ##Simple card with basic drag and drop functionality.
+@tool
 @icon("res://addons/simple_cards/card/icon_card.png")
 class_name Card extends Button
 
@@ -254,4 +255,93 @@ func refresh_layout() -> void:
 ##Flips the card face
 func flip() -> void:
 	is_front_face = !is_front_face
+#endregion
+
+
+#region Editor Testing Functions
+
+## Button in inspector to test positive ability
+@export_tool_button("Test Positive Ability") var _btn_test_positive = _test_positive_ability
+
+## Button in inspector to test negative ability
+@export_tool_button("Test Negative Ability") var _btn_test_negative = _test_negative_ability
+
+## Editor button to test the positive ability of the card
+func _test_positive_ability() -> void:
+	if not card_data is CardBackResource:
+		print("Card doesn't have a CardBackResource")
+		return
+
+	var card_back: CardBackResource = card_data as CardBackResource
+
+	if not card_back.ability:
+		print("Card doesn't have an ability assigned")
+		return
+
+	var context = _get_test_context()
+	if context.is_empty():
+		print("Could not find game context. Make sure card is in a scene with BlackjackManager.")
+		return
+
+	var ability_script: CardAbility = card_back.ability.new()
+	print("Testing POSITIVE ability for: ", card_back.display_name)
+	ability_script.perform_positive(context)
+
+
+## Editor button to test the negative ability of the card
+func _test_negative_ability() -> void:
+	if not card_data is CardBackResource:
+		print("Card doesn't have a CardBackResource")
+		return
+
+	var card_back: CardBackResource = card_data as CardBackResource
+
+	if not card_back.ability:
+		print("Card doesn't have an ability assigned")
+		return
+
+	var context = _get_test_context()
+	if context.is_empty():
+		print("Could not find game context. Make sure card is in a scene with BlackjackManager.")
+		return
+
+	var ability_script: CardAbility = card_back.ability.new()
+	print("Testing NEGATIVE ability for: ", card_back.display_name)
+	ability_script.perform_negative(context)
+
+
+## Helper to get test context from the scene tree
+func _get_test_context() -> Dictionary:
+	var root = get_tree().root
+	if not root:
+		return {}
+
+	# Try to find the RougelikeBlackjack scene
+	var scene = root.get_node_or_null("RougelikeBlackjack")
+	if not scene:
+		# Try current scene root
+		scene = get_tree().current_scene
+
+	if not scene:
+		return {}
+
+	# Try to get the required nodes
+	var blackjack_manager = scene.get_node_or_null("BlackjackManager")
+	var player_deck_manager = scene.get_node_or_null("PlayerDeckManager")
+	var dealer_deck_manager = scene.get_node_or_null("DealerDeckManager")
+	var player_hand = scene.get_node_or_null("CardHand")
+	var dealer_hand = scene.get_node_or_null("DealerHand")
+
+	if not blackjack_manager:
+		return {}
+
+	return {
+		"blackjack_game": blackjack_manager,
+		"player_deck_manager": player_deck_manager,
+		"dealer_deck_manager": dealer_deck_manager,
+		"player_hand": player_hand,
+		"dealer_hand": dealer_hand,
+		"triggering_card": self
+	}
+
 #endregion

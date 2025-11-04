@@ -24,6 +24,10 @@ extends CanvasLayer
 @onready var double_button: Button = %DoubleButton if has_node("%DoubleButton") else null
 @onready var split_button: Button = %SplitButton if has_node("%SplitButton") else null
 
+# UI Buttons - Card Ability actions
+@onready var positive_button: Button = %PositiveButton if has_node("%PositiveButton") else null
+@onready var negative_button: Button = %NegativeButton if has_node("%NegativeButton") else null
+
 
 # UI Labels (these need to be added to your scene)
 @onready var player_value_label: Label = %PlayerValueLabel if has_node("%PlayerValueLabel") else null
@@ -53,6 +57,12 @@ func _ready() -> void:
 		double_button.pressed.connect(_on_double_pressed)
 	if split_button:
 		split_button.pressed.connect(_on_split_pressed)
+
+	# Connect card ability buttons
+	if positive_button:
+		positive_button.pressed.connect(_on_positive_pressed)
+	if negative_button:
+		negative_button.pressed.connect(_on_negative_pressed)
 
 	# Connect betting dialog signals
 	betting_dialog.bet_selected.connect(_on_bet_selected)
@@ -114,6 +124,70 @@ func _on_none_pressed() -> void:
 		card.card_data.current_modiffier = 0
 		card.refresh_layout()
 	card_hand.clear_selected()
+
+
+func _on_positive_pressed() -> void:
+	"""Activate positive abilities of selected cards"""
+	var selected_cards = card_hand.selected
+
+	if selected_cards.is_empty():
+		_show_message("No cards selected!")
+		return
+
+	for card: Card in selected_cards:
+		_activate_card_ability(card, true)
+
+	card_hand.clear_selected()
+
+
+func _on_negative_pressed() -> void:
+	"""Activate negative abilities of selected cards"""
+	var selected_cards = card_hand.selected
+
+	if selected_cards.is_empty():
+		_show_message("No cards selected!")
+		return
+
+	for card: Card in selected_cards:
+		_activate_card_ability(card, false)
+
+	card_hand.clear_selected()
+
+
+func _activate_card_ability(card: Card, is_positive: bool) -> void:
+	"""Helper function to activate a card's ability"""
+	# Check if card has a CardBackResource with an ability
+	if not card.card_data is CardBackResource:
+		print("Card %s doesn't have a CardBackResource" % card.name)
+		return
+
+	var card_back: CardBackResource = card.card_data as CardBackResource
+
+	if not card_back.ability:
+		print("Card %s doesn't have an ability assigned" % card.name)
+		return
+
+	# Create an instance of the ability script
+	var ability_script: CardAbility = card_back.ability.new()
+
+	# Prepare the context dictionary
+	var context = {
+		"blackjack_game": blackjack_manager,
+		"player_deck_manager": player_deck_manager,
+		"dealer_deck_manager": dealer_deck_manager,
+		"player_hand": card_hand,
+		"dealer_hand": dealer_hand,
+		"triggering_card": card
+	}
+
+	# Call the appropriate ability function
+	if is_positive:
+		ability_script.perform_positive(context)
+	else:
+		ability_script.perform_negative(context)
+
+	# Update UI to reflect any changes
+	_update_ui()
 
 #endregion
 
