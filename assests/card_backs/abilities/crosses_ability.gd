@@ -4,7 +4,7 @@
 extends CardAbility
 
 ## Gain chips based on total cards on table
-func perform_positive(context: Dictionary) -> void:
+static func perform_positive(context: Dictionary) -> void:
 	var blackjack_game = context.get("blackjack_game")
 	var player_hand = context.get("player_hand")
 	var dealer_hand = context.get("dealer_hand")
@@ -22,7 +22,7 @@ func perform_positive(context: Dictionary) -> void:
 
 
 ## Draw additional cards based on cards already played
-func perform_negative(context: Dictionary) -> void:
+static func perform_negative(context: Dictionary) -> void:
 	var player_deck_manager = context.get("player_deck_manager")
 	var player_hand = context.get("player_hand")
 

@@ -4,7 +4,7 @@
 extends CardAbility
 
 ## Swap player and dealer hands
-func perform_positive(context: Dictionary) -> void:
+static func perform_positive(context: Dictionary) -> void:
 	var player_hand = context.get("player_hand")
 	var dealer_hand = context.get("dealer_hand")
 	var blackjack_game = context.get("blackjack_game")
@@ -19,7 +19,7 @@ func perform_positive(context: Dictionary) -> void:
 
 
 ## Discard all cards and draw 2 new ones for both players
-func perform_negative(context: Dictionary) -> void:
+static func perform_negative(context: Dictionary) -> void:
 	var card_deck_manager = context.get("card_deck_manager")
 	var player_hand = context.get("player_hand")
 	var dealer_hand = context.get("dealer_hand")

@@ -4,7 +4,7 @@
 extends CardAbility
 
 ## Show preview of next card and effect
-func perform_positive(context: Dictionary) -> void:
+static func perform_positive(context: Dictionary) -> void:
 	var card_deck_manager = context.get("card_deck_manager")
 
 	if !card_deck_manager:
@@ -16,7 +16,7 @@ func perform_positive(context: Dictionary) -> void:
 
 
 ## Special transformation effect
-func perform_negative(context: Dictionary) -> void:
+static func perform_negative(context: Dictionary) -> void:
 	var card_deck_manager = context.get("card_deck_manager")
 	var player_hand = context.get("player_hand")
 

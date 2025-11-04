@@ -4,7 +4,7 @@
 extends CardAbility
 
 ## Gain chips based on current hand value
-func perform_positive(context: Dictionary) -> void:
+static func perform_positive(context: Dictionary) -> void:
 	var blackjack_game = context.get("blackjack_game")
 
 	if !blackjack_game:
@@ -18,7 +18,7 @@ func perform_positive(context: Dictionary) -> void:
 
 
 ## Lose chips based on number of cards in hand
-func perform_negative(context: Dictionary) -> void:
+static func perform_negative(context: Dictionary) -> void:
 	var blackjack_game = context.get("blackjack_game")
 	var player_hand = context.get("player_hand")
 

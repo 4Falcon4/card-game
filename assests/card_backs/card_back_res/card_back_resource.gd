@@ -2,7 +2,7 @@
 class_name CardBackResource extends CardResource
 
 @export var display_name: String
-@export var ability: CardAbility
+@export var ability: Resource
 @export var descriptionP: String
 @export var descriptionN: String
 @export var rarrity: Rarrity = Rarrity.NONE

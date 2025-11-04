@@ -4,7 +4,7 @@
 extends CardAbility
 
 ## Prevent bust by making hand blank
-func perform_positive(context: Dictionary) -> void:
+static func perform_positive(context: Dictionary) -> void:
 	var player_hand = context.get("player_hand")
 	var blackjack_game = context.get("blackjack_game")
 
@@ -22,7 +22,7 @@ func perform_positive(context: Dictionary) -> void:
 
 
 ## Force stand with blank hand
-func perform_negative(context: Dictionary) -> void:
+static func perform_negative(context: Dictionary) -> void:
 	var player_hand = context.get("player_hand")
 	var blackjack_game = context.get("blackjack_game")
 

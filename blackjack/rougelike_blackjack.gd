@@ -195,21 +195,21 @@ func _activate_card_ability(card: Card, is_positive: bool) -> bool:
 	var ability_type = "POSITIVE" if is_positive else "NEGATIVE"
 
 	# Check if card has a CardBackResource with an ability
-	if not card.card_data is CardBackResource:
-		print("[ABILITY DEBUG] ❌ Card '%s' doesn't have a CardBackResource (has: %s)" % [card.name, card.card_data.get_class()])
+	if not card.card_data is BlackjackStyleRes:
+		print("[ABILITY DEBUG] ❌ Card '%s' doesn't have a BlackjackStyleRes (has: %s)" % [card.name, card.card_data.get_class()])
 		return false
 
-	var card_back: CardBackResource = card.card_data as CardBackResource
+	var card_data: BlackjackStyleRes = card.card_data as BlackjackStyleRes
 
-	if not card_back.ability:
-		print("[ABILITY DEBUG] ❌ Card '%s' (%s) doesn't have an ability assigned" % [card.name, card_back.display_name])
+	if not card_data.ability:
+		print("[ABILITY DEBUG] ❌ Card '%s' (%s) doesn't have an ability assigned" % [card.name, card_data.display_name])
 		return false
 
 	# Get the ability resource path for debugging
-	var ability_path = card_back.ability.resource_path if card_back.ability else "none"
+	var ability_path = card_data.ability.resource_path if card_data.ability else "none"
 	var ability_name = ability_path.get_file().get_basename() if ability_path != "none" else "unknown"
 
-	print("[ABILITY DEBUG] 🎴 Card: '%s' | Ability: '%s' | Type: %s" % [card_back.display_name, ability_name, ability_type])
+	print("[ABILITY DEBUG] 🎴 Card: '%s' | Ability: '%s' | Type: %s" % [card_data.display_name, ability_name, ability_type])
 
 	# Store state before ability activation for comparison
 	var chips_before = blackjack_manager.PlayerChips
@@ -217,7 +217,9 @@ func _activate_card_ability(card: Card, is_positive: bool) -> bool:
 	var player_hand_size_before = card_hand.cards.size()
 
 	# Get the ability resource (already an instance)
-	var ability: CardAbility = card_back.ability
+	var ability = card_data.ability
+
+	print(ability.get_class())
 
 	# Prepare the context dictionary
 	var context = {

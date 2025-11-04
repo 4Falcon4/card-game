@@ -3,11 +3,11 @@
 ## Negative: Activate random negative effect (random chip loss)
 extends CardAbility
 
-@export var max_bonus: int = 10
-@export var max_penalty: int = 10
+static var max_bonus: int = 10
+static var max_penalty: int = 10
 
 ## Apply a random positive effect
-func perform_positive(context: Dictionary) -> void:
+static func perform_positive(context: Dictionary) -> void:
 	var blackjack_game = context.get("blackjack_game")
 
 	if !blackjack_game:
@@ -21,7 +21,7 @@ func perform_positive(context: Dictionary) -> void:
 
 
 ## Apply a random negative effect
-func perform_negative(context: Dictionary) -> void:
+static func perform_negative(context: Dictionary) -> void:
 	var blackjack_game = context.get("blackjack_game")
 
 	if !blackjack_game:

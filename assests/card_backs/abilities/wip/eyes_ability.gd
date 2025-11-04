@@ -4,7 +4,7 @@
 extends CardAbility
 
 ## Preview next 3 cards and allow selection
-func perform_positive(context: Dictionary) -> void:
+static func perform_positive(context: Dictionary) -> void:
 	var card_deck_manager = context.get("card_deck_manager")
 
 	if !card_deck_manager:
@@ -17,7 +17,7 @@ func perform_positive(context: Dictionary) -> void:
 
 
 ## Draw a card face down (hidden value)
-func perform_negative(context: Dictionary) -> void:
+static func perform_negative(context: Dictionary) -> void:
 	var card_deck_manager = context.get("card_deck_manager")
 	var player_hand = context.get("player_hand")
 

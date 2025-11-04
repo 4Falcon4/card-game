@@ -17,10 +17,10 @@ class_name CardAbility extends Resource
 ##   - "player_hand": Reference to the player's CardHand
 ##   - "dealer_hand": Reference to the dealer's CardHand
 ##   - "triggering_card": The Card that triggered this ability
-func perform_positive(context: Dictionary) -> void:
+static func perform_positive(context: Dictionary) -> void:
 	push_error("CardAbility.perform_positive() must be overridden in subclass")
 
 ## Called when the negative effect of the card ability is triggered.
 ## @param context: Dictionary containing game state information (same as perform_positive)
-func perform_negative(context: Dictionary) -> void:
+static func perform_negative(context: Dictionary) -> void:
 	push_error("CardAbility.perform_negative() must be overridden in subclass")
