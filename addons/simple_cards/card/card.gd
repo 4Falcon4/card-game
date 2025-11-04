@@ -1,5 +1,4 @@
 ##Simple card with basic drag and drop functionality.
-@tool
 @icon("res://addons/simple_cards/card/icon_card.png")
 class_name Card extends Button
 
@@ -260,13 +259,8 @@ func flip() -> void:
 
 #region Editor Testing Functions
 
-## Button in inspector to test positive ability
-@export_tool_button("Test Positive Ability") var _btn_test_positive = _test_positive_ability
-
-## Button in inspector to test negative ability
-@export_tool_button("Test Negative Ability") var _btn_test_negative = _test_negative_ability
-
-## Editor button to test the positive ability of the card
+## Test the positive ability of the card
+## Call this function manually from code or a custom inspector button
 func _test_positive_ability() -> void:
 	print("\n========== EDITOR TEST: POSITIVE ABILITY ==========")
 
@@ -315,7 +309,8 @@ func _test_positive_ability() -> void:
 	print("===================================================\n")
 
 
-## Editor button to test the negative ability of the card
+## Test the negative ability of the card
+## Call this function manually from code or a custom inspector button
 func _test_negative_ability() -> void:
 	print("\n========== EDITOR TEST: NEGATIVE ABILITY ==========")
 
