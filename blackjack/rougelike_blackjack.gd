@@ -1,16 +1,14 @@
 extends CanvasLayer
 
 # Card management nodes
-@onready var player_deck_manager: CardDeckManager = $PlayerDeckManager
-@onready var dealer_deck_manager: CardDeckManager = $DealerDeckManager if has_node("DealerDeckManager") else null
+@onready var card_deck_manager: CardDeckManager = $CardDeckManager
 @onready var card_hand: CardHand = $CardHand
 @onready var dealer_hand: CardHand = $DealerHand
 @onready var split_hand: CardHand = $SplitHand if has_node("SplitHand") else null
 @onready var draw_hand: CardHand = $DrawHand if has_node("DrawHand") else null
 
 # Deck generators for automatic regeneration
-@onready var player_deck_generator: DeckGenerator = $PlayerDeckGenerator if has_node("PlayerDeckGenerator") else null
-@onready var dealer_deck_generator: DeckGenerator = $DealerDeckGenerator if has_node("DealerDeckGenerator") else null
+@onready var card_deck_generator: DeckGenerator = $CardDeckGenerator if has_node("CardDeckGenerator") else null
 
 # Blackjack game manager (C#)
 @onready var blackjack_manager := $BlackjackManager
@@ -44,7 +42,7 @@ extends CanvasLayer
 # Game state
 var current_bet: int = 100  # Default bet amount
 var players_turn: bool = true
-var activate_abilities_on_draw: bool = false  # Toggle for activating abilities when cards are drawn
+var activate_abilities_on_draw: bool = true  # Toggle for activating abilities when cards are drawn
 
 # Draw hand state
 var awaiting_card_selection: bool = false  # True when waiting for player to select cards from draw hand
@@ -105,12 +103,9 @@ func _ready() -> void:
 	CG.def_front_layout = "front_blackjack_style"
 	CG.def_back_layout = "back_blackjack_style"
 	
-	if player_deck_generator:
-		player_deck_generator.generate_new_deck()
-		player_deck_manager.shuffle()
-	if dealer_deck_generator:
-		dealer_deck_generator.generate_new_deck()
-		dealer_deck_manager.shuffle()
+	if card_deck_generator:
+		card_deck_generator.generate_new_deck()
+		card_deck_manager.shuffle()
 
 	# Initialize UI
 	_update_ui()
@@ -129,27 +124,6 @@ func _ready() -> void:
 	
 
 #region Card Modifier Buttons
-
-func _on_gold_pressed() -> void:
-	for card: Card in card_hand.selected:
-		card.card_data.current_modiffier = 1
-		card.refresh_layout()
-	card_hand.clear_selected()
-
-
-func _on_silv_pressed() -> void:
-	for card: Card in card_hand.selected:
-		card.card_data.current_modiffier = 2
-		card.refresh_layout()
-	card_hand.clear_selected()
-
-
-func _on_none_pressed() -> void:
-	for card: Card in card_hand.selected:
-		card.card_data.current_modiffier = 0
-		card.refresh_layout()
-	card_hand.clear_selected()
-
 
 func _on_positive_pressed() -> void:
 	"""Activate positive abilities of selected cards"""
@@ -217,10 +191,10 @@ func _on_negative_pressed() -> void:
 
 func _on_activate_on_draw_toggled(button_pressed: bool) -> void:
 	"""Toggle the activate on draw feature"""
-	activate_abilities_on_draw = button_pressed
+	activate_abilities_on_draw = !activate_abilities_on_draw
 	if activate_on_draw_button:
-		activate_on_draw_button.text = "Activate On Draw: ON" if button_pressed else "Activate On Draw: OFF"
-	print("[ABILITY DEBUG] Activate on draw: %s" % ("ENABLED" if button_pressed else "DISABLED"))
+		activate_on_draw_button.text = "Activate On Draw: ON" if activate_abilities_on_draw else "Activate On Draw: OFF"
+	print("[ABILITY DEBUG] Activate on draw: %s" % ("ENABLED" if activate_abilities_on_draw else "DISABLED"))
 
 
 func _try_activate_ability_on_draw(card: Card) -> void:
@@ -287,8 +261,7 @@ func _activate_card_ability(card: Card, is_positive: bool) -> bool:
 	# Prepare the context dictionary
 	var context = {
 		"blackjack_game": blackjack_manager,
-		"player_deck_manager": player_deck_manager,
-		"dealer_deck_manager": dealer_deck_manager,
+		"player_deck_manager": card_deck_manager,
 		"player_hand": card_hand,
 		"dealer_hand": dealer_hand,
 		"triggering_card": card
@@ -361,7 +334,7 @@ func _on_hit_pressed() -> void:
 		# Replenish draw hand if needed (keep it populated)
 		if draw_hand and draw_hand.cards.size() < draw_hand_size:
 			var needed_cards = draw_hand_size - draw_hand.cards.size()
-			var cards = player_deck_manager.draw_cards(needed_cards)
+			var cards = card_deck_manager.draw_cards(needed_cards)
 			if cards.size() > 0:
 				draw_hand.add_cards(cards)
 				for card in cards:
@@ -384,7 +357,7 @@ func _on_double_pressed() -> void:
 		# Replenish draw hand if needed
 		if draw_hand and draw_hand.cards.size() < draw_hand_size:
 			var needed_cards = draw_hand_size - draw_hand.cards.size()
-			var cards = player_deck_manager.draw_cards(needed_cards)
+			var cards = card_deck_manager.draw_cards(needed_cards)
 			if cards.size() > 0:
 				draw_hand.add_cards(cards)
 				for card in cards:
@@ -407,7 +380,7 @@ func _on_split_pressed() -> void:
 			# Replenish draw hand if needed
 			if draw_hand and draw_hand.cards.size() < draw_hand_size:
 				var needed_cards = draw_hand_size - draw_hand.cards.size()
-				var cards = player_deck_manager.draw_cards(needed_cards)
+				var cards = card_deck_manager.draw_cards(needed_cards)
 				if cards.size() > 0:
 					draw_hand.add_cards(cards)
 					for card in cards:
@@ -456,10 +429,11 @@ func _dealer_play() -> void:
 	while blackjack_manager.DealerShouldHit():
 		await get_tree().create_timer(1.0).timeout  # Visual delay
 
-		var cards = _get_dealer_deck_manager().draw_cards(1)
+		var cards = card_deck_manager.draw_cards(1)
 		if cards.size() > 0:
 			dealer_hand.add_cards(cards)
 			blackjack_manager.AddDealerCard(cards[0])
+			cards[0].card_data.deck_color = BlackjackStyleRes.deck_colors.DARK  # Dealer cards are always dark/gray
 			_update_ui()
 		else:
 			break
@@ -472,31 +446,22 @@ func _clear_all_hands() -> void:
 	"""Clear all cards from both hands"""
 	# Move player cards to player's discard pile
 	for card in card_hand.cards:
-		player_deck_manager.add_card_to_discard_pile(card)
+		card_deck_manager.add_card_to_discard_pile(card)
 
 	# Move dealer cards to dealer's discard pile
 	for card in dealer_hand.cards:
-		_get_dealer_deck_manager().add_card_to_discard_pile(card)
+		card_deck_manager.add_card_to_discard_pile(card)
 
 	# Clear split hand if it exists
 	if split_hand and split_hand.cards.size() > 0:
 		for card in split_hand.cards:
-			player_deck_manager.add_card_to_discard_pile(card)
+			card_deck_manager.add_card_to_discard_pile(card)
 		split_hand.clear_hand()
 		split_hand.visible = false
 
 	# Clear hand references
 	card_hand.clear_hand()
 	dealer_hand.clear_hand()
-
-
-func _get_dealer_deck_manager() -> CardDeckManager:
-	"""Returns the dealer deck manager, falling back to player deck if not available"""
-	if dealer_deck_manager:
-		return dealer_deck_manager
-	else:
-		# Fallback to player deck if dealer deck not set up
-		return player_deck_manager
 
 #endregion
 
@@ -623,7 +588,7 @@ func _populate_draw_hand() -> void:
 	draw_hand.clear_selected()
 
 	# Draw cards to populate the draw hand
-	var cards = player_deck_manager.draw_cards(draw_hand.get_remaining_space())
+	var cards = card_deck_manager.draw_cards(draw_hand.get_remaining_space())
 	if cards.size() > 0:
 		for card in cards:
 			draw_hand.add_card(card)
@@ -693,6 +658,7 @@ func _on_confirm_selection_pressed() -> void:
 	
 	if blackjack_manager.CurrentState == 3:
 		_set_blackjack_controls_enabled(true)
+		_show_message("Your turn! Hit or Stand?")
 	else:
 		_set_blackjack_controls_enabled(false)
 	
@@ -705,6 +671,8 @@ func _transfer_cards_to_play_hand(cards: Array[Card], target_hand: CardHand = nu
 	"""Transfer selected cards from draw hand to play hand"""
 	if not target_hand:
 		target_hand = card_hand
+		
+	_show_message("Transferring %d card%s to play hand" % [cards.size() + 1, "s" if cards.size() > 1 else ""])
 
 	for card in cards:
 		# Remove from draw hand
@@ -736,12 +704,13 @@ func _complete_deal_with_selected_cards(selected_cards: Array[Card]) -> void:
 	_populate_draw_hand()
 
 	# Deal dealer cards
-	var dealer_cards = _get_dealer_deck_manager().draw_cards(2)
+	var dealer_cards = card_deck_manager.draw_cards(2)
 	if dealer_cards.size() > 0:
 		var i := 0
 		for card in dealer_cards:
 			dealer_hand.add_card(card)
 			blackjack_manager.AddDealerCard(card)
+			card.card_data.deck_color = BlackjackStyleRes.deck_colors.DARK  # Dealer cards are always dark/gray
 			if i > 0:
 				card.is_hidden = true  # Hide dealer's second card
 			else:

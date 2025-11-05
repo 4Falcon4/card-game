@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://2dwibevu7ne7"]
+[gd_scene load_steps=19 format=3 uid="uid://2dwibevu7ne7"]
 
 [ext_resource type="Script" uid="uid://b4kn4yeeplfhp" path="res://blackjack/rougelike_blackjack.gd" id="1_b22ve"]
 [ext_resource type="Script" uid="uid://j11yb5rk1n4t" path="res://blackjack/BlackjackManager.cs" id="2_fs0nk"]
@@ -6,13 +6,30 @@
 [ext_resource type="Script" uid="uid://di1kob85cvgt1" path="res://blackjack/blackjack_card_hand.gd" id="4_b22ve"]
 [ext_resource type="Script" uid="uid://cn33b5sd6cnt6" path="res://blackjack/blackjack_deck_manager.gd" id="4_jnrdv"]
 [ext_resource type="PackedScene" uid="uid://ceqj7dw2cldtl" path="res://menu/scenes/overlaid_menus/pause_menu.tscn" id="4_x71mc"]
-[ext_resource type="Resource" uid="uid://tfmqvl885cor" path="res://blackjack/player_blackjack_deck.tres" id="5_jnrdv"]
+[ext_resource type="Resource" uid="uid://tfmqvl885cor" path="res://blackjack/blackjack_card_deck.tres" id="5_jnrdv"]
 [ext_resource type="Script" uid="uid://byukkb2blkkq0" path="res://blackjack/deck_generator.gd" id="5_sm6pw"]
 [ext_resource type="Script" uid="uid://b2knnouicstx" path="res://blackjack/blackjack_dealer_hand.gd" id="6_fs0nk"]
 [ext_resource type="Script" uid="uid://wn30x7o3f47m" path="res://addons/milestone/scripts/achievements/achievement_notifier.gd" id="6_sm6pw"]
-[ext_resource type="Resource" uid="uid://7xdydh66qfkc" path="res://blackjack/dealer_blackjack_deck.tres" id="8_6ijn7"]
 [ext_resource type="PackedScene" uid="uid://cq8f4y7n5xo8w" path="res://blackjack/betting_dialog.tscn" id="10_betting"]
 [ext_resource type="Script" uid="uid://b1qdadk3pvgrf" path="res://blackjack/blackjack_draw_hand.gd" id="12_ucmyi"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6ijn7"]
+font_size = 42
+
+[sub_resource type="LabelSettings" id="LabelSettings_ucmyi"]
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_qb4g8"]
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_1btgu"]
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_fxeat"]
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_0ab5v"]
+font_size = 24
 
 [node name="RougelikeBlackjack" type="CanvasLayer"]
 script = ExtResource("1_b22ve")
@@ -26,22 +43,22 @@ script = ExtResource("2_fs0nk")
 script = ExtResource("3_30fd4")
 pause_menu_packed = ExtResource("4_x71mc")
 
-[node name="PlayerDeckGenerator" type="Node" parent="." node_paths=PackedStringArray("target_deck_manager")]
+[node name="CardDeckGenerator" type="Node" parent="." node_paths=PackedStringArray("target_deck_manager")]
 script = ExtResource("5_sm6pw")
 base_deck = ExtResource("5_jnrdv")
-target_deck_manager = NodePath("../PlayerDeckManager")
+target_deck_manager = NodePath("../CardDeckManager")
 
-[node name="PlayerDeckManager" type="Node" parent="." node_paths=PackedStringArray("deck_generator", "draw_pile", "discard_pile")]
+[node name="CardDeckManager" type="Node" parent="." node_paths=PackedStringArray("deck_generator", "draw_pile", "discard_pile")]
 physics_interpolation_mode = 2
 script = ExtResource("4_jnrdv")
-deck_generator = NodePath("../PlayerDeckGenerator")
+deck_generator = NodePath("../CardDeckGenerator")
 show_cards = true
 starting_deck = ExtResource("5_jnrdv")
 draw_pile = NodePath("Draw")
 discard_pile = NodePath("Discards")
 metadata/_custom_type_script = "uid://bisyk4bowdvsf"
 
-[node name="Draw" type="Control" parent="PlayerDeckManager"]
+[node name="Draw" type="Control" parent="CardDeckManager"]
 layout_mode = 3
 anchors_preset = 0
 offset_left = 100.0
@@ -49,7 +66,7 @@ offset_top = 70.0
 offset_right = 100.0
 offset_bottom = 70.0
 
-[node name="Discards" type="Control" parent="PlayerDeckManager"]
+[node name="Discards" type="Control" parent="CardDeckManager"]
 layout_mode = 3
 anchors_preset = 1
 anchor_left = 1.0
@@ -58,40 +75,6 @@ offset_left = -1786.0
 offset_top = 957.0
 offset_right = -1786.0
 offset_bottom = 957.0
-grow_horizontal = 0
-
-[node name="DealerDeckGenerator" type="Node" parent="." node_paths=PackedStringArray("target_deck_manager")]
-script = ExtResource("5_sm6pw")
-base_deck = ExtResource("8_6ijn7")
-target_deck_manager = NodePath("../DealerDeckManager")
-
-[node name="DealerDeckManager" type="Node" parent="." node_paths=PackedStringArray("deck_generator", "draw_pile", "discard_pile")]
-physics_interpolation_mode = 2
-script = ExtResource("4_jnrdv")
-deck_generator = NodePath("../DealerDeckGenerator")
-show_cards = true
-starting_deck = ExtResource("8_6ijn7")
-draw_pile = NodePath("Draw")
-discard_pile = NodePath("Discards")
-metadata/_custom_type_script = "uid://bisyk4bowdvsf"
-
-[node name="Draw" type="Control" parent="DealerDeckManager"]
-layout_mode = 3
-anchors_preset = 0
-offset_left = 1769.0
-offset_top = 70.0
-offset_right = 1769.0
-offset_bottom = 70.0
-
-[node name="Discards" type="Control" parent="DealerDeckManager"]
-layout_mode = 3
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -140.0
-offset_top = 923.0
-offset_right = -140.0
-offset_bottom = 923.0
 grow_horizontal = 0
 
 [node name="CardHand" type="Control" parent="."]
@@ -108,7 +91,6 @@ offset_bottom = 206.0
 grow_horizontal = 2
 grow_vertical = 0
 script = ExtResource("4_b22ve")
-max_selected = 5
 card_spacing = 70.0
 max_hand_size = 7
 metadata/_custom_type_script = "uid://bbi8i6vef3f6y"
@@ -145,7 +127,6 @@ offset_bottom = 230.0
 grow_horizontal = 2
 grow_vertical = 0
 script = ExtResource("4_b22ve")
-max_selected = 5
 card_spacing = 70.0
 max_hand_size = 7
 metadata/_custom_type_script = "uid://bbi8i6vef3f6y"
@@ -199,7 +180,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 toggle_mode = true
-text = "Activate On Draw: OFF"
+text = "Activate On Draw: ON"
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="."]
 anchors_preset = 4
@@ -210,44 +191,76 @@ offset_right = 67.0
 offset_bottom = 66.0
 grow_vertical = 2
 
+[node name="ResultLabel" type="Label" parent="."]
+unique_name_in_owner = true
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -600.0
+offset_top = 297.0
+offset_right = 600.0
+offset_bottom = 355.0
+grow_horizontal = 2
+text = "Deal to get started"
+label_settings = SubResource("LabelSettings_6ijn7")
+horizontal_alignment = 1
+autowrap_mode = 2
+uppercase = true
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]
-offset_left = 843.0
-offset_top = 254.0
-offset_right = 1043.0
-offset_bottom = 318.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -303.0
+offset_right = 100.0
+offset_bottom = -239.0
+grow_horizontal = 2
+grow_vertical = 2
 alignment = 1
 
 [node name="DealerValueLabel" type="Label" parent="HBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="ResultLabel" type="Label" parent="HBoxContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
+label_settings = SubResource("LabelSettings_ucmyi")
+horizontal_alignment = 1
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="."]
-offset_left = 854.0
-offset_top = 951.0
-offset_right = 1054.0
-offset_bottom = 1015.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = 410.0
+offset_right = 100.0
+offset_bottom = 474.0
+grow_horizontal = 2
+grow_vertical = 2
 alignment = 1
 
 [node name="PlayerValueLabel" type="Label" parent="HBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
+label_settings = SubResource("LabelSettings_qb4g8")
 
 [node name="ChipsLabel" type="Label" parent="HBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
+label_settings = SubResource("LabelSettings_1btgu")
 
 [node name="BetLabel" type="Label" parent="HBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
+label_settings = SubResource("LabelSettings_fxeat")
 
 [node name="SplitValueLabel" type="Label" parent="HBoxContainer3"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+label_settings = SubResource("LabelSettings_0ab5v")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchors_preset = 7
@@ -255,11 +268,12 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -105.5
+offset_left = -225.0
 offset_top = -64.0
-offset_right = 105.5
+offset_right = 225.00049
 grow_horizontal = 2
 grow_vertical = 0
+alignment = 1
 
 [node name="HitButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
