@@ -27,6 +27,7 @@ extends CanvasLayer
 # UI Buttons - Card Ability actions
 @onready var positive_button: Button = %PositiveButton if has_node("%PositiveButton") else null
 @onready var negative_button: Button = %NegativeButton if has_node("%NegativeButton") else null
+@onready var activate_on_draw_button: Button = %ActivateOnDrawButton if has_node("%ActivateOnDrawButton") else null
 
 
 # UI Labels (these need to be added to your scene)
@@ -40,6 +41,7 @@ extends CanvasLayer
 # Game state
 var current_bet: int = 100  # Default bet amount
 var players_turn: bool = true
+var activate_abilities_on_draw: bool = false  # Toggle for activating abilities when cards are drawn
 
 
 func _init() -> void:
@@ -63,6 +65,8 @@ func _ready() -> void:
 		positive_button.pressed.connect(_on_positive_pressed)
 	if negative_button:
 		negative_button.pressed.connect(_on_negative_pressed)
+	if activate_on_draw_button:
+		activate_on_draw_button.toggled.connect(_on_activate_on_draw_toggled)
 
 	# Connect betting dialog signals
 	betting_dialog.bet_selected.connect(_on_bet_selected)
@@ -190,6 +194,44 @@ func _on_negative_pressed() -> void:
 	card_hand.clear_selected()
 
 
+func _on_activate_on_draw_toggled(button_pressed: bool) -> void:
+	"""Toggle the activate on draw feature"""
+	activate_abilities_on_draw = button_pressed
+	if activate_on_draw_button:
+		activate_on_draw_button.text = "Activate On Draw: ON" if button_pressed else "Activate On Draw: OFF"
+	print("[ABILITY DEBUG] Activate on draw: %s" % ("ENABLED" if button_pressed else "DISABLED"))
+
+
+func _try_activate_ability_on_draw(card: Card) -> void:
+	"""Automatically activate a card's ability based on its color when drawn"""
+	if not activate_abilities_on_draw:
+		return
+
+	if not card.card_data is BlackjackStyleRes:
+		return
+
+	var card_data: BlackjackStyleRes = card.card_data as BlackjackStyleRes
+
+	# Determine if positive or negative based on deck color
+	# LIGHT (1) = beige = positive
+	# DARK (2) = gray = negative
+	var is_positive: bool = false
+
+	match card_data.deck_color:
+		1:  # LIGHT (beige)
+			is_positive = true
+			print("[AUTO-ABILITY] Card '%s' is LIGHT (beige) - activating POSITIVE ability" % card_data.display_name)
+		2:  # DARK (gray)
+			is_positive = false
+			print("[AUTO-ABILITY] Card '%s' is DARK (gray) - activating NEGATIVE ability" % card_data.display_name)
+		_:
+			print("[AUTO-ABILITY] Card '%s' has no deck color (%d) - skipping" % [card_data.display_name, card_data.deck_color])
+			return
+
+	# Activate the ability
+	_activate_card_ability(card, is_positive)
+
+
 func _activate_card_ability(card: Card, is_positive: bool) -> bool:
 	"""Helper function to activate a card's ability. Returns true if successful."""
 	var ability_type = "POSITIVE" if is_positive else "NEGATIVE"
@@ -303,6 +345,10 @@ func _on_hit_pressed() -> void:
 			else:
 				card_hand.add_cards(cards)
 			blackjack_manager.AddPlayerCard(cards[0])
+
+			# Activate ability if toggle is enabled
+			_try_activate_ability_on_draw(cards[0])
+
 			_update_ui()
 
 
@@ -324,6 +370,10 @@ func _on_double_pressed() -> void:
 			else:
 				card_hand.add_cards(cards)
 			blackjack_manager.AddPlayerCard(cards[0])
+
+			# Activate ability if toggle is enabled
+			_try_activate_ability_on_draw(cards[0])
+
 			_update_ui()
 
 		# Automatically stand after doubling
@@ -347,6 +397,9 @@ func _on_split_pressed() -> void:
 			if cards.size() > 0:
 				split_hand.add_cards(cards)
 				blackjack_manager.AddPlayerCard(cards[0])
+
+				# Activate ability if toggle is enabled
+				_try_activate_ability_on_draw(cards[0])
 
 			_update_ui()
 
@@ -377,6 +430,10 @@ func _deal_initial_cards() -> void:
 			card_hand.add_card(card)
 			blackjack_manager.AddPlayerCard(card)
 			card.flip()
+
+			# Activate ability if toggle is enabled
+			_try_activate_ability_on_draw(card)
+
 			await get_tree().create_timer(0.5).timeout  # Small delay between deals
 
 	# Deal 2 cards to dealer (1 face down) from dealer's separate deck
@@ -392,7 +449,7 @@ func _deal_initial_cards() -> void:
 				card.flip()
 			await get_tree().create_timer(0.5).timeout  # Small delay between deals
 			i += 1
-			
+
 
 	# Begin player's turn
 	blackjack_manager.BeginPlayerTurn()

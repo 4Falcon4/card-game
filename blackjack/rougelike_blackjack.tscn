@@ -173,6 +173,13 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 text = "Activate Negative"
 
+[node name="ActivateOnDrawButton" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+toggle_mode = true
+text = "Activate On Draw: OFF"
+
 [node name="VBoxContainer2" type="VBoxContainer" parent="."]
 anchors_preset = 4
 anchor_top = 0.5
