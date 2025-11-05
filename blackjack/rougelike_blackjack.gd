@@ -14,6 +14,12 @@ extends CanvasLayer
 # Blackjack game manager (C#)
 @onready var blackjack_manager := $BlackjackManager
 
+# Protection racket system
+@onready var protection_racket: ProtectionRacket = $ProtectionRacket if has_node("ProtectionRacket") else null
+
+# Global game state manager
+@onready var game_state: Node = get_node("/root/GameStateManager") if has_node("/root/GameStateManager") else null
+
 # Betting dialog
 @onready var betting_dialog: CanvasLayer = $BettingDialog
 
@@ -38,6 +44,10 @@ extends CanvasLayer
 @onready var result_label: Label = %ResultLabel if has_node("%ResultLabel") else null
 @onready var split_value_label: Label = %SplitValueLabel if has_node("%SplitValueLabel") else null
 
+# Protection racket UI
+@onready var racket_label: Label = %RacketLabel if has_node("%RacketLabel") else null
+@onready var racket_warning: Panel = %RacketWarning if has_node("%RacketWarning") else null
+
 # Game state
 var current_bet: int = 100  # Default bet amount
 var players_turn: bool = true
@@ -50,6 +60,12 @@ func _init() -> void:
 
 
 func _ready() -> void:
+	# Initialize from game state if available
+	if game_state:
+		game_state.start_new_run()
+		var starting_chips = game_state.current_run_chips
+		blackjack_manager.PlayerChips = starting_chips
+
 	# Connect blackjack action buttons
 	hit_button.pressed.connect(_on_hit_pressed)
 	stand_button.pressed.connect(_on_stand_pressed)
@@ -79,6 +95,20 @@ func _ready() -> void:
 	blackjack_manager.Blackjack.connect(_on_blackjack)
 	blackjack_manager.RoundEnded.connect(_on_round_ended)
 	blackjack_manager.SwitchedToFirstHand.connect(_on_switched_to_first_hand)
+
+	# Connect protection racket signals
+	if protection_racket:
+		protection_racket.payment_demanded.connect(_on_payment_demanded)
+		protection_racket.payment_made.connect(_on_payment_made)
+		protection_racket.kicked_out.connect(_on_kicked_out)
+
+		# Apply upgrades to protection racket
+		if game_state:
+			var payment_delay = game_state.get_total_upgrade_value("payment_rounds")
+			protection_racket.rounds_between_payments += payment_delay
+
+			var payment_reduction = game_state.get_upgrade_multiplier("payment_reduction")
+			protection_racket.base_payment_amount = int(protection_racket.base_payment_amount * (1.0 - payment_reduction))
 
 	# Setup game
 	CG.def_front_layout = "front_blackjack_style"
@@ -610,6 +640,18 @@ func _on_round_ended(result: int, payout: int) -> void:
 	_show_message(message)
 	_update_ui()
 
+	# Update game state
+	if game_state:
+		game_state.update_run_chips(blackjack_manager.PlayerChips)
+		if result in [1, 4, 6]:  # Win conditions
+			game_state.current_run_wins += 1
+		else:
+			game_state.current_run_losses += 1
+
+	# Check protection racket after round ends
+	if protection_racket:
+		protection_racket.on_round_completed()
+
 	# Prepare for next round after delay
 	await get_tree().create_timer(3.0).timeout
 	blackjack_manager.ResetRound()
@@ -636,7 +678,7 @@ func _update_ui() -> void:
 	else:
 		if player_value_label:
 			player_value_label.text = "Player: %d" % blackjack_manager.GetPlayerHandValue()
-		
+
 		if dealer_value_label:
 			if players_turn:
 				dealer_value_label.text = "Dealer: %d" % blackjack_manager.GetVisibleDealerHandValue()
@@ -668,6 +710,9 @@ func _update_ui() -> void:
 	if split_button:
 		split_button.disabled = !blackjack_manager.CanSplit()
 
+	# Update protection racket UI
+	_update_racket_ui()
+
 
 func _show_message(message: String) -> void:
 	"""Display a message to the player"""
@@ -685,5 +730,71 @@ func _set_blackjack_controls_enabled(enabled: bool) -> void:
 		double_button.disabled = !blackjack_manager.CanDouble() if enabled else true
 	if split_button:
 		split_button.disabled = !blackjack_manager.CanSplit() if enabled else true
+
+#endregion
+
+#region Protection Racket Handlers
+
+func _on_payment_demanded(amount: int, rounds_until_demand: int) -> void:
+	"""Handle payment demand from the protection racket"""
+	if rounds_until_demand == 0:
+		# Payment is due NOW
+		_show_protection_payment_dialog(amount)
+	else:
+		# Warning that payment is coming soon
+		var warning_msg = "⚠️ Payment due in %d rounds! (%d chips)" % [rounds_until_demand, amount]
+		_show_message(warning_msg)
+		if racket_warning:
+			racket_warning.visible = true
+
+func _show_protection_payment_dialog(amount: int) -> void:
+	"""Show dialog demanding payment"""
+	var can_afford = blackjack_manager.PlayerChips >= amount
+
+	if can_afford:
+		# Auto-pay if player can afford it
+		blackjack_manager.PlayerChips -= amount
+		if protection_racket:
+			protection_racket.try_make_payment(blackjack_manager.PlayerChips + amount)
+		_update_ui()
+	else:
+		# Can't afford - get kicked out!
+		_show_message("💀 You can't pay! Getting kicked out... 💀")
+		await get_tree().create_timer(2.0).timeout
+		if protection_racket:
+			protection_racket.try_make_payment(blackjack_manager.PlayerChips)
+
+func _on_payment_made(amount: int) -> void:
+	"""Handle successful payment"""
+	_show_message("💰 Paid the guy %d chips. He'll be back..." % amount)
+	if racket_warning:
+		racket_warning.visible = false
+	_update_ui()
+
+func _on_kicked_out() -> void:
+	"""Handle getting kicked out - go to shop"""
+	_show_message("💀 KICKED OUT! 💀")
+
+	# Save chips to persistent state
+	if game_state:
+		game_state.end_run(false, blackjack_manager.PlayerChips)
+
+	# Transition to shop scene
+	await get_tree().create_timer(2.0).timeout
+	get_tree().change_scene_to_file("res://blackjack/shop_scene.tscn")
+
+func _update_racket_ui() -> void:
+	"""Update protection racket UI display"""
+	if not protection_racket or not racket_label:
+		return
+
+	var stats = protection_racket.get_stats()
+	var rounds_left = stats["rounds_until_payment"]
+	var payment_amt = stats["current_payment_amount"]
+
+	if rounds_left > 0:
+		racket_label.text = "Next Payment: %d chips in %d rounds" % [payment_amt, rounds_left]
+	else:
+		racket_label.text = "💀 PAYMENT DUE: %d chips 💀" % payment_amt
 
 #endregion

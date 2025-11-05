@@ -1,6 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://2dwibevu7ne7"]
+[gd_scene load_steps=14 format=3 uid="uid://2dwibevu7ne7"]
 
 [ext_resource type="Script" uid="uid://b4kn4yeeplfhp" path="res://blackjack/rougelike_blackjack.gd" id="1_b22ve"]
+[ext_resource type="Script" path="res://blackjack/protection_racket.gd" id="1_protection_racket"]
 [ext_resource type="Script" uid="uid://j11yb5rk1n4t" path="res://blackjack/BlackjackManager.cs" id="2_fs0nk"]
 [ext_resource type="Script" uid="uid://cyh0d64pfygbl" path="res://addons/maaacks_menus_template/base/scripts/pause_menu_controller.gd" id="3_30fd4"]
 [ext_resource type="Script" uid="uid://di1kob85cvgt1" path="res://blackjack/blackjack_card_hand.gd" id="4_b22ve"]
@@ -18,6 +19,13 @@ script = ExtResource("1_b22ve")
 
 [node name="BlackjackManager" type="Node" parent="."]
 script = ExtResource("2_fs0nk")
+
+[node name="ProtectionRacket" type="Node" parent="."]
+script = ExtResource("1_protection_racket")
+rounds_between_payments = 3
+base_payment_amount = 50
+payment_increase_per_demand = 25
+warning_rounds = 1
 
 [node name="BettingDialog" parent="." instance=ExtResource("10_betting")]
 
@@ -227,6 +235,42 @@ layout_mode = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+
+[node name="RacketUI" type="VBoxContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 20.0
+offset_bottom = 80.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="RacketLabel" type="Label" parent="RacketUI"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "Next Payment: 50 chips in 3 rounds"
+horizontal_alignment = 1
+
+[node name="RacketWarning" type="Panel" parent="RacketUI"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(400, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="WarningLabel" type="Label" parent="RacketUI/RacketWarning"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 18
+text = "⚠️ PAYMENT DUE SOON! ⚠️"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchors_preset = 7
