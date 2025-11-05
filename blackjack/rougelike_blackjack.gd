@@ -24,6 +24,11 @@ extends CanvasLayer
 @onready var double_button: Button = %DoubleButton if has_node("%DoubleButton") else null
 @onready var split_button: Button = %SplitButton if has_node("%SplitButton") else null
 
+# UI Buttons - Card Ability actions
+@onready var positive_button: Button = %PositiveButton if has_node("%PositiveButton") else null
+@onready var negative_button: Button = %NegativeButton if has_node("%NegativeButton") else null
+@onready var activate_on_draw_button: Button = %ActivateOnDrawButton if has_node("%ActivateOnDrawButton") else null
+
 
 # UI Labels (these need to be added to your scene)
 @onready var player_value_label: Label = %PlayerValueLabel if has_node("%PlayerValueLabel") else null
@@ -36,6 +41,7 @@ extends CanvasLayer
 # Game state
 var current_bet: int = 100  # Default bet amount
 var players_turn: bool = true
+var activate_abilities_on_draw: bool = false  # Toggle for activating abilities when cards are drawn
 
 
 func _init() -> void:
@@ -53,6 +59,14 @@ func _ready() -> void:
 		double_button.pressed.connect(_on_double_pressed)
 	if split_button:
 		split_button.pressed.connect(_on_split_pressed)
+
+	# Connect card ability buttons
+	if positive_button:
+		positive_button.pressed.connect(_on_positive_pressed)
+	if negative_button:
+		negative_button.pressed.connect(_on_negative_pressed)
+	if activate_on_draw_button:
+		activate_on_draw_button.toggled.connect(_on_activate_on_draw_toggled)
 
 	# Connect betting dialog signals
 	betting_dialog.bet_selected.connect(_on_bet_selected)
@@ -115,6 +129,184 @@ func _on_none_pressed() -> void:
 		card.refresh_layout()
 	card_hand.clear_selected()
 
+
+func _on_positive_pressed() -> void:
+	"""Activate positive abilities of selected cards"""
+	var selected_cards = card_hand.selected
+
+	if selected_cards.is_empty():
+		print("[ABILITY DEBUG] No cards selected for positive activation!")
+		_show_message("No cards selected!")
+		return
+
+	print("\n========== ACTIVATING POSITIVE ABILITIES ==========")
+	print("[ABILITY DEBUG] Selected %d card(s)" % selected_cards.size())
+
+	var activated_count = 0
+	var failed_count = 0
+
+	for card: Card in selected_cards:
+		if _activate_card_ability(card, true):
+			activated_count += 1
+		else:
+			failed_count += 1
+
+	print("[ABILITY DEBUG] Successfully activated: %d | Failed: %d" % [activated_count, failed_count])
+	print("===================================================\n")
+
+	var message = "Activated %d positive abilities" % activated_count
+	if failed_count > 0:
+		message += " (%d failed)" % failed_count
+	_show_message(message)
+
+	card_hand.clear_selected()
+
+
+func _on_negative_pressed() -> void:
+	"""Activate negative abilities of selected cards"""
+	var selected_cards = card_hand.selected
+
+	if selected_cards.is_empty():
+		print("[ABILITY DEBUG] No cards selected for negative activation!")
+		_show_message("No cards selected!")
+		return
+
+	print("\n========== ACTIVATING NEGATIVE ABILITIES ==========")
+	print("[ABILITY DEBUG] Selected %d card(s)" % selected_cards.size())
+
+	var activated_count = 0
+	var failed_count = 0
+
+	for card: Card in selected_cards:
+		if _activate_card_ability(card, false):
+			activated_count += 1
+		else:
+			failed_count += 1
+
+	print("[ABILITY DEBUG] Successfully activated: %d | Failed: %d" % [activated_count, failed_count])
+	print("===================================================\n")
+
+	var message = "Activated %d negative abilities" % activated_count
+	if failed_count > 0:
+		message += " (%d failed)" % failed_count
+	_show_message(message)
+
+	card_hand.clear_selected()
+
+
+func _on_activate_on_draw_toggled(button_pressed: bool) -> void:
+	"""Toggle the activate on draw feature"""
+	activate_abilities_on_draw = button_pressed
+	if activate_on_draw_button:
+		activate_on_draw_button.text = "Activate On Draw: ON" if button_pressed else "Activate On Draw: OFF"
+	print("[ABILITY DEBUG] Activate on draw: %s" % ("ENABLED" if button_pressed else "DISABLED"))
+
+
+func _try_activate_ability_on_draw(card: Card) -> void:
+	"""Automatically activate a card's ability based on its color when drawn"""
+	if not activate_abilities_on_draw:
+		return
+
+	if not card.card_data is BlackjackStyleRes:
+		return
+
+	var card_data: BlackjackStyleRes = card.card_data as BlackjackStyleRes
+
+	# Determine if positive or negative based on deck color
+	# LIGHT (1) = beige = positive
+	# DARK (2) = gray = negative
+	var is_positive: bool = false
+
+	match card_data.deck_color:
+		1:  # LIGHT (beige)
+			is_positive = true
+			print("[AUTO-ABILITY] Card '%s' is LIGHT (beige) - activating POSITIVE ability" % card_data.display_name)
+		2:  # DARK (gray)
+			is_positive = false
+			print("[AUTO-ABILITY] Card '%s' is DARK (gray) - activating NEGATIVE ability" % card_data.display_name)
+		_:
+			print("[AUTO-ABILITY] Card '%s' has no deck color (%d) - skipping" % [card_data.display_name, card_data.deck_color])
+			return
+
+	# Activate the ability
+	_activate_card_ability(card, is_positive)
+
+
+func _activate_card_ability(card: Card, is_positive: bool) -> bool:
+	"""Helper function to activate a card's ability. Returns true if successful."""
+	var ability_type = "POSITIVE" if is_positive else "NEGATIVE"
+
+	# Check if card has a CardBackResource with an ability
+	if not card.card_data is BlackjackStyleRes:
+		print("[ABILITY DEBUG] ❌ Card '%s' doesn't have a BlackjackStyleRes (has: %s)" % [card.name, card.card_data.get_class()])
+		return false
+
+	var card_data: BlackjackStyleRes = card.card_data as BlackjackStyleRes
+
+	if not card_data.ability:
+		print("[ABILITY DEBUG] ❌ Card '%s' (%s) doesn't have an ability assigned" % [card.name, card_data.display_name])
+		return false
+
+	# Get the ability resource path for debugging
+	var ability_path = card_data.ability.resource_path if card_data.ability else "none"
+	var ability_name = ability_path.get_file().get_basename() if ability_path != "none" else "unknown"
+
+	print("[ABILITY DEBUG] 🎴 Card: '%s' | Ability: '%s' | Type: %s" % [card_data.display_name, ability_name, ability_type])
+
+	# Store state before ability activation for comparison
+	var chips_before = blackjack_manager.PlayerChips
+	var player_hand_value_before = blackjack_manager.GetPlayerHandValue()
+	var player_hand_size_before = card_hand.cards.size()
+
+	# Get the ability resource (already an instance)
+	var ability = card_data.ability
+
+	print(ability.get_class())
+
+	# Prepare the context dictionary
+	var context = {
+		"blackjack_game": blackjack_manager,
+		"player_deck_manager": player_deck_manager,
+		"dealer_deck_manager": dealer_deck_manager,
+		"player_hand": card_hand,
+		"dealer_hand": dealer_hand,
+		"triggering_card": card
+	}
+
+	# Call the appropriate ability function
+	print("[ABILITY DEBUG] 🔄 Executing %s ability..." % ability_type)
+	if is_positive:
+		ability.perform_positive(context)
+	else:
+		ability.perform_negative(context)
+
+	# Show what changed after ability
+	var chips_after = blackjack_manager.PlayerChips
+	var player_hand_value_after = blackjack_manager.GetPlayerHandValue()
+	var player_hand_size_after = card_hand.cards.size()
+
+	print("[ABILITY DEBUG] 📊 Changes:")
+	if chips_after != chips_before:
+		var chips_diff = chips_after - chips_before
+		var diff_symbol = "+" if chips_diff > 0 else ""
+		print("   💰 Chips: %d → %d (%s%d)" % [chips_before, chips_after, diff_symbol, chips_diff])
+	else:
+		print("   💰 Chips: %d (no change)" % chips_before)
+
+	if player_hand_value_after != player_hand_value_before:
+		print("   🎯 Hand Value: %d → %d" % [player_hand_value_before, player_hand_value_after])
+
+	if player_hand_size_after != player_hand_size_before:
+		var card_diff = player_hand_size_after - player_hand_size_before
+		print("   🃏 Hand Size: %d → %d (%+d cards)" % [player_hand_size_before, player_hand_size_after, card_diff])
+
+	print("[ABILITY DEBUG] ✅ %s ability executed successfully!\n" % ability_type)
+
+	# Update UI to reflect any changes
+	_update_ui()
+
+	return true
+
 #endregion
 
 
@@ -153,6 +345,10 @@ func _on_hit_pressed() -> void:
 			else:
 				card_hand.add_cards(cards)
 			blackjack_manager.AddPlayerCard(cards[0])
+
+			# Activate ability if toggle is enabled
+			_try_activate_ability_on_draw(cards[0])
+
 			_update_ui()
 
 
@@ -174,6 +370,10 @@ func _on_double_pressed() -> void:
 			else:
 				card_hand.add_cards(cards)
 			blackjack_manager.AddPlayerCard(cards[0])
+
+			# Activate ability if toggle is enabled
+			_try_activate_ability_on_draw(cards[0])
+
 			_update_ui()
 
 		# Automatically stand after doubling
@@ -197,6 +397,9 @@ func _on_split_pressed() -> void:
 			if cards.size() > 0:
 				split_hand.add_cards(cards)
 				blackjack_manager.AddPlayerCard(cards[0])
+
+				# Activate ability if toggle is enabled
+				_try_activate_ability_on_draw(cards[0])
 
 			_update_ui()
 
@@ -227,6 +430,10 @@ func _deal_initial_cards() -> void:
 			card_hand.add_card(card)
 			blackjack_manager.AddPlayerCard(card)
 			card.flip()
+
+			# Activate ability if toggle is enabled
+			_try_activate_ability_on_draw(card)
+
 			await get_tree().create_timer(0.5).timeout  # Small delay between deals
 
 	# Deal 2 cards to dealer (1 face down) from dealer's separate deck
@@ -242,7 +449,7 @@ func _deal_initial_cards() -> void:
 				card.flip()
 			await get_tree().create_timer(0.5).timeout  # Small delay between deals
 			i += 1
-			
+
 
 	# Begin player's turn
 	blackjack_manager.BeginPlayerTurn()

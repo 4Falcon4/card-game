@@ -4,11 +4,11 @@
 extends CardAbility
 
 ## Preview next 3 cards and allow selection
-func perform_positive(context: Dictionary) -> void:
-	var card_deck_manager = context.get("card_deck_manager")
+static func perform_positive(context: Dictionary) -> void:
+	var player_deck_manager = context.get("player_deck_manager")
 
-	if !card_deck_manager:
-		push_error("EyesAbility: Missing card_deck_manager in context")
+	if !player_deck_manager:
+		push_error("EyesAbility: Missing player_deck_manager in context")
 		return
 
 	# TODO: Implement preview and selection UI
@@ -17,16 +17,16 @@ func perform_positive(context: Dictionary) -> void:
 
 
 ## Draw a card face down (hidden value)
-func perform_negative(context: Dictionary) -> void:
-	var card_deck_manager = context.get("card_deck_manager")
+static func perform_negative(context: Dictionary) -> void:
+	var player_deck_manager = context.get("card_deck_manager")
 	var player_hand = context.get("player_hand")
 
-	if !card_deck_manager or !player_hand:
+	if !player_deck_manager or !player_hand:
 		push_error("EyesAbility: Missing required context")
 		return
 
 	# Draw a card face down
-	var drawn_cards = card_deck_manager.deal_cards(1)
+	var drawn_cards = player_deck_manager.deal_cards(1)
 	if drawn_cards.size() > 0:
 		var card = drawn_cards[0]
 		card.is_hidden = true
