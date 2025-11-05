@@ -416,7 +416,7 @@ public partial class BlackjackManager : Node
 
 	#endregion
 
-	#region Public Methods - Getters
+	#region Public Methods - Getters/Setters
 
 	/// <summary>
 	/// Gets the current value of the player's hand.
@@ -424,6 +424,11 @@ public partial class BlackjackManager : Node
 	public int GetPlayerHandValue()
 	{
 		return _playerHandValue;
+	}
+	
+	public void SetPlayerHandValue(int value)
+	{
+		_playerHandValue = value;
 	}
 
 	/// <summary>
