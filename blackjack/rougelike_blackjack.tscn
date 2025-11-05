@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://2dwibevu7ne7"]
+[gd_scene load_steps=14 format=3 uid="uid://2dwibevu7ne7"]
 
 [ext_resource type="Script" uid="uid://b4kn4yeeplfhp" path="res://blackjack/rougelike_blackjack.gd" id="1_b22ve"]
 [ext_resource type="Script" uid="uid://j11yb5rk1n4t" path="res://blackjack/BlackjackManager.cs" id="2_fs0nk"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://wn30x7o3f47m" path="res://addons/milestone/scripts/achievements/achievement_notifier.gd" id="6_sm6pw"]
 [ext_resource type="Resource" uid="uid://7xdydh66qfkc" path="res://blackjack/dealer_blackjack_deck.tres" id="8_6ijn7"]
 [ext_resource type="PackedScene" uid="uid://cq8f4y7n5xo8w" path="res://blackjack/betting_dialog.tscn" id="10_betting"]
+[ext_resource type="Script" uid="uid://b1qdadk3pvgrf" path="res://blackjack/blackjack_draw_hand.gd" id="12_ucmyi"]
 
 [node name="RougelikeBlackjack" type="CanvasLayer"]
 script = ExtResource("1_b22ve")
@@ -149,6 +150,26 @@ card_spacing = 70.0
 max_hand_size = 7
 metadata/_custom_type_script = "uid://bbi8i6vef3f6y"
 
+[node name="DrawHand" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -648.0
+offset_top = -954.0
+offset_right = -648.0
+offset_bottom = -954.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("12_ucmyi")
+max_selected = 5
+shape = 0
+card_spacing = 55.0
+max_hand_size = 3
+metadata/_custom_type_script = "uid://bbi8i6vef3f6y"
+
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchors_preset = 6
 anchor_left = 1.0
@@ -269,6 +290,12 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 text = "Split"
+
+[node name="ConfirmSelectionButton" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+text = "Confirm (0/0)"
 
 [node name="AchievementNotifier" type="Node" parent="." node_paths=PackedStringArray("user_interface")]
 script = ExtResource("6_sm6pw")

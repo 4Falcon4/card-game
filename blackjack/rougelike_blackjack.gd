@@ -6,6 +6,7 @@ extends CanvasLayer
 @onready var card_hand: CardHand = $CardHand
 @onready var dealer_hand: CardHand = $DealerHand
 @onready var split_hand: CardHand = $SplitHand if has_node("SplitHand") else null
+@onready var draw_hand: CardHand = $DrawHand if has_node("DrawHand") else null
 
 # Deck generators for automatic regeneration
 @onready var player_deck_generator: DeckGenerator = $PlayerDeckGenerator if has_node("PlayerDeckGenerator") else null
@@ -29,6 +30,8 @@ extends CanvasLayer
 @onready var negative_button: Button = %NegativeButton if has_node("%NegativeButton") else null
 @onready var activate_on_draw_button: Button = %ActivateOnDrawButton if has_node("%ActivateOnDrawButton") else null
 
+# UI Buttons - Draw hand confirmation
+@onready var confirm_selection_button: Button = %ConfirmSelectionButton if has_node("%ConfirmSelectionButton") else null
 
 # UI Labels (these need to be added to your scene)
 @onready var player_value_label: Label = %PlayerValueLabel if has_node("%PlayerValueLabel") else null
@@ -42,6 +45,16 @@ extends CanvasLayer
 var current_bet: int = 100  # Default bet amount
 var players_turn: bool = true
 var activate_abilities_on_draw: bool = false  # Toggle for activating abilities when cards are drawn
+
+# Draw hand state
+var awaiting_card_selection: bool = false  # True when waiting for player to select cards from draw hand
+var required_selection_count: int = 0  # Number of cards that must be selected
+var selection_action: String = ""  # "deal" or "hit" to track what action we're selecting for
+var draw_hand_size: int = draw_hand.max_hand_size if draw_hand else 0:
+	set(value):
+		draw_hand_size = value
+		if draw_hand:
+			draw_hand.max_hand_size = value
 
 
 func _init() -> void:
@@ -67,6 +80,14 @@ func _ready() -> void:
 		negative_button.pressed.connect(_on_negative_pressed)
 	if activate_on_draw_button:
 		activate_on_draw_button.toggled.connect(_on_activate_on_draw_toggled)
+
+	# Connect draw hand confirmation button
+	if confirm_selection_button:
+		confirm_selection_button.pressed.connect(_on_confirm_selection_pressed)
+		confirm_selection_button.visible = false  # Hidden by default
+
+	if draw_hand:
+		draw_hand.selection_changed.connect(_update_confirm_button_state)
 
 	# Connect betting dialog signals
 	betting_dialog.bet_selected.connect(_on_bet_selected)
@@ -335,21 +356,19 @@ func _on_bet_cancelled() -> void:
 
 
 func _on_hit_pressed() -> void:
-	"""Player hits - draw another card"""
+	"""Player hits - select a card from draw hand"""
 	if blackjack_manager.PlayerHit():
-		var cards = player_deck_manager.draw_cards(1)
-		if cards.size() > 0:
-			# Add card to correct hand
-			if blackjack_manager.IsPlayingSplitHand() and split_hand:
-				split_hand.add_cards(cards)
-			else:
-				card_hand.add_cards(cards)
-			blackjack_manager.AddPlayerCard(cards[0])
+		# Replenish draw hand if needed (keep it populated)
+		if draw_hand and draw_hand.cards.size() < draw_hand_size:
+			var needed_cards = draw_hand_size - draw_hand.cards.size()
+			var cards = player_deck_manager.draw_cards(needed_cards)
+			if cards.size() > 0:
+				draw_hand.add_cards(cards)
+				for card in cards:
+					card.is_front_face = false
 
-			# Activate ability if toggle is enabled
-			_try_activate_ability_on_draw(cards[0])
-
-			_update_ui()
+		# Start card selection process (need 1 card for hit)
+		_start_card_selection(1, "hit")
 
 
 func _on_stand_pressed() -> void:
@@ -360,26 +379,19 @@ func _on_stand_pressed() -> void:
 
 
 func _on_double_pressed() -> void:
-	"""Player doubles down - double bet, draw one card, then stand"""
+	"""Player doubles down - double bet, select a card from draw hand, then stand"""
 	if blackjack_manager.PlayerDouble():
-		# Draw one card
-		var cards = player_deck_manager.draw_cards(1)
-		if cards.size() > 0:
-			if blackjack_manager.IsPlayingSplitHand() and split_hand:
-				split_hand.add_cards(cards)
-			else:
-				card_hand.add_cards(cards)
-			blackjack_manager.AddPlayerCard(cards[0])
+		# Replenish draw hand if needed
+		if draw_hand and draw_hand.cards.size() < draw_hand_size:
+			var needed_cards = draw_hand_size - draw_hand.cards.size()
+			var cards = player_deck_manager.draw_cards(needed_cards)
+			if cards.size() > 0:
+				draw_hand.add_cards(cards)
+				for card in cards:
+					card.is_front_face = false
 
-			# Activate ability if toggle is enabled
-			_try_activate_ability_on_draw(cards[0])
-
-			_update_ui()
-
-		# Automatically stand after doubling
-		await get_tree().create_timer(0.5).timeout
-		blackjack_manager.PlayerStand()
-		_update_ui()
+		# Start card selection process (need 1 card for double)
+		_start_card_selection(1, "double")
 
 
 func _on_split_pressed() -> void:
@@ -392,16 +404,17 @@ func _on_split_pressed() -> void:
 			split_hand.add_cards([second_card])
 			split_hand.visible = true
 
-			# Draw a card for the split hand (playing this hand first)
-			var cards = player_deck_manager.draw_cards(1)
-			if cards.size() > 0:
-				split_hand.add_cards(cards)
-				blackjack_manager.AddPlayerCard(cards[0])
+			# Replenish draw hand if needed
+			if draw_hand and draw_hand.cards.size() < draw_hand_size:
+				var needed_cards = draw_hand_size - draw_hand.cards.size()
+				var cards = player_deck_manager.draw_cards(needed_cards)
+				if cards.size() > 0:
+					draw_hand.add_cards(cards)
+					for card in cards:
+						card.is_front_face = false
 
-				# Activate ability if toggle is enabled
-				_try_activate_ability_on_draw(cards[0])
-
-			_update_ui()
+			# Start card selection process (need 1 card for split hand)
+			_start_card_selection(1, "split")
 
 
 #endregion
@@ -422,37 +435,12 @@ func _start_new_round() -> void:
 	_update_ui()
 
 func _deal_initial_cards() -> void:
-	"""Deal 2 cards to player and 2 to dealer"""
-	# Deal 2 cards to player
-	var player_cards = player_deck_manager.draw_cards(2)
-	if player_cards.size() > 0:
-		for card in player_cards:
-			card_hand.add_card(card)
-			blackjack_manager.AddPlayerCard(card)
-			card.flip()
+	"""Deal 2 cards to player using draw hand selection"""
+	# Populate the draw hand with cards
+	_populate_draw_hand()
 
-			# Activate ability if toggle is enabled
-			_try_activate_ability_on_draw(card)
-
-			await get_tree().create_timer(0.5).timeout  # Small delay between deals
-
-	# Deal 2 cards to dealer (1 face down) from dealer's separate deck
-	var dealer_cards = _get_dealer_deck_manager().draw_cards(2)
-	if dealer_cards.size() > 0:
-		var i := 0
-		for card in dealer_cards:
-			dealer_hand.add_card(card)
-			blackjack_manager.AddDealerCard(card)
-			if i > 0:
-				card.is_hidden = true  # Hide dealer's second card
-			else:
-				card.flip()
-			await get_tree().create_timer(0.5).timeout  # Small delay between deals
-			i += 1
-
-
-	# Begin player's turn
-	blackjack_manager.BeginPlayerTurn()
+	# Start card selection process (need 2 cards for initial deal)
+	_start_card_selection(2, "deal")
 
 
 func _dealer_play() -> void:
@@ -624,6 +612,211 @@ func _on_switched_to_first_hand() -> void:
 #endregion
 
 
+#region Draw Hand System
+
+func _populate_draw_hand() -> void:
+	"""Fill the draw hand with cards face-down for selection"""
+	if not draw_hand:
+		return
+
+	# Clear any existing cards in draw hand
+	draw_hand.clear_selected()
+
+	# Draw cards to populate the draw hand
+	var cards = player_deck_manager.draw_cards(draw_hand.get_remaining_space())
+	if cards.size() > 0:
+		for card in cards:
+			draw_hand.add_card(card)
+			card.is_hidden = true
+			await get_tree().create_timer(0.2).timeout  # Small delay for visual effect
+
+
+func _start_card_selection(count: int, action: String) -> void:
+	"""Begin waiting for player to select cards from draw hand"""
+	if not draw_hand:
+		return
+
+	awaiting_card_selection = true
+	required_selection_count = count
+	selection_action = action
+
+	# Clear any previous selections
+	draw_hand.clear_selected()
+
+	# Update draw hand max_selected to match required count
+	draw_hand.max_selected = count
+
+	# Show confirmation button
+	if confirm_selection_button:
+		confirm_selection_button.visible = true
+		confirm_selection_button.disabled = true  # Disabled until correct number selected
+
+	# Disable game action buttons during selection
+	_set_blackjack_controls_enabled(false)
+	
+	_update_confirm_button_state()
+
+	# Show message
+	_show_message("Select %d card%s from draw hand" % [count, "s" if count > 1 else ""])
+
+
+func _on_confirm_selection_pressed() -> void:
+	"""Handle confirmation of card selection from draw hand"""
+	if not awaiting_card_selection or not draw_hand:
+		return
+
+	var selected_cards = draw_hand.selected
+	
+	draw_hand.clear_selected()
+
+	# Validate selection count
+	if selected_cards.size() != required_selection_count:
+		_show_message("Please select exactly %d card%s!" % [required_selection_count, "s" if required_selection_count > 1 else ""])
+		return
+
+	# Process based on action type
+	match selection_action:
+		"deal":
+			_complete_deal_with_selected_cards(selected_cards)
+		"hit":
+			_complete_hit_with_selected_card(selected_cards[0])
+		"double":
+			_complete_double_with_selected_card(selected_cards[0])
+		"split":
+			_complete_split_with_selected_card(selected_cards[0])
+
+	# Reset selection state
+	awaiting_card_selection = false
+	required_selection_count = 0
+	draw_hand.max_selected = 0
+	selection_action = ""
+	
+	if blackjack_manager.CurrentState == 3:
+		_set_blackjack_controls_enabled(true)
+	else:
+		_set_blackjack_controls_enabled(false)
+	
+	# Hide confirmation button
+	if confirm_selection_button:
+		confirm_selection_button.visible = false
+
+
+func _transfer_cards_to_play_hand(cards: Array[Card], target_hand: CardHand = null) -> void:
+	"""Transfer selected cards from draw hand to play hand"""
+	if not target_hand:
+		target_hand = card_hand
+
+	for card in cards:
+		# Remove from draw hand
+		if draw_hand and draw_hand._cards.has(card):
+			draw_hand.remove_card(card, target_hand)
+
+		# Add to target hand
+		target_hand.add_card(card)
+
+		# Flip card face-up
+		card.flip()
+		
+		card.is_hidden = false
+
+		# Register with blackjack manager
+		blackjack_manager.AddPlayerCard(card)
+
+		# Activate ability if toggle is enabled
+		_try_activate_ability_on_draw(card)
+
+
+func _complete_deal_with_selected_cards(selected_cards: Array[Card]) -> void:
+	"""Complete the initial deal using selected cards from draw hand"""
+	# Transfer cards one by one with delay
+	for card in selected_cards:
+		_transfer_cards_to_play_hand([card])
+		await get_tree().create_timer(0.5).timeout
+		
+	_populate_draw_hand()
+
+	# Deal dealer cards
+	var dealer_cards = _get_dealer_deck_manager().draw_cards(2)
+	if dealer_cards.size() > 0:
+		var i := 0
+		for card in dealer_cards:
+			dealer_hand.add_card(card)
+			blackjack_manager.AddDealerCard(card)
+			if i > 0:
+				card.is_hidden = true  # Hide dealer's second card
+			else:
+				card.flip()
+			await get_tree().create_timer(0.5).timeout
+			i += 1
+
+	# Begin player's turn
+	blackjack_manager.BeginPlayerTurn()
+
+
+func _complete_hit_with_selected_card(card: Card) -> void:
+	"""Complete a hit action using selected card from draw hand"""
+	# Determine target hand (split or main)
+	var target_hand = card_hand
+	if blackjack_manager.IsPlayingSplitHand() and split_hand:
+		target_hand = split_hand
+
+	# Transfer the card
+	_transfer_cards_to_play_hand([card], target_hand)
+	
+	_populate_draw_hand()
+
+	# Update UI
+	_update_ui()
+
+
+func _complete_double_with_selected_card(card: Card) -> void:
+	"""Complete a double down action using selected card from draw hand"""
+	# Determine target hand (split or main)
+	var target_hand = card_hand
+	if blackjack_manager.IsPlayingSplitHand() and split_hand:
+		target_hand = split_hand
+
+	# Transfer the card
+	_transfer_cards_to_play_hand([card], target_hand)
+	
+	_populate_draw_hand()
+
+	# Update UI
+	_update_ui()
+
+	# Automatically stand after doubling
+	await get_tree().create_timer(0.5).timeout
+	blackjack_manager.PlayerStand()
+	_update_ui()
+
+
+func _complete_split_with_selected_card(card: Card) -> void:
+	"""Complete a split action by adding selected card to the split hand"""
+	# Add card to split hand (which is the active hand when splitting)
+	if split_hand:
+		_transfer_cards_to_play_hand([card], split_hand)
+		
+	_populate_draw_hand()
+
+	# Update UI
+	_update_ui()
+
+
+func _update_confirm_button_state() -> void:
+	"""Update the confirm button enabled state based on selection count"""
+	if not confirm_selection_button or not awaiting_card_selection or not draw_hand:
+		return
+
+	var selected_count = draw_hand.selected.size()
+	confirm_selection_button.disabled = (selected_count != required_selection_count)
+
+	# Update button text to show progress
+	if required_selection_count > 0:
+		confirm_selection_button.text = "Confirm (%d/%d)" % [selected_count, required_selection_count]
+
+#endregion
+
+
 #region UI Helpers
 
 func _update_ui() -> void:
@@ -636,7 +829,7 @@ func _update_ui() -> void:
 	else:
 		if player_value_label:
 			player_value_label.text = "Player: %d" % blackjack_manager.GetPlayerHandValue()
-		
+
 		if dealer_value_label:
 			if players_turn:
 				dealer_value_label.text = "Dealer: %d" % blackjack_manager.GetVisibleDealerHandValue()
@@ -667,6 +860,9 @@ func _update_ui() -> void:
 		double_button.disabled = !blackjack_manager.CanDouble()
 	if split_button:
 		split_button.disabled = !blackjack_manager.CanSplit()
+
+	# Update confirm button state for draw hand selection
+	_update_confirm_button_state()
 
 
 func _show_message(message: String) -> void:
