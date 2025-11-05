@@ -261,7 +261,7 @@ func _activate_card_ability(card: Card, is_positive: bool) -> bool:
 	# Prepare the context dictionary
 	var context = {
 		"blackjack_game": blackjack_manager,
-		"player_deck_manager": card_deck_manager,
+		"card_deck_manager": card_deck_manager,
 		"player_hand": card_hand,
 		"dealer_hand": dealer_hand,
 		"triggering_card": card
@@ -527,13 +527,19 @@ func _on_dealer_busted() -> void:
 	print("Dealer busted!")
 	_show_message("Dealer BUST! You win!")
 
-
+# some issues when other get blackjack and some wierd message glitchs sometimes
 func _on_blackjack(is_player: bool) -> void:
 	"""Someone got a blackjack (21 with 2 cards)"""
+	await get_tree().create_timer(2.0).timeout
 	if is_player:
 		_show_message("🃏 BLACKJACK! 🃏")
 	else:
 		_show_message("Dealer has Blackjack!")
+	for card in dealer_hand.cards:
+		card.is_hidden = false
+		if not card.is_front_face:
+			card.flip()
+	_update_ui()
 
 
 func _on_round_ended(result: int, payout: int) -> void:
@@ -548,19 +554,22 @@ func _on_round_ended(result: int, payout: int) -> void:
 		3:  # Push
 			result_text = "Push - It's a Tie!"
 		4:  # PlayerBlackjack
-			result_text = "🃏 BLACKJACK! You Win! 🃏"
+			await get_tree().create_timer(3.0).timeout
+			result_text = null
 		5:  # PlayerBust
 			result_text = "Bust! You Lose"
 		6:  # DealerBust
 			result_text = "Dealer Bust! You Win!"
 
-	var message = "%s\nPayout: %d chips\nTotal Chips: %d" % [
-		result_text,
-		payout,
-		blackjack_manager.PlayerChips
-	]
-
-	_show_message(message)
+	if result_text != null:
+		var message = "%s\nPayout: %d chips\nTotal Chips: %d" % [
+			result_text,
+			payout,
+			blackjack_manager.PlayerChips
+		]
+		_show_message(message)
+		
+	
 	_update_ui()
 
 	# Prepare for next round after delay
