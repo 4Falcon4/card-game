@@ -215,10 +215,11 @@ value = 10.0
 
 [node name="QuickBets" type="HBoxContainer" parent="Panel/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 15
 alignment = 1
 
 [node name="MinButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
+custom_minimum_size = Vector2(70, 40)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
@@ -227,6 +228,7 @@ shortcut = SubResource("Shortcut_wx8ro")
 text = "Min"
 
 [node name="QuarterButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
+custom_minimum_size = Vector2(70, 40)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
@@ -235,6 +237,7 @@ shortcut = SubResource("Shortcut_74nfr")
 text = "25%"
 
 [node name="HalfButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
+custom_minimum_size = Vector2(70, 40)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
@@ -243,6 +246,7 @@ shortcut = SubResource("Shortcut_bflfa")
 text = "50%"
 
 [node name="MaxButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
+custom_minimum_size = Vector2(70, 40)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
