@@ -161,6 +161,9 @@ grow_vertical = 0
 rotation = -0.523599
 color = Color(0.2, 0.8, 0.3, 0.6)
 
+[node name="VersionLabel" parent="VersionMargin/VersionContainer" index="0"]
+text = "v1.0.0"
+
 [node name="MenuContainer" parent="." index="9"]
 theme_override_constants/margin_left = 100
 theme_override_constants/margin_top = 60
