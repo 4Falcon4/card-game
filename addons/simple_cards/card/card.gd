@@ -5,6 +5,12 @@ class_name Card extends Button
 ##Emited when cards is pressed but not dragged
 signal card_clicked(card: Card)
 
+##Emitted when mouse enters card (for tooltip display)
+signal card_tooltip_requested(card: Card)
+
+##Emitted when mouse exits card (for hiding tooltip)
+signal card_tooltip_hide_requested()
+
 ##Coeficient used in lerp movenment functions
 const drag_coef: float = -30
 ##Max angle the card will swing when moving
@@ -150,10 +156,14 @@ func _on_focus_exited() -> void:
 func _on_mouse_entered() -> void:
 	if !CG.current_held_item:
 		grab_focus()
+	# Emit tooltip signal for cards with ability data
+	card_tooltip_requested.emit(self)
 
-func _on_mouse_exited() -> void: 
+func _on_mouse_exited() -> void:
 	if !holding and !CG.current_held_item:
 		get_viewport().gui_release_focus()
+	# Emit hide tooltip signal
+	card_tooltip_hide_requested.emit()
 
 #endregion
 

@@ -1,17 +1,10 @@
 # Attribution
 ## Collaborators
 
-### Role
-Person 1  
-Person 2  
-[Person w/ Link]()  
-
-## Sourced
-### Asset Type
-#### Use Case
-Author: [Name]()  
-Source: [Domain : webpage.html]()  
-License: [License]()
+### Contributors
+Koby Falconeri
+Raymond Lau
+Chenghao Jiang
 
 #### Godot Engine Logo
 Author: Andrea Calabró  
@@ -30,6 +23,16 @@ License: [MIT License](https://github.com/godotengine/godot/blob/master/LICENSE.
 Author: [Marek Belski and contributors](https://github.com/Maaack/Godot-Menus-Template/graphs/contributors)  
 Source: [github: Godot-Menus-Template](https://github.com/Maaack/Godot-Menus-Template)  
 License: [MIT License](LICENSE.txt)  
+
+#### Godot Simple Cards V2
+Author: [twdoor](https://github.com/twdoor/simple-cards-v-2/graphs/contributors)  
+Source: [github: simple-cards-v-2](https://github.com/twdoor/simple-cards-v-2)  
+License: [MIT License](LICENSE.txt)
+
+#### Card Backs
+Author: [Nikoichu](https://github.com/Nikoichu)  
+Source: [github: tripeaks-gdx](https://github.com/mimoguz/tripeaks-gdx/issues/13)  
+License: Unknown
 
 #### Git
 ![Git Logo](/Menu/assets/git_logo/Git-Logo-2Color.png)  
