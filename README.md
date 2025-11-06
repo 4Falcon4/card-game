@@ -1,152 +1,114 @@
-# Simple Cards V2
-This project is a complete rewrite of the SimpleCards plugin I made a while back. Due to my lack of knowledge and experience, the first version lacked the quality I wanted to deliver. 
+# CardGame
 
-You can still check the first version here ...
+A **roguelike Blackjack** game built with Godot 4.5, featuring persistent progression, special card abilities, and a unique "protection racket" mechanic.
 
-## What is SimpleCards?
-This is a card system plugin, made in Godot 4.5 only using UI elements (Control nodes). Because of that, the cards can be used in both 2d and 3d projects.
+## Overview
 
-![Gif of example](https://github.com/twdoor/simple-cards-v-2/blob/main/github/assets/example.gif)
+This is a casino-style Blackjack game with a twist: survive the bookie's protection racket while building up your permanent upgrades across multiple runs. Features standard Blackjack mechanics (Hit, Stand, Double Down, Split) combined with a progression system that rewards strategic play and long-term planning.
 
-### Main features
+## Features
 
-**Cards** with implemented press and drag & drop functionality.
+### Core Gameplay
+- **Classic Blackjack Rules** - Hit, Stand, Double Down, and Split hands
+- **Intelligent Dealer AI** - Follows standard casino rules (hits until 17+)
+- **Automatic Detection** - Natural blackjack, busts, and hand comparisons
+- **Flexible Betting** - Quick-bet buttons (min, quarter, half, max) for easy wagering
 
-Customizable and expendable functionality and visuals provided by **layouts** and **resources**. 
+### Roguelike Progression
+- **Persistent Chip System** - Keep your winnings across runs
+- **Upgrade Shop** - Purchase permanent upgrades between runs:
+  - Extra starting chips
+  - Delayed bookie payments
+  - Reduced payment amounts
+  - Better payout odds
+  - Ability boosts
+  - Double down discounts
+- **Achievement System** - Track your accomplishments
+- **Run Statistics** - Monitor wins, losses, and rounds completed
 
-Management provided by **deck** and **hand** containers. 
+### Special Mechanics
+- **Protection Racket** - Pay the bookie periodically or get kicked out of the casino
+- **Card Abilities** - Special effects on cards that modify gameplay
+  - Light-colored cards: Positive abilities
+  - Dark-colored cards: Negative effects
+- **Draw Hand System** - Visual card selection from a draw pile
+- **Smart Tooltips** - Hover over cards to see ability information
 
-### Installation
+### Professional UI
+- Main menu with animations
+- Pause menu and comprehensive options (audio, video, input)
+- Achievement notifications
+- Loading screens
+- Credits system
 
-#### Addon (soon™)
-1. Install the addon from the Godot asset library
-2. Go to Project/Project Settings/Plugins and enable SimpleCards plugin
-#### Manual
-1. Download or clone the repo.
-2. Open it as a godot project or copy the addons/simple_cards folder into the project you want to use.
-3. Go to Project/Project Settings/Plugins and enable SimpleCards plugin
+## Tech Stack
 
+- **Engine:** Godot 4.5 (GL Compatibility)
+- **Languages:**
+  - GDScript (UI, scenes, game flow)
+  - C# .NET 8.0 (core Blackjack logic)
+- **Framework:** Godot.NET.Sdk 4.5.1
+- **Platform:** Windows Desktop (x86_64)
+- **Resolution:** 1920x1080
 
-## Usage and features. 
-**All custom classes added are documented in the editor.**
-If curios you can always check the scripts as well.
+## Controls
 
-### Making your first card. 
+| Action | Key Bindings |
+|--------|-------------|
+| Hit / Deal | Space, Z |
+| Stand / Cancel Bet | X |
+| Double Down / Min Bet | V |
+| Split / Max Bet | B |
+| Quarter Bet | G, W |
+| Half Bet | H, E |
+| Max Bet | R |
+| Confirm Bet | C |
 
-#### 1. Making the resource. 
-**Card Resource** is the way to store the data you want your card to have.
+![In-Game Screenshot](https://github.com/4Falcon4/card-game/blob/main/assests/keybinds.png)
 
-In the file manger create a script that extends CardResource. 
+## Save System
 
-![Photo of creating a resource](https://github.com/twdoor/simple-cards-v-2/blob/main/github/assets/create_resource.png)
+- **Location:** `%APPDATA%\\Godot\\app_userdata\\CardGame\\casino_save.dat`
+- **Format:** Encrypted JSON (via Locker addon) (WIP)
+- **Saved Data:**
+  - Persistent chip count
+  - Purchased upgrades and levels
+  - Progression unlocks
+  - Run statistics (wins, losses, rounds)
+  - Lifetime earnings
 
-Give it a fancy name and class_name.
+## Architecture
 
-Now add everything your card needs. 
+The game uses a hybrid approach:
+- **C# (BlackjackManager.cs)** - Core game logic, card management, hand scoring
+- **GDScript** - UI, scene management, visual effects, game flow
+- **Signal-driven** - Decoupled systems communicating via Godot signals
+- **Auto-save** - State persists automatically after purchases and run completion
 
-![Photo of setting a resource](https://github.com/twdoor/simple-cards-v-2/blob/main/github/assets/set_resource.png)
+## Addons Used
 
-And you're done!
+1. **simple_cards** - Card rendering and management
+2. **dialogue_manager** - Branching dialogue system with C# support
+3. **maaacks_menus_template** - Professional menu and options UI
+4. **milestone** - Achievement tracking
+5. **locker** - Encrypted save file management
 
-#### 2. Making a layout.
-**Card layout** is the base of the visuals. 
+[//]: # (## License)
+[//]: # (*[Add your license information here]*)
 
-Go to "Project/Tools/Create a new card layout". This will create the default template scene of a layout.
+## Roadmap
+- [ ] Additional card abilities and upgrades planned for future updates
+- [ ] Use locker to save data
+- [ ] Implement more robust error handling and user feedback
+- [ ] Implement sound effects and music tracks
 
-![Photo of creating a layout](https://github.com/twdoor/simple-cards-v-2/blob/main/github/assets/create_layout.png)
+## Known Issues
+- Save system is a work in progress; may have bugs
+- Some UI elements may not scale perfectly on all resolutions
+- Earned chips are inconsistent between runs
 
-Give it a name (ex. test_layout.tscn). **This name will be used as a key in the scripts. keep it simple and/or memorable.**
+## Credits
 
-**The scene will be placed in the "card_layouts" folder that will be automatically created. Any layout outside this folder will NOT be read. To change the folder go to the card_globals.gd and change the LAYOUT_FOLDER path to the you want.**
+Developed by **Koby, Raymond, and Chenghao**
 
-![Photo of default layout](https://github.com/twdoor/simple-cards-v-2/blob/main/github/assets/default_layout.png)
-
-Now you can create your perfect card. **The Subview's size will determine the size of the card.**
-
-![Photo of custom layout](https://github.com/twdoor/simple-cards-v-2/blob/main/github/assets/customized_layout.png)
-
-To update the visuals, extend the card layer (the root) script. Here overwrite the: 
-```
-_update_display()
-```
-to set you changes.  You can also overwrite:
-```
-_flip_in()
- or
-_flip_out()
-```
-to create transition effects for layouts.
-
-You also have access to the **Card** and its **Resource** as card_instance and card_resource respectively. **This are set after the ready function, if trying to access in ready they will return null or might just crash :)**
-
-![Photo of custom layout code](https://github.com/twdoor/simple-cards-v-2/blob/main/github/assets/custom_layout_code.png)
-
-
-After you are done you just need to set the layout to the cards:
-1. use the set_layout("name", true) function in the card.
-2.  set def_front_layout value from the card globals to the value you need.
-3. (not recommended) replace DEFAULT_LAYOUT constant path in the global script
-4.  use the custom_layout export on the resource to have per resource layout.
-
-
-The cards also have a back_layout implemented, simmilar you can use this methods to set it:
-1. use the set_layout("back_name", false) function in the card.
-2.  set def_back_layout value from the card globals to the value you need.
-3.  (not recommended) replace DEFAULT_BACK_LAYOUT constant path in the global script
-
-#### 3. Spawning the card. 
-To spawn a specific card, initialize it by passing a card_resource in the Card.new() function. 
-You can also you the "Add child node" button in the editor to add a new card and manually set its resource within the editor. 
-
-And you're done. Enjoy your card :)
-
-### Classes
-
-**Check the editor documentation for full details for each class and function**
-
-#### Card
-The Card is  a modified button.
-On button_down the card will wait for 2 possibilities:
-- If button_up is called (button released) than the click action happens. card_clicked is emited.
-- If the cursor is moved pass the threshold card enters in holding state. holding = true and will follow cursor until button_up is called.
-Disabling the button will stop both of this to stop working.
-Setting undraggable to true will disable the draging function but not the click
-
-#### CardResource
-Abstract class used to store data. Does nothing unless extended.
-
-The custom_layout_name export will set the front layout to the value if valid.
-
-
-#### CardLayout
-Node used to create visuals for the cards. Check [[#Making your first card.]] for details.
-
-#### CardDeck
-Resource class to used to store premade arrays of card_resources.
-You can give it a name.
-
-#### CardDeckManager
-Takes a card deck and converts the resources into card instances. It is split in to nodes: 
-draw pile and discard pile. Has basic functions like draw, discard, and shuffle. 
-
-#### CardHand
-Container node used to arrange cards in a specific shape. 
-The shapes implemented for now are: 
-- Arc
-- Line
-Use the add and remove card functions to manage the cards in the hand. 
-
-The handle_clicked_card function also connects to the card_clicked signals of all the cards in the hand. Overwrite it to implement your own functionality.
-
-
-### Example
-
-#### Balatro Style
-In the example folder there is a simple stripped down implementation of the game balatro. Use it as a refrence for what could be done :)
-
-#### More soon™
-
-
-
-## Have fun 
-For any feedback, suggestions or complains, feel free to dm me at @twdoortoo on Twitter (formerly known as X)
+[//]: # (*[Add additional credits, assets, libraries, etc.]*)
