@@ -162,7 +162,8 @@ func _ready() -> void:
 
 	# Achievement setup
 	await AchievementManager.achievements_loaded
-	AchievementManager.reset_achievements()
+	if Engine.is_editor_hint() or OS.has_feature("editor"): 
+		AchievementManager.reset_achievements()
 	await get_tree().create_timer(3).timeout
 	AchievementManager.unlock_achievement("game_launch")
 
