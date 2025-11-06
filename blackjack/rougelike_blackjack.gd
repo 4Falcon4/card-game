@@ -39,6 +39,11 @@ extends CanvasLayer
 @onready var result_label: Label = %ResultLabel if has_node("%ResultLabel") else null
 @onready var split_value_label: Label = %SplitValueLabel if has_node("%SplitValueLabel") else null
 
+# Tooltip UI
+@onready var card_tooltip: PanelContainer = %CardTooltip if has_node("%CardTooltip") else null
+@onready var tooltip_ability_name: Label = %AbilityName if has_node("%AbilityName") else null
+@onready var tooltip_ability_description: Label = %AbilityDescription if has_node("%AbilityDescription") else null
+
 # Game state
 var current_bet: int = 100  # Default bet amount
 var players_turn: bool = true
@@ -121,6 +126,9 @@ func _ready() -> void:
 	AchievementManager.reset_achievements()
 	await get_tree().create_timer(3).timeout
 	AchievementManager.unlock_achievement("game_launch")
+
+	# Setup tooltip connections for all hands
+	_setup_tooltip_connections()
 	
 
 #region Card Modifier Buttons
@@ -339,6 +347,7 @@ func _on_hit_pressed() -> void:
 				draw_hand.add_cards(cards)
 				for card in cards:
 					card.is_front_face = false
+					_connect_card_tooltip_signals(card)  # Connect tooltip signals
 
 		# Start card selection process (need 1 card for hit)
 		_start_card_selection(1, "hit")
@@ -362,6 +371,7 @@ func _on_double_pressed() -> void:
 				draw_hand.add_cards(cards)
 				for card in cards:
 					card.is_front_face = false
+					_connect_card_tooltip_signals(card)  # Connect tooltip signals
 
 		# Start card selection process (need 1 card for double)
 		_start_card_selection(1, "double")
@@ -385,6 +395,7 @@ func _on_split_pressed() -> void:
 					draw_hand.add_cards(cards)
 					for card in cards:
 						card.is_front_face = false
+						_connect_card_tooltip_signals(card)  # Connect tooltip signals
 
 			# Start card selection process (need 1 card for split hand)
 			_start_card_selection(1, "split")
@@ -434,6 +445,7 @@ func _dealer_play() -> void:
 			dealer_hand.add_cards(cards)
 			blackjack_manager.AddDealerCard(cards[0])
 			cards[0].card_data.deck_color = BlackjackStyleRes.deck_colors.DARK  # Dealer cards are always dark/gray
+			_connect_card_tooltip_signals(cards[0])  # Connect tooltip signals
 			_update_ui()
 		else:
 			break
@@ -602,6 +614,7 @@ func _populate_draw_hand() -> void:
 		for card in cards:
 			draw_hand.add_card(card)
 			card.is_hidden = true
+			_connect_card_tooltip_signals(card)  # Connect tooltip signals
 			await get_tree().create_timer(0.2).timeout  # Small delay for visual effect
 
 
@@ -680,7 +693,7 @@ func _transfer_cards_to_play_hand(cards: Array[Card], target_hand: CardHand = nu
 	"""Transfer selected cards from draw hand to play hand"""
 	if not target_hand:
 		target_hand = card_hand
-		
+
 	_show_message("Transferring %d card%s to play hand" % [cards.size() + 1, "s" if cards.size() > 1 else ""])
 
 	for card in cards:
@@ -693,8 +706,11 @@ func _transfer_cards_to_play_hand(cards: Array[Card], target_hand: CardHand = nu
 
 		# Flip card face-up
 		card.flip()
-		
+
 		card.is_hidden = false
+
+		# Connect tooltip signals (in case not already connected)
+		_connect_card_tooltip_signals(card)
 
 		# Register with blackjack manager
 		blackjack_manager.AddPlayerCard(card)
@@ -720,6 +736,7 @@ func _complete_deal_with_selected_cards(selected_cards: Array[Card]) -> void:
 			dealer_hand.add_card(card)
 			blackjack_manager.AddDealerCard(card)
 			card.card_data.deck_color = BlackjackStyleRes.deck_colors.DARK  # Dealer cards are always dark/gray
+			_connect_card_tooltip_signals(card)  # Connect tooltip signals
 			if i > 0:
 				card.is_hidden = true  # Hide dealer's second card
 			else:
@@ -859,5 +876,115 @@ func _set_blackjack_controls_enabled(enabled: bool) -> void:
 		double_button.disabled = !blackjack_manager.CanDouble() if enabled else true
 	if split_button:
 		split_button.disabled = !blackjack_manager.CanSplit() if enabled else true
+
+#endregion
+
+
+#region Tooltip System
+
+func _setup_tooltip_connections() -> void:
+	"""Connect tooltip signals for all existing cards in all hands"""
+	if not card_tooltip:
+		return
+
+	# Connect cards in all hands
+	for hand in [card_hand, dealer_hand, draw_hand, split_hand]:
+		if hand and hand.cards:
+			for card in hand.cards:
+				_connect_card_tooltip_signals(card)
+
+
+func _connect_card_tooltip_signals(card: Card) -> void:
+	"""Connect a card's tooltip signals"""
+	if not card or not card_tooltip:
+		return
+
+	# Check if already connected to avoid duplicate connections
+	if not card.card_tooltip_requested.is_connected(_show_card_tooltip):
+		card.card_tooltip_requested.connect(_show_card_tooltip)
+	if not card.card_tooltip_hide_requested.is_connected(_hide_card_tooltip):
+		card.card_tooltip_hide_requested.connect(_hide_card_tooltip)
+
+
+func _show_card_tooltip(card: Card) -> void:
+	"""Display tooltip for a card showing its ability"""
+	if not card_tooltip or not tooltip_ability_name or not tooltip_ability_description:
+		return
+
+	# Check if card has BlackjackStyleRes data
+	if not card.card_data is BlackjackStyleRes:
+		return
+
+	var card_data: BlackjackStyleRes = card.card_data as BlackjackStyleRes
+
+	# Check if card has ability data
+	if not card_data.ability or card_data.display_name.is_empty():
+		return
+
+	# Determine which description to show based on deck color
+	var description: String = ""
+	var is_positive: bool = false
+
+	match card_data.deck_color:
+		BlackjackStyleRes.deck_colors.LIGHT:  # Beige = Positive
+			description = card_data.descriptionP
+			is_positive = true
+		BlackjackStyleRes.deck_colors.DARK:  # Grey = Negative
+			description = card_data.descriptionN
+			is_positive = false
+		_:
+			# No color set, don't show tooltip
+			return
+
+	# Set tooltip content
+	tooltip_ability_name.text = card_data.display_name
+	tooltip_ability_description.text = description
+
+	# Style tooltip based on positive/negative
+	var tooltip_panel = card_tooltip.get_theme_stylebox("panel")
+	if not tooltip_panel:
+		tooltip_panel = StyleBoxFlat.new()
+		card_tooltip.add_theme_stylebox_override("panel", tooltip_panel)
+
+	if tooltip_panel is StyleBoxFlat:
+		if is_positive:
+			# Positive style - beige/green theme
+			tooltip_panel.bg_color = Color(0.87, 0.72, 0.53, 0.95)  # Burlywood with slight transparency
+			tooltip_panel.border_color = Color(0.18, 0.31, 0.31)  # Dark slate gray
+			tooltip_ability_name.add_theme_color_override("font_color", Color(0.0, 0.5, 0.0))  # Dark green
+		else:
+			# Negative style - grey/red theme
+			tooltip_panel.bg_color = Color(0.18, 0.31, 0.31, 0.95)  # Dark slate gray with transparency
+			tooltip_panel.border_color = Color(0.87, 0.72, 0.53)  # Burlywood
+			tooltip_ability_name.add_theme_color_override("font_color", Color(0.8, 0.2, 0.2))  # Red
+
+		tooltip_panel.border_width_left = 2
+		tooltip_panel.border_width_top = 2
+		tooltip_panel.border_width_right = 2
+		tooltip_panel.border_width_bottom = 2
+		tooltip_panel.corner_radius_top_left = 5
+		tooltip_panel.corner_radius_top_right = 5
+		tooltip_panel.corner_radius_bottom_left = 5
+		tooltip_panel.corner_radius_bottom_right = 5
+
+	# Position tooltip near mouse cursor
+	var mouse_pos = get_viewport().get_mouse_position()
+	card_tooltip.position = mouse_pos + Vector2(20, 20)  # Offset from cursor
+
+	# Make sure tooltip stays on screen
+	var viewport_size = get_viewport().get_visible_rect().size
+	if card_tooltip.position.x + card_tooltip.size.x > viewport_size.x:
+		card_tooltip.position.x = mouse_pos.x - card_tooltip.size.x - 20
+	if card_tooltip.position.y + card_tooltip.size.y > viewport_size.y:
+		card_tooltip.position.y = mouse_pos.y - card_tooltip.size.y - 20
+
+	# Show tooltip
+	card_tooltip.visible = true
+
+
+func _hide_card_tooltip() -> void:
+	"""Hide the card tooltip"""
+	if card_tooltip:
+		card_tooltip.visible = false
 
 #endregion
