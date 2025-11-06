@@ -318,6 +318,7 @@ metadata/_custom_type_script = "uid://wn30x7o3f47m"
 
 [node name="CardTooltip" type="PanelContainer" parent="."]
 unique_name_in_owner = true
+z_index = 100
 custom_minimum_size = Vector2(250, 0)
 visible = false
 offset_right = 250.0

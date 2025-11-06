@@ -980,30 +980,50 @@ func _show_card_tooltip(card: Card) -> void:
 	# Wait one frame for size to update
 	await get_tree().process_frame
 
-	# Position tooltip near mouse cursor
-	var mouse_pos = get_viewport().get_mouse_position()
+	# Position tooltip relative to the card
+	var card_global_pos = card.global_position
+	var card_size = card.size
 	var tooltip_size = card_tooltip.size
-	var offset = Vector2(20, 20)
-
-	# Calculate position with screen boundary checks
 	var viewport_size = get_viewport().get_visible_rect().size
-	var new_pos = mouse_pos + offset
 
-	# Check right edge
-	if new_pos.x + tooltip_size.x > viewport_size.x:
-		new_pos.x = mouse_pos.x - tooltip_size.x - 20
+	# Determine if card is in top or bottom half of screen
+	var screen_middle_y = viewport_size.y / 2
+	var card_center_y = card_global_pos.y + (card_size.y / 2)
+	var is_in_top_half = card_center_y < screen_middle_y
 
-	# Check bottom edge
-	if new_pos.y + tooltip_size.y > viewport_size.y:
-		new_pos.y = mouse_pos.y - tooltip_size.y - 20
+	# Base position: to the left of the card
+	var offset_x = -20  # Offset to the left
+	var new_pos = Vector2()
 
+	if is_in_top_half:
+		# Card is in top half: show tooltip BELOW the card
+		new_pos.x = card_global_pos.x + offset_x
+		new_pos.y = card_global_pos.y + card_size.y + 10  # 10px below card
+	else:
+		# Card is in bottom half: show tooltip ABOVE the card
+		new_pos.x = card_global_pos.x + offset_x
+		new_pos.y = card_global_pos.y - tooltip_size.y - 10  # 10px above card
+
+	# Boundary checks to keep tooltip on screen
 	# Check left edge
-	if new_pos.x < 0:
+	if new_pos.x < 10:
 		new_pos.x = 10
 
+	# Check right edge
+	if new_pos.x + tooltip_size.x > viewport_size.x - 10:
+		# Try positioning to the right of the card instead
+		new_pos.x = card_global_pos.x + card_size.x + 20
+		# If still off-screen, clamp it
+		if new_pos.x + tooltip_size.x > viewport_size.x - 10:
+			new_pos.x = viewport_size.x - tooltip_size.x - 10
+
 	# Check top edge
-	if new_pos.y < 0:
+	if new_pos.y < 10:
 		new_pos.y = 10
+
+	# Check bottom edge
+	if new_pos.y + tooltip_size.y > viewport_size.y - 10:
+		new_pos.y = viewport_size.y - tooltip_size.y - 10
 
 	card_tooltip.position = new_pos
 
