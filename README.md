@@ -98,6 +98,7 @@ The game uses a hybrid approach:
 
 ## Roadmap
 - [ ] Additional card abilities and upgrades planned for future updates
+- [ ] Rework round end timing
 - [ ] Use locker to save data
 - [ ] Implement more robust error handling and user feedback
 - [ ] Implement sound effects and music tracks
@@ -106,6 +107,7 @@ The game uses a hybrid approach:
 - Save system is a work in progress; may have bugs
 - Some UI elements may not scale perfectly on all resolutions
 - Earned chips are inconsistent between runs
+- Split hand incorrectly changing states when busted
 
 ## Credits
 
