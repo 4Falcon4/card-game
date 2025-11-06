@@ -1,3 +1,4 @@
+@tool
 extends Node
 
 ## Global Game State Manager
@@ -6,6 +7,13 @@ extends Node
 signal chips_changed(new_amount: int)
 signal upgrade_purchased(upgrade_id: String)
 signal level_unlocked(level: int)
+
+## Editor-only button to delete save data
+@export var delete_save_data: bool = false:
+	set(value):
+		if value and (Engine.is_editor_hint() or OS.has_feature("editor")):
+			_editor_delete_save_data()
+		delete_save_data = false
 
 ## Persistent state
 var persistent_chips: int = 1000  ## Chips that persist between runs
@@ -25,18 +33,18 @@ var current_run_losses: int = 0
 var available_upgrades: Dictionary = {
 	"starting_chips_100": {
 		"name": "Extra Starting Chips I",
-		"description": "Start each run with +100 chips",
+		"description": "Start each run with +250 chips",
 		"cost": 500,
 		"effect": "starting_chips",
-		"value": 100,
+		"value": 250,
 		"max_level": 5
 	},
 	"starting_chips_250": {
 		"name": "Extra Starting Chips II",
-		"description": "Start each run with +250 chips",
+		"description": "Start each run with +750 chips",
 		"cost": 1500,
 		"effect": "starting_chips",
-		"value": 250,
+		"value": 750,
 		"max_level": 3,
 		"requires": "starting_chips_100"
 	},
@@ -85,6 +93,40 @@ var available_upgrades: Dictionary = {
 func _ready() -> void:
 	load_game_state()
 
+
+func _input(event):
+	if Input.is_action_just_pressed("Delete Save Data"):
+		_editor_delete_save_data()
+	
+	
+func _editor_delete_save_data() -> void:
+	"""Editor-only function to delete save data"""
+	if not (Engine.is_editor_hint() or OS.has_feature("editor")):
+		print("This function can only be used in the editor.")
+		return
+
+	# Delete the save file
+	reset_all_progress()
+	if FileAccess.file_exists("user://casino_save.dat"):
+		DirAccess.remove_absolute("user://casino_save.dat")
+		print("Save data deleted successfully!")
+	else:
+		print("No save data found to delete.")
+
+	# Reset all variables to defaults
+	persistent_chips = 1000
+	current_run_chips = 1000
+	purchased_upgrades = []
+	current_level = 1
+	highest_level_unlocked = 1
+	runs_completed = 0
+	total_chips_earned = 0
+	current_run_rounds = 0
+	current_run_wins = 0
+	current_run_losses = 0
+
+	print("Game state reset to defaults.")
+	
 func start_new_run() -> void:
 	"""Start a new casino run"""
 	# Calculate starting chips with upgrades

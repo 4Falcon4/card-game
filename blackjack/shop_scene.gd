@@ -11,9 +11,6 @@ extends Control
 @onready var return_button: Button = $MarginContainer/VBoxContainer/Footer/ReturnButton
 @onready var stats_label: Label = $MarginContainer/VBoxContainer/Footer/StatsLabel
 
-## Upgrade button scene (we'll create these dynamically)
-var upgrade_button_scene: PackedScene = preload("res://blackjack/shop_upgrade_button.tscn")
-
 func _ready() -> void:
 	if game_state:
 		game_state.chips_changed.connect(_on_chips_changed)

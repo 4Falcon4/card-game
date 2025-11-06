@@ -84,10 +84,10 @@ public partial class BlackjackManager : Node
 	public int WinPayoutMultiplier { get; set; } = 2;
 
 	[Export]
-	public int MinimumBet { get; set; } = 10;
+	public int MinimumBet { get; set; } = 100;
 
 	[Export]
-	public int MaximumBet { get; set; } = 1000;
+	public int MaximumBet { get; set; } = 100000;
 
 	#endregion
 
@@ -95,7 +95,7 @@ public partial class BlackjackManager : Node
 
 	public GameState CurrentState { get; private set; } = GameState.Idle;
 	public int CurrentBet { get; private set; } = 0;
-	public int PlayerChips { get; set; } = 1000;
+	public int PlayerChips { get; set; } = 100;
 	public RoundResult LastResult { get; private set; } = RoundResult.None;
 
 	private int _playerHandValue = 0;
@@ -232,7 +232,12 @@ public partial class BlackjackManager : Node
 		_dealerHandValue = CalculateHandValue(_dealerCards);
 		GD.Print($"Dealer card added. Hand value: {_dealerHandValue}");
 
-		CheckForBlackjack();
+		// Only check for blackjack if still in Dealing state
+		// This prevents duplicate EndRound calls when player already has blackjack
+		if (CurrentState == GameState.Dealing)
+		{
+			CheckForBlackjack();
+		}
 	}
 
 	/// <summary>

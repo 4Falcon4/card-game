@@ -338,6 +338,11 @@ func _activate_card_ability(card: Card, is_positive: bool) -> bool:
 
 func _on_deal_pressed() -> void:
 	"""Show betting dialog to start a new round"""
+	if blackjack_manager.PlayerChips < blackjack_manager.MinimumBet:
+		_show_message("Not enough chips to place minimum bet!")
+		protection_racket.kick_out()
+		return
+
 	betting_dialog.show_dialog(
 		blackjack_manager.PlayerChips,
 		blackjack_manager.MinimumBet,
@@ -609,6 +614,19 @@ func _on_round_ended(result: int, payout: int) -> void:
 			game_state.current_run_wins += 1
 		else:
 			game_state.current_run_losses += 1
+
+	# Check if player has 0 or fewer chips - auto kick out
+	if blackjack_manager.PlayerChips <= 0:
+		_show_message("💀 Out of chips! Getting kicked out... 💀")
+		await get_tree().create_timer(2.0).timeout
+
+		# Save chips to persistent state
+		if game_state:
+			game_state.end_run(false, 0)
+
+		# Transition to shop scene
+		get_tree().change_scene_to_file("res://blackjack/shop_scene.tscn")
+		return
 
 	# Check protection racket after round ends
 	if protection_racket:
@@ -954,7 +972,7 @@ func _on_kicked_out() -> void:
 		game_state.end_run(false, blackjack_manager.PlayerChips)
 
 	# Transition to shop scene
-	await get_tree().create_timer(2.0).timeout
+	await get_tree().create_timer(1.0).timeout
 	get_tree().change_scene_to_file("res://blackjack/shop_scene.tscn")
 
 func _update_racket_ui() -> void:

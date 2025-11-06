@@ -11,8 +11,8 @@ signal kicked_out()
 
 ## Configuration
 @export var rounds_between_payments: int = 3  ## How many rounds between payment demands
-@export var base_payment_amount: int = 50  ## Base amount to pay
-@export var payment_increase_per_demand: int = 25  ## How much the payment increases each time
+@export var base_payment_amount: int = 500  ## Base amount to pay
+@export var payment_increase_per_demand: int = 250  ## How much the payment increases each time
 @export var warning_rounds: int = 1  ## Warn player N rounds before payment due
 
 ## State
@@ -84,6 +84,11 @@ func try_make_payment(available_chips: int) -> bool:
 		kicked_out.emit()
 		is_active = false
 		return false
+		
+func kick_out() -> void:
+	"""Kick the player out of the casino"""
+	kicked_out.emit()
+	is_active = false
 
 func get_rounds_until_payment() -> int:
 	"""Get how many rounds until next payment is due"""
