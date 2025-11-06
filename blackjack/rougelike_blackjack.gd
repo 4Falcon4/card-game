@@ -936,50 +936,76 @@ func _show_card_tooltip(card: Card) -> void:
 			# No color set, don't show tooltip
 			return
 
+	# Skip if no description available
+	if description.is_empty():
+		return
+
 	# Set tooltip content
 	tooltip_ability_name.text = card_data.display_name
 	tooltip_ability_description.text = description
 
 	# Style tooltip based on positive/negative
-	var tooltip_panel = card_tooltip.get_theme_stylebox("panel")
-	if not tooltip_panel:
-		tooltip_panel = StyleBoxFlat.new()
-		card_tooltip.add_theme_stylebox_override("panel", tooltip_panel)
+	var tooltip_panel = StyleBoxFlat.new()
 
-	if tooltip_panel is StyleBoxFlat:
-		if is_positive:
-			# Positive style - beige/green theme
-			tooltip_panel.bg_color = Color(0.87, 0.72, 0.53, 0.95)  # Burlywood with slight transparency
-			tooltip_panel.border_color = Color(0.18, 0.31, 0.31)  # Dark slate gray
-			tooltip_ability_name.add_theme_color_override("font_color", Color(0.0, 0.5, 0.0))  # Dark green
-		else:
-			# Negative style - grey/red theme
-			tooltip_panel.bg_color = Color(0.18, 0.31, 0.31, 0.95)  # Dark slate gray with transparency
-			tooltip_panel.border_color = Color(0.87, 0.72, 0.53)  # Burlywood
-			tooltip_ability_name.add_theme_color_override("font_color", Color(0.8, 0.2, 0.2))  # Red
+	if is_positive:
+		# Positive style - beige/green theme
+		tooltip_panel.bg_color = Color(0.87, 0.72, 0.53, 0.95)  # Burlywood with slight transparency
+		tooltip_panel.border_color = Color(0.18, 0.31, 0.31)  # Dark slate gray
+		tooltip_ability_name.add_theme_color_override("font_color", Color(0.0, 0.5, 0.0))  # Dark green
+		tooltip_ability_description.add_theme_color_override("font_color", Color(0.1, 0.1, 0.1))  # Dark text
+	else:
+		# Negative style - grey/red theme
+		tooltip_panel.bg_color = Color(0.18, 0.31, 0.31, 0.95)  # Dark slate gray with transparency
+		tooltip_panel.border_color = Color(0.87, 0.72, 0.53)  # Burlywood
+		tooltip_ability_name.add_theme_color_override("font_color", Color(0.9, 0.3, 0.3))  # Red
+		tooltip_ability_description.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))  # Light text
 
-		tooltip_panel.border_width_left = 2
-		tooltip_panel.border_width_top = 2
-		tooltip_panel.border_width_right = 2
-		tooltip_panel.border_width_bottom = 2
-		tooltip_panel.corner_radius_top_left = 5
-		tooltip_panel.corner_radius_top_right = 5
-		tooltip_panel.corner_radius_bottom_left = 5
-		tooltip_panel.corner_radius_bottom_right = 5
+	tooltip_panel.border_width_left = 2
+	tooltip_panel.border_width_top = 2
+	tooltip_panel.border_width_right = 2
+	tooltip_panel.border_width_bottom = 2
+	tooltip_panel.corner_radius_top_left = 5
+	tooltip_panel.corner_radius_top_right = 5
+	tooltip_panel.corner_radius_bottom_left = 5
+	tooltip_panel.corner_radius_bottom_right = 5
+
+	card_tooltip.add_theme_stylebox_override("panel", tooltip_panel)
+
+	# Show tooltip first (needed for size calculation)
+	card_tooltip.visible = true
+
+	# Force size recalculation
+	card_tooltip.reset_size()
+
+	# Wait one frame for size to update
+	await get_tree().process_frame
 
 	# Position tooltip near mouse cursor
 	var mouse_pos = get_viewport().get_mouse_position()
-	card_tooltip.position = mouse_pos + Vector2(20, 20)  # Offset from cursor
+	var tooltip_size = card_tooltip.size
+	var offset = Vector2(20, 20)
 
-	# Make sure tooltip stays on screen
+	# Calculate position with screen boundary checks
 	var viewport_size = get_viewport().get_visible_rect().size
-	if card_tooltip.position.x + card_tooltip.size.x > viewport_size.x:
-		card_tooltip.position.x = mouse_pos.x - card_tooltip.size.x - 20
-	if card_tooltip.position.y + card_tooltip.size.y > viewport_size.y:
-		card_tooltip.position.y = mouse_pos.y - card_tooltip.size.y - 20
+	var new_pos = mouse_pos + offset
 
-	# Show tooltip
-	card_tooltip.visible = true
+	# Check right edge
+	if new_pos.x + tooltip_size.x > viewport_size.x:
+		new_pos.x = mouse_pos.x - tooltip_size.x - 20
+
+	# Check bottom edge
+	if new_pos.y + tooltip_size.y > viewport_size.y:
+		new_pos.y = mouse_pos.y - tooltip_size.y - 20
+
+	# Check left edge
+	if new_pos.x < 0:
+		new_pos.x = 10
+
+	# Check top edge
+	if new_pos.y < 0:
+		new_pos.y = 10
+
+	card_tooltip.position = new_pos
 
 
 func _hide_card_tooltip() -> void:

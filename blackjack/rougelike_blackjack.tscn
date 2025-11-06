@@ -318,9 +318,10 @@ metadata/_custom_type_script = "uid://wn30x7o3f47m"
 
 [node name="CardTooltip" type="PanelContainer" parent="."]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 0)
 visible = false
-offset_right = 300.0
-offset_bottom = 100.0
+offset_right = 250.0
+offset_bottom = 80.0
 mouse_filter = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="CardTooltip"]
@@ -332,17 +333,20 @@ theme_override_constants/margin_bottom = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CardTooltip/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 5
 
 [node name="AbilityName" type="Label" parent="CardTooltip/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "Ability Name"
 uppercase = true
 
 [node name="AbilityDescription" type="Label" parent="CardTooltip/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 13
 text = "Ability Description"
 autowrap_mode = 3
