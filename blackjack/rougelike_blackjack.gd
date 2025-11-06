@@ -350,6 +350,7 @@ func _on_deal_pressed() -> void:
 		_show_message("Not enough chips to place minimum bet!")
 		protection_racket.kick_out()
 		return
+	deal_button.disabled = true
 
 	betting_dialog.show_dialog(
 		blackjack_manager.PlayerChips,
@@ -369,6 +370,7 @@ func _on_bet_selected(bet_amount: int) -> void:
 func _on_bet_cancelled() -> void:
 	"""Called when player cancels betting"""
 	_show_message("Betting cancelled.")
+	deal_button.disabled = false
 
 
 func _on_hit_pressed() -> void:
