@@ -1,11 +1,216 @@
-[gd_scene load_steps=5 format=3 uid="uid://bsgctj4uxp7js"]
+[gd_scene load_steps=8 format=3 uid="uid://bsgctj4uxp7js"]
 
 [ext_resource type="PackedScene" uid="uid://c6k5nnpbypshi" path="res://addons/maaacks_menus_template/base/scenes/menus/main_menu/main_menu.tscn" id="1_d0671"]
 [ext_resource type="Script" uid="uid://dp2fm6vkg4nh0" path="res://menu/scenes/menus/main_menu/main_menu.gd" id="2_igqbr"]
 [ext_resource type="PackedScene" uid="uid://b24knl60ell7b" path="res://menu/scenes/overlaid_menus/main_menu_options_overlaid_menu.tscn" id="3_itxjw"]
 [ext_resource type="PackedScene" uid="uid://cqoysew7fmxj0" path="res://menu/scenes/overlaid_menus/main_menu_credits_overlaid_menu.tscn" id="4_tg1yk"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_normal"]
+bg_color = Color(0.15, 0.25, 0.15, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.5, 0.7, 0.4, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_pressed"]
+bg_color = Color(0.1, 0.2, 0.1, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.4, 0.6, 0.3, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+bg_color = Color(0.25, 0.4, 0.25, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.6, 0.9, 0.5, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_size = 6
+
 [node name="MainMenu" instance=ExtResource("1_d0671")]
 script = ExtResource("2_igqbr")
+game_scene_path = "uid://2dwibevu7ne7"
 options_packed_scene = ExtResource("3_itxjw")
 credits_packed_scene = ExtResource("4_tg1yk")
+
+[node name="CasinoBackground" type="ColorRect" parent="." index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.12, 0.08, 1)
+
+[node name="BackgroundGradient" type="ColorRect" parent="." index="1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1, 0.15, 0.1, 0.9)
+
+[node name="PokerTableHint" type="ColorRect" parent="." index="2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -300.0
+offset_right = 500.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.13, 0.45, 0.13, 0.15)
+
+[node name="AmbientParticles" type="CPUParticles2D" parent="." index="3"]
+position = Vector2(960, 0)
+amount = 25
+lifetime = 10.0
+preprocess = 2.0
+explosiveness = 0.1
+randomness = 0.5
+emission_shape = 3
+emission_rect_extents = Vector2(960, 50)
+direction = Vector2(0, 1)
+spread = 15.0
+gravity = Vector2(0, 15)
+initial_velocity_min = 8.0
+initial_velocity_max = 20.0
+scale_amount_min = 2.0
+scale_amount_max = 5.0
+color = Color(1, 0.9, 0.5, 0.25)
+
+[node name="Decorations" type="Control" parent="." index="4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopLeftCard" type="ColorRect" parent="Decorations" index="0"]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 150.0
+offset_right = 180.0
+offset_bottom = 300.0
+rotation = 0.261799
+color = Color(0.8, 0.1, 0.1, 0.5)
+
+[node name="TopRightCard" type="ColorRect" parent="Decorations" index="1"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -180.0
+offset_top = 150.0
+offset_right = -80.0
+offset_bottom = 300.0
+grow_horizontal = 0
+rotation = -0.261799
+color = Color(0.1, 0.1, 0.8, 0.5)
+
+[node name="BottomLeftChip" type="ColorRect" parent="Decorations" index="2"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 120.0
+offset_top = -200.0
+offset_right = 190.0
+offset_bottom = -130.0
+grow_vertical = 0
+rotation = 0.523599
+color = Color(1, 0.8, 0.2, 0.6)
+
+[node name="BottomRightChip" type="ColorRect" parent="Decorations" index="3"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -190.0
+offset_top = -200.0
+offset_right = -120.0
+offset_bottom = -130.0
+grow_horizontal = 0
+grow_vertical = 0
+rotation = -0.523599
+color = Color(0.2, 0.8, 0.3, 0.6)
+
+[node name="MenuContainer" parent="." index="9"]
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 60
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 60
+
+[node name="TitleLabel" parent="MenuContainer/TitleMargin/TitleContainer" index="0"]
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 72
+text = "CardGame"
+
+[node name="SubTitleLabel" parent="MenuContainer/SubTitleMargin/SubTitleContainer" index="0"]
+offset_top = 27.0
+offset_bottom = 66.0
+theme_override_colors/font_color = Color(0.9, 0.85, 0.6, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 28
+text = "Deal or Be Dealt With"
+
+[node name="NewGameButton" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="0"]
+custom_minimum_size = Vector2(250, 60)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+text = "Deal Me In"
+
+[node name="OptionsButton" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="1"]
+custom_minimum_size = Vector2(250, 60)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+
+[node name="CreditsButton" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="2"]
+custom_minimum_size = Vector2(250, 60)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+
+[node name="ExitButton" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="3"]
+custom_minimum_size = Vector2(250, 60)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+text = "Cash Out"

@@ -46,7 +46,7 @@ func generate_new_deck() -> void:
 		return
 
 	# Clear existing deck
-	target_deck_manager.clear_deck()
+	target_deck_manager.clear_draw_pile()
 
 	# Create a copy of the deck to modify
 	var new_deck = base_deck.duplicate(true)

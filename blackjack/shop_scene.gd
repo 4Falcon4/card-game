@@ -4,12 +4,12 @@ extends Control
 ## Displayed when player gets kicked out or wants to upgrade between runs
 
 @onready var game_state: Node = get_node("/root/GameStateManager")
-@onready var chips_label: Label = $MarginContainer/VBoxContainer/Header/ChipsLabel
-@onready var title_label: Label = $MarginContainer/VBoxContainer/Header/TitleLabel
-@onready var flavor_text: Label = $MarginContainer/VBoxContainer/Header/FlavorText
-@onready var upgrades_container: VBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/UpgradesContainer
-@onready var return_button: Button = $MarginContainer/VBoxContainer/Footer/ReturnButton
-@onready var stats_label: Label = $MarginContainer/VBoxContainer/Footer/StatsLabel
+@onready var chips_label: Label = %ChipsLabel
+@onready var title_label: Label = %TitleLabel
+@onready var flavor_text: Label = %FlavorText
+@onready var upgrades_container: VBoxContainer = %UpgradesContainer
+@onready var return_button: Button = %ReturnButton
+@onready var stats_label: Label = %StatsLabel
 
 func _ready() -> void:
 	if game_state:
