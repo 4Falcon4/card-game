@@ -64,6 +64,7 @@ func _discover_layouts() -> void:
 			var file_name = dir.get_next()
 			
 			while file_name != "":
+				file_name = file_name.replace(".remap", "")
 				if not dir.current_is_dir() and file_name.ends_with(".tscn"):
 					var full_path = LAYOUT_FOLDER + file_name
 					var layout_name = file_name.get_basename()
