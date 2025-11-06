@@ -490,6 +490,11 @@ public partial class BlackjackManager : Node
 			return false;
 		return _canDouble;
 	}
+	
+	public bool HasDoubled()
+	{
+		return _hasDoubled;
+	}
 
 	/// <summary>
 	/// Checks if player can split.
