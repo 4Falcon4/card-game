@@ -108,6 +108,7 @@ The game uses a hybrid approach:
 - Some UI elements may not scale perfectly on all resolutions
 - Earned chips are inconsistent between runs
 - Split hand incorrectly changing states when busted
+- Confirmation prompts are not using correct style
 
 ## Credits
 
