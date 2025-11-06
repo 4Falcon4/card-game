@@ -23,10 +23,10 @@ static func perform_positive(context: Dictionary) -> void:
 
 ## Draw additional cards based on cards already played
 static func perform_negative(context: Dictionary) -> void:
-	var player_deck_manager = context.get("player_deck_manager")
+	var card_deck_manager = context.get("card_deck_manager")
 	var player_hand = context.get("player_hand")
 
-	if !player_deck_manager or !player_hand:
+	if !card_deck_manager or !player_hand:
 		push_error("CrossesAbility: Missing required context")
 		return
 
@@ -34,7 +34,7 @@ static func perform_negative(context: Dictionary) -> void:
 	var cards_to_draw = player_hand.cards.size()
 
 	if cards_to_draw > 0:
-		var drawn_cards = player_deck_manager.deal_cards(cards_to_draw)
+		var drawn_cards = card_deck_manager.deal_cards(cards_to_draw)
 		if drawn_cards.size() > 0:
 			player_hand.add_cards(drawn_cards)
 			print("CrossesAbility: Drew %d additional cards! Hand size: %d" % [drawn_cards.size(), player_hand.cards.size()])
