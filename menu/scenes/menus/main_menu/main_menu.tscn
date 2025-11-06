@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bsgctj4uxp7js"]
+[gd_scene load_steps=8 format=3 uid="uid://bsgctj4uxp7js"]
 
 [ext_resource type="PackedScene" uid="uid://c6k5nnpbypshi" path="res://addons/maaacks_menus_template/base/scenes/menus/main_menu/main_menu.tscn" id="1_d0671"]
 [ext_resource type="Script" uid="uid://dp2fm6vkg4nh0" path="res://menu/scenes/menus/main_menu/main_menu.gd" id="2_igqbr"]
@@ -16,22 +16,8 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
-shadow_size = 4
 shadow_color = Color(0, 0, 0, 0.5)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
-bg_color = Color(0.25, 0.4, 0.25, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.6, 0.9, 0.5, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_size = 6
-shadow_color = Color(0, 0, 0, 0.6)
+shadow_size = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_pressed"]
 bg_color = Color(0.1, 0.2, 0.1, 1)
@@ -45,17 +31,22 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="LabelSettings" id="LabelSettings_title"]
-font_size = 72
-font_color = Color(1, 0.9, 0.4, 1)
-outline_size = 4
-outline_color = Color(0, 0, 0, 1)
-shadow_size = 8
-shadow_color = Color(0, 0, 0, 0.5)
-shadow_offset = Vector2(4, 4)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+bg_color = Color(0.25, 0.4, 0.25, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.6, 0.9, 0.5, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_size = 6
 
 [node name="MainMenu" instance=ExtResource("1_d0671")]
 script = ExtResource("2_igqbr")
+game_scene_path = "uid://2dwibevu7ne7"
 options_packed_scene = ExtResource("3_itxjw")
 credits_packed_scene = ExtResource("4_tg1yk")
 
@@ -170,7 +161,7 @@ grow_vertical = 0
 rotation = -0.523599
 color = Color(0.2, 0.8, 0.3, 0.6)
 
-[node name="MenuContainer" parent="." index="5"]
+[node name="MenuContainer" parent="." index="9"]
 theme_override_constants/margin_left = 100
 theme_override_constants/margin_top = 60
 theme_override_constants/margin_right = 100
@@ -179,13 +170,15 @@ theme_override_constants/margin_bottom = 60
 [node name="TitleLabel" parent="MenuContainer/TitleMargin/TitleContainer" index="0"]
 theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 4
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 72
-text = "Roguelike Blackjack"
+text = "CardGame"
 
 [node name="SubTitleLabel" parent="MenuContainer/SubTitleMargin/SubTitleContainer" index="0"]
+offset_top = 27.0
+offset_bottom = 66.0
 theme_override_colors/font_color = Color(0.9, 0.85, 0.6, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
 theme_override_constants/outline_size = 2
@@ -194,30 +187,30 @@ text = "Deal or Be Dealt With"
 
 [node name="NewGameButton" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="0"]
 custom_minimum_size = Vector2(250, 60)
-theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 text = "Deal Me In"
 
 [node name="OptionsButton" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="1"]
 custom_minimum_size = Vector2(250, 60)
-theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 
 [node name="CreditsButton" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="2"]
 custom_minimum_size = Vector2(250, 60)
-theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 
 [node name="ExitButton" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="3"]
 custom_minimum_size = Vector2(250, 60)
-theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 text = "Cash Out"
