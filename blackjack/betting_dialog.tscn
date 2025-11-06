@@ -1,6 +1,72 @@
-[gd_scene load_steps=14 format=3 uid="uid://cq8f4y7n5xo8w"]
+[gd_scene load_steps=21 format=3 uid="uid://cq8f4y7n5xo8w"]
 
 [ext_resource type="Script" uid="uid://dm30448djqv5c" path="res://blackjack/betting_dialog.gd" id="1_betting_dialog"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.1, 0.1, 0.15, 0.95)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.8, 0.6, 0.2, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+shadow_size = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font_size = 32
+font_color = Color(1, 0.85, 0.3, 1)
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_chips"]
+font_size = 24
+font_color = Color(0.3, 1, 0.3, 1)
+outline_size = 1
+outline_color = Color(0, 0, 0, 0.8)
+
+[sub_resource type="LabelSettings" id="LabelSettings_bet"]
+font_size = 28
+outline_size = 1
+outline_color = Color(0, 0, 0, 0.8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_normal"]
+bg_color = Color(0.2, 0.35, 0.2, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4, 0.6, 0.4, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_pressed"]
+bg_color = Color(0.15, 0.25, 0.15, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.3, 0.5, 0.3, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+bg_color = Color(0.3, 0.5, 0.3, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5, 0.8, 0.5, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="InputEventAction" id="InputEventAction_gswfk"]
 action = &"bet_min"
@@ -38,74 +104,6 @@ action = &"bet_confirm"
 [sub_resource type="Shortcut" id="Shortcut_46kr7"]
 events = [SubResource("InputEventAction_bflfa")]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.1, 0.1, 0.15, 0.95)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.8, 0.6, 0.2, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-shadow_size = 8
-shadow_color = Color(0, 0, 0, 0.6)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_normal"]
-bg_color = Color(0.2, 0.35, 0.2, 0.9)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.4, 0.6, 0.4, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
-bg_color = Color(0.3, 0.5, 0.3, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.5, 0.8, 0.5, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_pressed"]
-bg_color = Color(0.15, 0.25, 0.15, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.3, 0.5, 0.3, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="LabelSettings" id="LabelSettings_title"]
-font_size = 32
-font_color = Color(1, 0.85, 0.3, 1)
-outline_size = 2
-outline_color = Color(0, 0, 0, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_chips"]
-font_size = 24
-font_color = Color(0.3, 1, 0.3, 1)
-outline_size = 1
-outline_color = Color(0, 0, 0, 0.8)
-
-[sub_resource type="LabelSettings" id="LabelSettings_bet"]
-font_size = 28
-font_color = Color(1, 1, 1, 1)
-outline_size = 1
-outline_color = Color(0, 0, 0, 0.8)
-
 [node name="BettingDialog" type="CanvasLayer"]
 script = ExtResource("1_betting_dialog")
 
@@ -118,6 +116,7 @@ grow_vertical = 2
 color = Color(0, 0, 0, 0.7)
 
 [node name="Decorations" type="Control" parent="."]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -222,32 +221,32 @@ alignment = 1
 [node name="MinButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 shortcut = SubResource("Shortcut_wx8ro")
 text = "Min"
 
 [node name="QuarterButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 shortcut = SubResource("Shortcut_74nfr")
 text = "25%"
 
 [node name="HalfButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 shortcut = SubResource("Shortcut_bflfa")
 text = "50%"
 
 [node name="MaxButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 shortcut = SubResource("Shortcut_toxqd")
 text = "Max"
 
@@ -259,19 +258,19 @@ alignment = 1
 [node name="CancelButton" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(100, 50)
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 shortcut = SubResource("Shortcut_shwt1")
 text = "Cancel"
 
 [node name="ConfirmButton" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(100, 50)
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 shortcut = SubResource("Shortcut_46kr7")
 text = "Confirm Bet"

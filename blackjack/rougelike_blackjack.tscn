@@ -363,6 +363,7 @@ script = ExtResource("2_fs0nk")
 script = ExtResource("1_protection_racket")
 
 [node name="BettingDialog" parent="." instance=ExtResource("10_betting")]
+layer = 5
 
 [node name="PuaseMenuController" type="Node" parent="."]
 script = ExtResource("3_30fd4")
@@ -438,6 +439,7 @@ enable_reordering = false
 metadata/_custom_type_script = "uid://bbi8i6vef3f6y"
 
 [node name="SplitHand" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 7
 anchor_left = 0.5
