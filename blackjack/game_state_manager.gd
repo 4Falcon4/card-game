@@ -15,14 +15,23 @@ signal level_unlocked(level: int)
 			_editor_delete_save_data()
 		delete_save_data = false
 
+# Constants for default values
+const DEFAULT_PERSISTENT_CHIPS: int = 100
+const DEFAULT_CURRENT_RUN_CHIPS: int = 1000
+const DEFAULT_PURCHASED_UPGRADES: Array[String] = []
+const DEFAULT_CURRENT_LEVEL: int = 1
+const DEFAULT_HIGHEST_LEVEL_UNLOCKED: int = 1
+const DEFAULT_RUNS_COMPLETED: int = 0
+const DEFAULT_TOTAL_CHIPS_EARNED: int = 0
+
 ## Persistent state
-var persistent_chips: int = 1000  ## Chips that persist between runs
-var current_run_chips: int = 1000  ## Chips for current casino run
-var purchased_upgrades: Array[String] = []  ## List of purchased upgrade IDs
-var current_level: int = 1  ## Current level/difficulty
-var highest_level_unlocked: int = 1  ## Highest level unlocked
-var runs_completed: int = 0  ## Total successful runs
-var total_chips_earned: int = 0  ## Lifetime chips earned
+var persistent_chips: int = DEFAULT_PERSISTENT_CHIPS  ## Chips that persist between runs
+var current_run_chips: int = DEFAULT_CURRENT_RUN_CHIPS  ## Chips for current casino run
+var purchased_upgrades: Array[String] = DEFAULT_PURCHASED_UPGRADES.duplicate()  ## List of purchased upgrade IDs
+var current_level: int = DEFAULT_CURRENT_LEVEL  ## Current level/difficulty
+var highest_level_unlocked: int = DEFAULT_HIGHEST_LEVEL_UNLOCKED  ## Highest level unlocked
+var runs_completed: int = DEFAULT_RUNS_COMPLETED  ## Total successful runs
+var total_chips_earned: int = DEFAULT_TOTAL_CHIPS_EARNED  ## Lifetime chips earned
 
 ## Run statistics
 var current_run_rounds: int = 0
@@ -95,8 +104,9 @@ func _ready() -> void:
 
 
 func _input(event):
-	if Input.is_action_just_pressed("Delete Save Data"):
-		_editor_delete_save_data()
+	if InputMap.has_action("delete_save_data"):
+		if Input.is_action_just_pressed("delete_save_data"):
+			_editor_delete_save_data()
 	
 	
 func _editor_delete_save_data() -> void:
@@ -114,13 +124,13 @@ func _editor_delete_save_data() -> void:
 		print("No save data found to delete.")
 
 	# Reset all variables to defaults
-	persistent_chips = 1000
-	current_run_chips = 1000
-	purchased_upgrades = []
-	current_level = 1
-	highest_level_unlocked = 1
-	runs_completed = 0
-	total_chips_earned = 0
+	persistent_chips = DEFAULT_PERSISTENT_CHIPS
+	current_run_chips = DEFAULT_CURRENT_RUN_CHIPS
+	purchased_upgrades = DEFAULT_PURCHASED_UPGRADES.duplicate()
+	current_level = DEFAULT_CURRENT_LEVEL
+	highest_level_unlocked = DEFAULT_HIGHEST_LEVEL_UNLOCKED
+	runs_completed = DEFAULT_RUNS_COMPLETED
+	total_chips_earned = DEFAULT_TOTAL_CHIPS_EARNED
 	current_run_rounds = 0
 	current_run_wins = 0
 	current_run_losses = 0
@@ -130,7 +140,7 @@ func _editor_delete_save_data() -> void:
 func start_new_run() -> void:
 	"""Start a new casino run"""
 	# Calculate starting chips with upgrades
-	var starting_chips = 1000
+	var starting_chips = DEFAULT_CURRENT_RUN_CHIPS
 	starting_chips += get_total_upgrade_value("starting_chips")
 
 	current_run_chips = starting_chips
@@ -257,19 +267,19 @@ func load_game_state() -> void:
 		save_file.close()
 
 		if save_data is Dictionary:
-			persistent_chips = save_data.get("persistent_chips", 1000)
-			purchased_upgrades = save_data.get("purchased_upgrades", [])
-			current_level = save_data.get("current_level", 1)
-			highest_level_unlocked = save_data.get("highest_level_unlocked", 1)
-			runs_completed = save_data.get("runs_completed", 0)
-			total_chips_earned = save_data.get("total_chips_earned", 0)
+			persistent_chips = save_data.get("persistent_chips", DEFAULT_PERSISTENT_CHIPS)
+			purchased_upgrades = save_data.get("purchased_upgrades", DEFAULT_PURCHASED_UPGRADES.duplicate())
+			current_level = save_data.get("current_level", DEFAULT_CURRENT_LEVEL)
+			highest_level_unlocked = save_data.get("highest_level_unlocked", DEFAULT_HIGHEST_LEVEL_UNLOCKED)
+			runs_completed = save_data.get("runs_completed", DEFAULT_RUNS_COMPLETED)
+			total_chips_earned = save_data.get("total_chips_earned", DEFAULT_TOTAL_CHIPS_EARNED)
 
 func reset_all_progress() -> void:
 	"""Reset all progress (for debugging or new game+)"""
-	persistent_chips = 1000
-	purchased_upgrades = []
-	current_level = 1
-	highest_level_unlocked = 1
-	runs_completed = 0
-	total_chips_earned = 0
+	persistent_chips = DEFAULT_PERSISTENT_CHIPS
+	purchased_upgrades = DEFAULT_PURCHASED_UPGRADES.duplicate()
+	current_level = DEFAULT_CURRENT_LEVEL
+	highest_level_unlocked = DEFAULT_HIGHEST_LEVEL_UNLOCKED
+	runs_completed = DEFAULT_RUNS_COMPLETED
+	total_chips_earned = DEFAULT_TOTAL_CHIPS_EARNED
 	save_game_state()
