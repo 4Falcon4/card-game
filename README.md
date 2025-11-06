@@ -107,7 +107,7 @@ The game uses a hybrid approach:
 - Save system is a work in progress; may have bugs
 - Some UI elements may not scale perfectly on all resolutions
 - Earned chips are inconsistent between runs
-- Split hand incorrectly changing states when busted
+- Split hand possibly still incorrectly changing states when busted
 - Confirmation prompts are not using correct style
 
 ## Credits
