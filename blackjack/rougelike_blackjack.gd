@@ -577,6 +577,8 @@ func _on_game_state_changed(new_state: int) -> void:
 
 func _on_player_busted() -> void:
 	"""Player exceeded 21"""
+	if blackjack_manager.IsPlayingSplitHand() or blackjack_manager.HasSplit():
+		return
 	for card in dealer_hand.cards:
 		if not card.is_front_face:
 			card.is_front_face = true
@@ -935,7 +937,7 @@ func _update_ui() -> void:
 		var total_bet = blackjack_manager.CurrentBet
 		if blackjack_manager.HasSplit():
 			# Split means double the bet (one per hand)
-			bet_label.text = "Bet: %d (x2 hands)" % (total_bet / 2)
+			bet_label.text = "Bet: %d (x2 hands)" % (total_bet)
 		else:
 			bet_label.text = "Bet: %d" % total_bet
 
