@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://fpoco0u13011"
-path="res://.godot/imported/KarenFat.ttf-c688da488ef7cec3316a95fdd79a95b9.fontdata"
+uid="uid://dab1n5uj316c8"
+path="res://.godot/imported/KarenFat.ttf-e82f07297b12f45392e216d84c884840.fontdata"
 
 [deps]
 
-source_file="res://examples/balatro_style/KarenFat.ttf"
-dest_files=["res://.godot/imported/KarenFat.ttf-c688da488ef7cec3316a95fdd79a95b9.fontdata"]
+source_file="res://card_layouts/KarenFat.ttf"
+dest_files=["res://.godot/imported/KarenFat.ttf-e82f07297b12f45392e216d84c884840.fontdata"]
 
 [params]
 
