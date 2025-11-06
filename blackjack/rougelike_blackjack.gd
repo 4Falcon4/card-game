@@ -87,13 +87,21 @@ func _ready() -> void:
 	if split_button:
 		split_button.pressed.connect(_on_split_pressed)
 
+	if Engine.is_editor_hint() or OS.has_feature("editor"):
 	# Connect card ability buttons
-	if positive_button:
-		positive_button.pressed.connect(_on_positive_pressed)
-	if negative_button:
-		negative_button.pressed.connect(_on_negative_pressed)
-	if activate_on_draw_button:
-		activate_on_draw_button.toggled.connect(_on_activate_on_draw_toggled)
+		if positive_button:
+			positive_button.pressed.connect(_on_positive_pressed)
+		if negative_button:
+			negative_button.pressed.connect(_on_negative_pressed)
+		if activate_on_draw_button:
+			activate_on_draw_button.toggled.connect(_on_activate_on_draw_toggled)
+	else:
+		if positive_button:
+			positive_button.visible = false
+		if negative_button:
+			negative_button.visible = false
+		if activate_on_draw_button:
+			activate_on_draw_button.visible = false
 
 	# Connect draw hand confirmation button
 	if confirm_selection_button:
