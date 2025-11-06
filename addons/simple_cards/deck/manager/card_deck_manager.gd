@@ -84,6 +84,20 @@ func add_card_to_discard_pile(card: Card) -> void:
 	
 	_handle_card_reparanting(card, discard_pile.global_position if discard_pile is Control else Vector2.ZERO)
 
+func add_card_to_bottom_draw_pile(card: Card) -> void:
+	# Kill all tweens before reparenting
+	card.kill_all_tweens()
+	
+	if card.get_parent():
+		if card.get_parent() is CardHand:
+			card.get_parent().remove_card(card, draw_pile)
+		else:
+			card.reparent(draw_pile)
+	else:
+		draw_pile.add_child(card)
+	
+	draw_pile.move_child(card, 0)
+	_handle_card_reparanting(card, draw_pile.global_position if draw_pile is Control else Vector2.ZERO)
 
 func _handle_card_reparanting(card: Card, des_position: Vector2 = Vector2.ZERO):
 	card.rotation = 0
@@ -228,6 +242,14 @@ func clear_deck() -> void:
 	for child in draw_pile.get_children():
 		child.queue_free()
 	
+	for child in discard_pile.get_children():
+		child.queue_free()
+
+func clear_draw_pile() -> void:
+	for child in draw_pile.get_children():
+		child.queue_free()
+		
+func clear_discard_pile() -> void:
 	for child in discard_pile.get_children():
 		child.queue_free()
 
