@@ -325,6 +325,18 @@ offset_right = 250.0
 offset_bottom = 80.0
 mouse_filter = 2
 
+[node name="RarityLabel" type="Label" parent="CardTooltip"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 215.0
+offset_top = 5.0
+offset_right = 245.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 14
+text = "R"
+horizontal_alignment = 2
+vertical_alignment = 0
+
 [node name="MarginContainer" type="MarginContainer" parent="CardTooltip"]
 layout_mode = 2
 theme_override_constants/margin_left = 10

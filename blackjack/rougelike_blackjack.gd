@@ -43,6 +43,7 @@ extends CanvasLayer
 @onready var card_tooltip: PanelContainer = %CardTooltip if has_node("%CardTooltip") else null
 @onready var tooltip_ability_name: Label = %AbilityName if has_node("%AbilityName") else null
 @onready var tooltip_ability_description: Label = %AbilityDescription if has_node("%AbilityDescription") else null
+@onready var tooltip_rarity_label: Label = %RarityLabel if has_node("%RarityLabel") else null
 
 # Game state
 var current_bet: int = 100  # Default bet amount
@@ -882,6 +883,56 @@ func _set_blackjack_controls_enabled(enabled: bool) -> void:
 
 #region Tooltip System
 
+func _get_rarity_shorthand(rarity: BlackjackStyleRes.Rarrity) -> String:
+	"""Convert rarity enum to shorthand string"""
+	match rarity:
+		BlackjackStyleRes.Rarrity.COMMON:
+			return "C"
+		BlackjackStyleRes.Rarrity.UNCOMMON:
+			return "UC"
+		BlackjackStyleRes.Rarrity.RARE:
+			return "R"
+		BlackjackStyleRes.Rarrity.EPIC:
+			return "E"
+		BlackjackStyleRes.Rarrity.LEGENDARY:
+			return "L"
+		BlackjackStyleRes.Rarrity.MYTHIC:
+			return "M"
+		BlackjackStyleRes.Rarrity.EXOTIC:
+			return "EX"
+		BlackjackStyleRes.Rarrity.DIVINE:
+			return "D"
+		BlackjackStyleRes.Rarrity.GODLY:
+			return "G"
+		_:
+			return ""
+
+
+func _get_rarity_color(rarity: BlackjackStyleRes.Rarrity) -> Color:
+	"""Get color for rarity tier"""
+	match rarity:
+		BlackjackStyleRes.Rarrity.COMMON:
+			return Color(0.6, 0.6, 0.6)  # Gray
+		BlackjackStyleRes.Rarrity.UNCOMMON:
+			return Color(0.2, 0.8, 0.2)  # Green
+		BlackjackStyleRes.Rarrity.RARE:
+			return Color(0.2, 0.5, 1.0)  # Blue
+		BlackjackStyleRes.Rarrity.EPIC:
+			return Color(0.6, 0.2, 0.9)  # Purple
+		BlackjackStyleRes.Rarrity.LEGENDARY:
+			return Color(1.0, 0.65, 0.0)  # Orange
+		BlackjackStyleRes.Rarrity.MYTHIC:
+			return Color(1.0, 0.2, 0.5)  # Pink
+		BlackjackStyleRes.Rarrity.EXOTIC:
+			return Color(0.0, 0.9, 0.9)  # Cyan
+		BlackjackStyleRes.Rarrity.DIVINE:
+			return Color(1.0, 1.0, 0.4)  # Gold
+		BlackjackStyleRes.Rarrity.GODLY:
+			return Color(1.0, 0.0, 0.0)  # Red
+		_:
+			return Color(1.0, 1.0, 1.0)  # White
+
+
 func _setup_tooltip_connections() -> void:
 	"""Connect tooltip signals for all existing cards in all hands"""
 	if not card_tooltip:
@@ -943,6 +994,16 @@ func _show_card_tooltip(card: Card) -> void:
 	# Set tooltip content
 	tooltip_ability_name.text = card_data.display_name
 	tooltip_ability_description.text = description
+
+	# Set and style rarity label
+	if tooltip_rarity_label:
+		var rarity_shorthand = _get_rarity_shorthand(card_data.rarrity)
+		if rarity_shorthand.is_empty():
+			tooltip_rarity_label.visible = false
+		else:
+			tooltip_rarity_label.visible = true
+			tooltip_rarity_label.text = rarity_shorthand
+			tooltip_rarity_label.add_theme_color_override("font_color", _get_rarity_color(card_data.rarrity))
 
 	# Style tooltip based on positive/negative
 	var tooltip_panel = StyleBoxFlat.new()
