@@ -70,8 +70,288 @@ action = &"confirm"
 [sub_resource type="Shortcut" id="Shortcut_ei5kt"]
 events = [SubResource("InputEventAction_7go54")]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_normal"]
+bg_color = Color(0.2, 0.4, 0.2, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4, 0.6, 0.4, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+bg_color = Color(0.3, 0.55, 0.3, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5, 0.8, 0.5, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_pressed"]
+bg_color = Color(0.15, 0.3, 0.15, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.3, 0.5, 0.3, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.1, 0.1, 0.15, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.6, 0.5, 0.3, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_size = 5
+shadow_color = Color(0, 0, 0, 0.5)
+
 [node name="RougelikeBlackjack" type="CanvasLayer"]
 script = ExtResource("1_b22ve")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1, 0.15, 0.1, 1)
+
+[node name="BackgroundGradient" type="ColorRect" parent="Background"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.1, 0.05, 1)
+
+[node name="PokerTable" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -600.0
+offset_top = -350.0
+offset_right = 600.0
+offset_bottom = 350.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.13, 0.55, 0.13, 1)
+
+[node name="TableBorder" type="ColorRect" parent="PokerTable"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.6, 0.4, 0.2, 1)
+
+[node name="TableFelt" type="ColorRect" parent="PokerTable/TableBorder"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = -15.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.35, 0.08, 1)
+
+[node name="AmbientParticles" type="CPUParticles2D" parent="."]
+position = Vector2(960, 0)
+amount = 30
+lifetime = 8.0
+preprocess = 2.0
+explosiveness = 0.1
+randomness = 0.5
+emission_shape = 3
+emission_rect_extents = Vector2(960, 50)
+direction = Vector2(0, 1)
+spread = 10.0
+gravity = Vector2(0, 20)
+initial_velocity_min = 10.0
+initial_velocity_max = 30.0
+scale_amount_min = 2.0
+scale_amount_max = 5.0
+color = Color(1, 0.9, 0.6, 0.3)
+
+[node name="Decorations" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopLeftChip1" type="ColorRect" parent="Decorations"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 100.0
+offset_right = 120.0
+offset_bottom = 170.0
+rotation = 0.349066
+color = Color(1, 0.2, 0.2, 1)
+
+[node name="TopLeftChip2" type="ColorRect" parent="Decorations"]
+layout_mode = 0
+offset_left = 75.0
+offset_top = 115.0
+offset_right = 145.0
+offset_bottom = 185.0
+rotation = 0.698132
+color = Color(0.2, 0.2, 1, 1)
+
+[node name="TopLeftChip3" type="ColorRect" parent="Decorations"]
+layout_mode = 0
+offset_left = 95.0
+offset_top = 125.0
+offset_right = 165.0
+offset_bottom = 195.0
+rotation = 1.0472
+color = Color(1, 1, 0.2, 1)
+
+[node name="TopRightChip1" type="ColorRect" parent="Decorations"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = 100.0
+offset_right = -50.0
+offset_bottom = 170.0
+grow_horizontal = 0
+rotation = -0.349066
+color = Color(0.2, 1, 0.2, 1)
+
+[node name="TopRightChip2" type="ColorRect" parent="Decorations"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -145.0
+offset_top = 115.0
+offset_right = -75.0
+offset_bottom = 185.0
+grow_horizontal = 0
+rotation = -0.698132
+color = Color(1, 0.5, 0.2, 1)
+
+[node name="BottomLeftChip1" type="ColorRect" parent="Decorations"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 50.0
+offset_top = -170.0
+offset_right = 120.0
+offset_bottom = -100.0
+grow_vertical = 0
+rotation = 0.523599
+color = Color(0.8, 0.2, 0.8, 1)
+
+[node name="BottomRightChip1" type="ColorRect" parent="Decorations"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -120.0
+offset_top = -170.0
+offset_right = -50.0
+offset_bottom = -100.0
+grow_horizontal = 0
+grow_vertical = 0
+rotation = -0.523599
+color = Color(0.2, 0.8, 0.8, 1)
+
+[node name="Spotlight1" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -600.0
+offset_right = -100.0
+offset_bottom = -300.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.785398
+color = Color(1, 1, 0.8, 0.05)
+
+[node name="Spotlight2" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 100.0
+offset_top = -600.0
+offset_right = 400.0
+offset_bottom = -300.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.785398
+color = Color(1, 1, 0.8, 0.05)
+
+[node name="TableGlowParticles" type="CPUParticles2D" parent="."]
+position = Vector2(960, 540)
+amount = 20
+lifetime = 5.0
+preprocess = 2.0
+explosiveness = 0.2
+randomness = 0.8
+emission_shape = 3
+emission_rect_extents = Vector2(600, 350)
+direction = Vector2(0, -1)
+spread = 45.0
+gravity = Vector2(0, -10)
+initial_velocity_min = 5.0
+initial_velocity_max = 15.0
+scale_amount_min = 3.0
+scale_amount_max = 8.0
+color = Color(0.3, 0.8, 0.3, 0.15)
+
+[node name="GoldShimmerParticles" type="CPUParticles2D" parent="."]
+position = Vector2(960, 1080)
+amount = 15
+lifetime = 6.0
+preprocess = 2.0
+explosiveness = 0.15
+randomness = 0.6
+emission_shape = 3
+emission_rect_extents = Vector2(400, 50)
+direction = Vector2(0, -1)
+spread = 30.0
+gravity = Vector2(0, -30)
+initial_velocity_min = 20.0
+initial_velocity_max = 40.0
+angular_velocity_min = -45.0
+angular_velocity_max = 45.0
+scale_amount_min = 1.5
+scale_amount_max = 4.0
+color = Color(1, 0.85, 0.3, 0.4)
 
 [node name="BlackjackManager" type="Node" parent="."]
 script = ExtResource("2_fs0nk")
@@ -234,21 +514,45 @@ offset_right = 67.0
 offset_bottom = 66.0
 grow_vertical = 2
 
-[node name="ResultLabel" type="Label" parent="."]
-unique_name_in_owner = true
+[node name="ResultPanel" type="Panel" parent="."]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -600.0
-offset_top = 297.0
-offset_right = 600.0
-offset_bottom = 355.0
+offset_left = -650.0
+offset_top = 280.0
+offset_right = 650.0
+offset_bottom = 370.0
 grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="ResultLabel" type="Label" parent="ResultPanel"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "Deal to get started"
 label_settings = SubResource("LabelSettings_6ijn7")
 horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 2
 uppercase = true
+
+[node name="DealerPanel" type="Panel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -315.0
+offset_right = 120.0
+offset_bottom = -225.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]
 anchors_preset = 8
@@ -269,6 +573,20 @@ unique_name_in_owner = true
 layout_mode = 2
 label_settings = SubResource("LabelSettings_ucmyi")
 horizontal_alignment = 1
+
+[node name="InfoPanel" type="Panel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = 400.0
+offset_right = 200.0
+offset_bottom = 490.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="."]
 anchors_preset = 8
@@ -304,6 +622,16 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 label_settings = SubResource("LabelSettings_0ab5v")
+
+[node name="RacketUIPanel" type="Panel" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 400.0
+offset_top = 15.0
+offset_right = -400.0
+offset_bottom = 85.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
 [node name="RacketUI" type="VBoxContainer" parent="."]
 anchors_preset = 10
@@ -341,6 +669,20 @@ text = "⚠️ PAYMENT DUE SOON! ⚠️"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="ControlPanel" type="Panel" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -85.0
+offset_right = 250.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchors_preset = 7
 anchor_left = 0.5
@@ -358,6 +700,9 @@ alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 shortcut = SubResource("Shortcut_1btgu")
 text = "Hit"
 
@@ -365,6 +710,9 @@ text = "Hit"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 shortcut = SubResource("Shortcut_0ab5v")
 text = "Stand"
 
@@ -372,6 +720,9 @@ text = "Stand"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 shortcut = SubResource("Shortcut_qb4g8")
 text = "Deal"
 
@@ -379,6 +730,9 @@ text = "Deal"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 shortcut = SubResource("Shortcut_fycht")
 text = "Double"
 
@@ -386,6 +740,9 @@ text = "Double"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 shortcut = SubResource("Shortcut_nohg5")
 text = "Split"
 
@@ -393,6 +750,9 @@ text = "Split"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 shortcut = SubResource("Shortcut_ei5kt")
 text = "Confirm (0/0)"
 
