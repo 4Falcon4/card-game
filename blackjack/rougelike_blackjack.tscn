@@ -320,7 +320,6 @@ metadata/_custom_type_script = "uid://wn30x7o3f47m"
 unique_name_in_owner = true
 z_index = 100
 custom_minimum_size = Vector2(250, 0)
-visible = false
 offset_right = 250.0
 offset_bottom = 80.0
 mouse_filter = 2
@@ -328,14 +327,10 @@ mouse_filter = 2
 [node name="RarityLabel" type="Label" parent="CardTooltip"]
 unique_name_in_owner = true
 layout_mode = 2
-offset_left = 215.0
-offset_top = 5.0
-offset_right = 245.0
-offset_bottom = 23.0
+size_flags_vertical = 0
 theme_override_font_sizes/font_size = 14
 text = "R"
 horizontal_alignment = 2
-vertical_alignment = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="CardTooltip"]
 layout_mode = 2
