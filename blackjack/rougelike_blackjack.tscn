@@ -1,6 +1,7 @@
-[gd_scene load_steps=19 format=3 uid="uid://2dwibevu7ne7"]
+[gd_scene load_steps=33 format=3 uid="uid://2dwibevu7ne7"]
 
 [ext_resource type="Script" uid="uid://b4kn4yeeplfhp" path="res://blackjack/rougelike_blackjack.gd" id="1_b22ve"]
+[ext_resource type="Script" uid="uid://icdokrot17fm" path="res://blackjack/protection_racket.gd" id="1_protection_racket"]
 [ext_resource type="Script" uid="uid://j11yb5rk1n4t" path="res://blackjack/BlackjackManager.cs" id="2_fs0nk"]
 [ext_resource type="Script" uid="uid://cyh0d64pfygbl" path="res://addons/maaacks_menus_template/base/scripts/pause_menu_controller.gd" id="3_30fd4"]
 [ext_resource type="Script" uid="uid://di1kob85cvgt1" path="res://blackjack/blackjack_card_hand.gd" id="4_b22ve"]
@@ -12,6 +13,8 @@
 [ext_resource type="Script" uid="uid://wn30x7o3f47m" path="res://addons/milestone/scripts/achievements/achievement_notifier.gd" id="6_sm6pw"]
 [ext_resource type="PackedScene" uid="uid://cq8f4y7n5xo8w" path="res://blackjack/betting_dialog.tscn" id="10_betting"]
 [ext_resource type="Script" uid="uid://b1qdadk3pvgrf" path="res://blackjack/blackjack_draw_hand.gd" id="12_ucmyi"]
+
+[sub_resource type="Shortcut" id="Shortcut_fxeat"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_6ijn7"]
 font_size = 42
@@ -31,11 +34,50 @@ font_size = 24
 [sub_resource type="LabelSettings" id="LabelSettings_0ab5v"]
 font_size = 24
 
+[sub_resource type="InputEventAction" id="InputEventAction_qb4g8"]
+action = &"hit"
+
+[sub_resource type="Shortcut" id="Shortcut_1btgu"]
+events = [SubResource("InputEventAction_qb4g8")]
+
+[sub_resource type="InputEventAction" id="InputEventAction_fxeat"]
+action = &"stand"
+
+[sub_resource type="Shortcut" id="Shortcut_0ab5v"]
+events = [SubResource("InputEventAction_fxeat")]
+
+[sub_resource type="InputEventAction" id="InputEventAction_ucmyi"]
+action = &"deal"
+
+[sub_resource type="Shortcut" id="Shortcut_qb4g8"]
+events = [SubResource("InputEventAction_ucmyi")]
+
+[sub_resource type="InputEventAction" id="InputEventAction_vv4jd"]
+action = &"double"
+
+[sub_resource type="Shortcut" id="Shortcut_fycht"]
+events = [SubResource("InputEventAction_vv4jd")]
+
+[sub_resource type="InputEventAction" id="InputEventAction_nw6iu"]
+action = &"split"
+
+[sub_resource type="Shortcut" id="Shortcut_nohg5"]
+events = [SubResource("InputEventAction_nw6iu")]
+
+[sub_resource type="InputEventAction" id="InputEventAction_7go54"]
+action = &"confirm"
+
+[sub_resource type="Shortcut" id="Shortcut_ei5kt"]
+events = [SubResource("InputEventAction_7go54")]
+
 [node name="RougelikeBlackjack" type="CanvasLayer"]
 script = ExtResource("1_b22ve")
 
 [node name="BlackjackManager" type="Node" parent="."]
 script = ExtResource("2_fs0nk")
+
+[node name="ProtectionRacket" type="Node" parent="."]
+script = ExtResource("1_protection_racket")
 
 [node name="BettingDialog" parent="." instance=ExtResource("10_betting")]
 
@@ -173,6 +215,7 @@ text = "Activate Positive"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+shortcut = SubResource("Shortcut_fxeat")
 text = "Activate Negative"
 
 [node name="ActivateOnDrawButton" type="Button" parent="VBoxContainer"]
@@ -262,6 +305,42 @@ visible = false
 layout_mode = 2
 label_settings = SubResource("LabelSettings_0ab5v")
 
+[node name="RacketUI" type="VBoxContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 20.0
+offset_bottom = 80.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="RacketLabel" type="Label" parent="RacketUI"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "Next Payment: 50 chips in 3 rounds"
+horizontal_alignment = 1
+
+[node name="RacketWarning" type="Panel" parent="RacketUI"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(400, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="WarningLabel" type="Label" parent="RacketUI/RacketWarning"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 18
+text = "⚠️ PAYMENT DUE SOON! ⚠️"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchors_preset = 7
 anchor_left = 0.5
@@ -279,36 +358,42 @@ alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+shortcut = SubResource("Shortcut_1btgu")
 text = "Hit"
 
 [node name="StandButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+shortcut = SubResource("Shortcut_0ab5v")
 text = "Stand"
 
 [node name="DealButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+shortcut = SubResource("Shortcut_qb4g8")
 text = "Deal"
 
 [node name="DoubleButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+shortcut = SubResource("Shortcut_fycht")
 text = "Double"
 
 [node name="SplitButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+shortcut = SubResource("Shortcut_nohg5")
 text = "Split"
 
 [node name="ConfirmSelectionButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+shortcut = SubResource("Shortcut_ei5kt")
 text = "Confirm (0/0)"
 
 [node name="AchievementNotifier" type="Node" parent="." node_paths=PackedStringArray("user_interface")]

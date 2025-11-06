@@ -1,6 +1,42 @@
-[gd_scene load_steps=2 format=3 uid="uid://cq8f4y7n5xo8w"]
+[gd_scene load_steps=14 format=3 uid="uid://cq8f4y7n5xo8w"]
 
-[ext_resource type="Script" path="res://blackjack/betting_dialog.gd" id="1_betting_dialog"]
+[ext_resource type="Script" uid="uid://dm30448djqv5c" path="res://blackjack/betting_dialog.gd" id="1_betting_dialog"]
+
+[sub_resource type="InputEventAction" id="InputEventAction_gswfk"]
+action = &"bet_min"
+
+[sub_resource type="Shortcut" id="Shortcut_wx8ro"]
+events = [SubResource("InputEventAction_gswfk")]
+
+[sub_resource type="InputEventAction" id="InputEventAction_wx8ro"]
+action = &"bet_quarter"
+
+[sub_resource type="Shortcut" id="Shortcut_74nfr"]
+events = [SubResource("InputEventAction_wx8ro")]
+
+[sub_resource type="InputEventAction" id="InputEventAction_shwt1"]
+action = &"bet_half"
+
+[sub_resource type="Shortcut" id="Shortcut_bflfa"]
+events = [SubResource("InputEventAction_shwt1")]
+
+[sub_resource type="InputEventAction" id="InputEventAction_46kr7"]
+action = &"bet_max"
+
+[sub_resource type="Shortcut" id="Shortcut_toxqd"]
+events = [SubResource("InputEventAction_46kr7")]
+
+[sub_resource type="InputEventAction" id="InputEventAction_74nfr"]
+action = &"bet_cancel"
+
+[sub_resource type="Shortcut" id="Shortcut_shwt1"]
+events = [SubResource("InputEventAction_74nfr")]
+
+[sub_resource type="InputEventAction" id="InputEventAction_bflfa"]
+action = &"bet_confirm"
+
+[sub_resource type="Shortcut" id="Shortcut_46kr7"]
+events = [SubResource("InputEventAction_bflfa")]
 
 [node name="BettingDialog" type="CanvasLayer"]
 script = ExtResource("1_betting_dialog")
@@ -23,12 +59,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 offset_left = 20.0
 offset_top = 20.0
 offset_right = -20.0
 offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 15
 
 [node name="TitleLabel" type="Label" parent="Panel/VBoxContainer"]
@@ -61,18 +97,22 @@ alignment = 1
 
 [node name="MinButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
 layout_mode = 2
+shortcut = SubResource("Shortcut_wx8ro")
 text = "Min"
 
 [node name="QuarterButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
 layout_mode = 2
+shortcut = SubResource("Shortcut_74nfr")
 text = "25%"
 
 [node name="HalfButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
 layout_mode = 2
+shortcut = SubResource("Shortcut_bflfa")
 text = "50%"
 
 [node name="MaxButton" type="Button" parent="Panel/VBoxContainer/QuickBets"]
 layout_mode = 2
+shortcut = SubResource("Shortcut_toxqd")
 text = "Max"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
@@ -82,8 +122,10 @@ alignment = 1
 
 [node name="CancelButton" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+shortcut = SubResource("Shortcut_shwt1")
 text = "Cancel"
 
 [node name="ConfirmButton" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+shortcut = SubResource("Shortcut_46kr7")
 text = "Confirm Bet"
