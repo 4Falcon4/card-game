@@ -576,7 +576,22 @@ func _on_game_state_changed(new_state: int) -> void:
 
 func _on_player_busted() -> void:
 	"""Player exceeded 21"""
+	for card in dealer_hand.cards:
+		if not card.is_front_face:
+			card.is_front_face = true
+		if card.is_hidden:
+			card.is_hidden = false
 	print("Player busted!")
+	await get_tree().create_timer(2.0).timeout
+	for card in dealer_hand.cards:
+		if card.is_front_face:
+			card.is_front_face = false
+		if card.is_hidden:
+			card.is_hidden = false
+		card_deck_manager.add_card_to_bottom_draw_pile(card)
+		dealer_hand.remove_card(card)
+		await get_tree().create_timer(0.5).timeout
+	card_deck_manager.shuffle()
 	_show_message("BUST! You went over 21!")
 
 
@@ -609,6 +624,16 @@ func _on_round_ended(result: int, payout: int) -> void:
 			result_text = "You Win!"
 		2:  # DealerWin
 			result_text = "Dealer Wins"
+			# shuffle dealer cards to the deck
+			for card in dealer_hand.cards:
+				if card.is_front_face:
+					card.is_front_face = false
+				if card.is_hidden:
+					card.is_hidden = false
+				card_deck_manager.add_card_to_bottom_draw_pile(card)
+				dealer_hand.remove_card(card)
+				await get_tree().create_timer(0.5).timeout
+			card_deck_manager.shuffle()
 		3:  # Push
 			result_text = "Push - It's a Tie!"
 		4:  # PlayerBlackjack
@@ -749,7 +774,7 @@ func _on_confirm_selection_pressed() -> void:
 	draw_hand.max_selected = 0
 	selection_action = ""
 	
-	if blackjack_manager.CurrentState == 3:
+	if blackjack_manager.CurrentState == 3 and not blackjack_manager.HasDoubled():
 		_set_blackjack_controls_enabled(true)
 		_show_message("Your turn! Hit or Stand?")
 	else:

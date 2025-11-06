@@ -1,10 +1,34 @@
-[gd_scene load_steps=3 format=3 uid="uid://cmpfc8xtbu6yp"]
+[gd_scene load_steps=4 format=3 uid="uid://cmpfc8xtbu6yp"]
 
 [ext_resource type="PackedScene" uid="uid://bqqngki8bm3iq" path="res://addons/maaacks_menus_template/base/scenes/overlaid_menu/overlaid_menu_container.tscn" id="1_ar74f"]
 [ext_resource type="PackedScene" uid="uid://dp1jqmev8sse1" path="res://menu/scenes/menus/options_menu/mini_options_menu.tscn" id="2_x0fll"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.1, 0.1, 0.15, 0.95)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.7, 0.6, 0.3, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+shadow_size = 10
+shadow_color = Color(0, 0, 0, 0.7)
+
 [node name="OverlaidMenuContainer" instance=ExtResource("1_ar74f")]
 menu_scene = ExtResource("2_x0fll")
 
+[node name="BackgroundColor" parent="." index="0"]
+color = Color(0, 0, 0, 0.6)
+
+[node name="MenuPanelContainer" parent="." index="1"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
 [node name="TitleLabel" parent="MenuPanelContainer/MarginContainer/BoxContainer/TitleMargin" index="0"]
-text = "Options"
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 32
+text = "Game Options"

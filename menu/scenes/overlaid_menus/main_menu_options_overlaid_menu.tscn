@@ -1,10 +1,27 @@
-[gd_scene load_steps=3 format=3 uid="uid://b24knl60ell7b"]
+[gd_scene load_steps=4 format=3 uid="uid://b24knl60ell7b"]
 
 [ext_resource type="PackedScene" uid="uid://bqqngki8bm3iq" path="res://addons/maaacks_menus_template/base/scenes/overlaid_menu/overlaid_menu_container.tscn" id="1_0onma"]
 [ext_resource type="PackedScene" uid="uid://chmwsu4u5xxho" path="res://menu/scenes/menus/options_menu/master_options_menu_with_tabs.tscn" id="2_j1am7"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.1, 0.1, 0.15, 0.95)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.7, 0.6, 0.3, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+shadow_size = 10
+shadow_color = Color(0, 0, 0, 0.7)
+
 [node name="MasterOptionsOverlaidMenu" instance=ExtResource("1_0onma")]
 menu_scene = ExtResource("2_j1am7")
+
+[node name="BackgroundColor" parent="." index="0"]
+color = Color(0, 0, 0, 0.6)
 
 [node name="MenuPanelContainer" parent="." index="1"]
 anchors_preset = 15
@@ -16,6 +33,7 @@ offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
 offset_bottom = 0.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
 [node name="TitleMargin" parent="MenuPanelContainer/MarginContainer/BoxContainer" index="0"]
 visible = false

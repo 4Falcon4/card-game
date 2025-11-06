@@ -1,6 +1,56 @@
-[gd_scene load_steps=2 format=3 uid="uid://c3v7xqn8ykf4t"]
+[gd_scene load_steps=6 format=3 uid="uid://tkera3cpx2fp"]
 
 [ext_resource type="Script" path="res://blackjack/shop_scene.gd" id="1_shop"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
+bg_color = Color(0.15, 0.1, 0.1, 0.9)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.6, 0.2, 0.2, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button"]
+bg_color = Color(0.2, 0.35, 0.2, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4, 0.6, 0.4, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_pressed"]
+bg_color = Color(0.15, 0.25, 0.15, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.3, 0.5, 0.3, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+bg_color = Color(0.3, 0.5, 0.3, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5, 0.8, 0.5, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [node name="ShopScene" type="Control"]
 layout_mode = 3
@@ -18,7 +68,106 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.1, 0.1, 0.12, 1)
+color = Color(0.08, 0.06, 0.08, 1)
+
+[node name="BackgroundGradient" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12, 0.08, 0.1, 0.8)
+
+[node name="VignetteTop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 200.0
+grow_horizontal = 2
+color = Color(0, 0, 0, 0.4)
+
+[node name="VignetteBottom" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -200.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0, 0, 0, 0.4)
+
+[node name="SmokeParticles" type="CPUParticles2D" parent="."]
+position = Vector2(960, 1080)
+amount = 15
+lifetime = 8.0
+preprocess = 2.0
+explosiveness = 0.1
+randomness = 0.5
+emission_shape = 3
+emission_rect_extents = Vector2(960, 50)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, -15)
+initial_velocity_min = 10.0
+initial_velocity_max = 25.0
+scale_amount_min = 8.0
+scale_amount_max = 15.0
+color = Color(0.3, 0.2, 0.25, 0.15)
+
+[node name="Decorations" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="LeftChip1" type="ColorRect" parent="Decorations"]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 300.0
+offset_right = 170.0
+offset_bottom = 370.0
+rotation = 0.523599
+color = Color(0.5, 0.1, 0.1, 0.6)
+
+[node name="LeftChip2" type="ColorRect" parent="Decorations"]
+layout_mode = 0
+offset_left = 150.0
+offset_top = 600.0
+offset_right = 220.0
+offset_bottom = 670.0
+rotation = 0.785398
+color = Color(0.6, 0.5, 0.1, 0.6)
+
+[node name="RightChip1" type="ColorRect" parent="Decorations"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -170.0
+offset_top = 300.0
+offset_right = -100.0
+offset_bottom = 370.0
+grow_horizontal = 0
+rotation = -0.523599
+color = Color(0.1, 0.1, 0.5, 0.6)
+
+[node name="RightChip2" type="ColorRect" parent="Decorations"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -220.0
+offset_top = 600.0
+offset_right = -150.0
+offset_bottom = 670.0
+grow_horizontal = 0
+rotation = -0.785398
+color = Color(0.1, 0.5, 0.5, 0.6)
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -36,26 +185,39 @@ theme_override_constants/margin_bottom = 40
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Header" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="HeaderPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_header")
+
+[node name="Header" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HeaderPanel"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer/Header"]
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer/HeaderPanel/Header"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 48
 text = "Back Alley Shop"
 horizontal_alignment = 1
 
-[node name="FlavorText" type="Label" parent="MarginContainer/VBoxContainer/Header"]
+[node name="FlavorText" type="Label" parent="MarginContainer/VBoxContainer/HeaderPanel/Header"]
+unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.8, 0.7, 1)
 theme_override_font_sizes/font_size = 18
 text = "You got roughed up pretty good. Maybe buy something to help next time?"
 horizontal_alignment = 1
+autowrap_mode = 2
 
-[node name="ChipsLabel" type="Label" parent="MarginContainer/VBoxContainer/Header"]
+[node name="ChipsLabel" type="Label" parent="MarginContainer/VBoxContainer/HeaderPanel/Header"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.843, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 32
 text = "Chips: 1000"
 horizontal_alignment = 1
@@ -68,6 +230,7 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="UpgradesContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -81,13 +244,18 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="StatsLabel" type="Label" parent="MarginContainer/VBoxContainer/Footer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "Runs Completed: 0 | Total Earned: 0 chips"
 horizontal_alignment = 1
 
 [node name="ReturnButton" type="Button" parent="MarginContainer/VBoxContainer/Footer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_button")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 text = "Return to Casino"
