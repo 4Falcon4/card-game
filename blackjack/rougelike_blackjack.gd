@@ -735,7 +735,7 @@ func _on_confirm_selection_pressed() -> void:
 	draw_hand.max_selected = 0
 	selection_action = ""
 	
-	if blackjack_manager.CurrentState == 3:
+	if blackjack_manager.CurrentState == 3 and not blackjack_manager.HasDoubled():
 		_set_blackjack_controls_enabled(true)
 		_show_message("Your turn! Hit or Stand?")
 	else:
