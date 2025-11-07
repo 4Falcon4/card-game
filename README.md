@@ -97,11 +97,12 @@ The game uses a hybrid approach:
 [//]: # (*[Add your license information here]*)
 
 ## Roadmap
+- [ ] Add ability perfomed text popups
 - [ ] Additional card abilities and upgrades planned for future updates
 - [ ] Rework round end timing
-- [ ] Use locker to save data
-- [ ] Implement more robust error handling and user feedback
 - [ ] Implement sound effects and music tracks
+- [ ] Use locker to save data
+- [ ] Implement more robust error handling
 
 ## Known Issues
 - Save system is a work in progress; may have bugs
